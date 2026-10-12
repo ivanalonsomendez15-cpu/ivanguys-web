@@ -1,0 +1,131 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signed() { return request.auth != null; }
+    function self(uid) { return signed() && request.auth.uid == uid; }
+    // REVISAR: configurar el UID real del moderador antes de abrir UGC o videos publicos.
+    function admin() { return signed() && request.auth.uid == 'PON_AQUI_UID_MODERADOR'; }
+    function friend(fid) {
+      return signed() && exists(/databases/$(database)/documents/friendships/$(fid))
+        && get(/databases/$(database)/documents/friendships/$(fid)).data.status == 'accepted'
+        && request.auth.uid in get(/databases/$(database)/documents/friendships/$(fid)).data.members;
+    }
+    function blocked(userA, userB) {
+      return exists(/databases/$(database)/documents/blocks/$(userA)/targets/$(userB))
+          || exists(/databases/$(database)/documents/blocks/$(userB)/targets/$(userA));
+    }
+    match /users/{uid} {
+      allow get, list: if signed();
+      allow create: if self(uid) && request.resource.data.keys().hasOnly(['nickname','nicknameLower','avatarURL','isOnline','lastSeen','createdAt'])
+        && request.resource.data.nickname is string && request.resource.data.nickname.size() >= 3 && request.resource.data.nickname.size() <= 24;
+      allow update: if self(uid) && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['nickname','nicknameLower','avatarURL','isOnline','lastSeen'])
+        && request.resource.data.nickname is string && request.resource.data.nickname.size() >= 3 && request.resource.data.nickname.size() <= 24;
+      allow delete: if false;
+    }
+    match /friendships/{fid} {
+      allow read: if signed() && request.auth.uid in resource.data.members;
+      allow create: if signed() && request.resource.data.keys().hasOnly(['members','requestedBy','status','createdAt'])
+        && request.resource.data.members is list && request.resource.data.members.size() == 2
+        && request.auth.uid in request.resource.data.members
+        && request.resource.data.requestedBy == request.auth.uid
+        && request.resource.data.status == 'pending'
+        && request.resource.data.members[0] != request.resource.data.members[1]
+        && fid == request.resource.data.members[0] + '_' + request.resource.data.members[1];
+      allow update: if signed() && request.auth.uid in resource.data.members
+        && resource.data.status == 'pending' && request.auth.uid != resource.data.requestedBy
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])
+        && request.resource.data.status == 'accepted';
+      allow delete: if signed() && request.auth.uid in resource.data.members;
+    }
+    match /blocks/{owner}/targets/{target} {
+      allow get: if self(owner) || self(target);
+      allow list: if self(owner);
+      allow create, update, delete: if self(owner);
+    }
+    match /conversations/{fid} {
+      allow read, create, update, delete: if false;
+      match /messages/{mid} {
+        allow read: if friend(fid);
+        allow create: if friend(fid)
+          && request.resource.data.keys().hasOnly(['sender','text','createdAt'])
+          && request.resource.data.sender == request.auth.uid
+          && request.resource.data.text is string
+          && request.resource.data.text.size() > 0 && request.resource.data.text.size() <= 1500
+          && !blocked(get(/databases/$(database)/documents/friendships/$(fid)).data.members[0],
+                     get(/databases/$(database)/documents/friendships/$(fid)).data.members[1]);
+        allow update, delete: if false;
+      }
+    }
+    match /videos/{vid} {
+      allow read: if signed() && (resource.data.status == 'approved' || self(resource.data.ownerId) || admin());
+      allow create: if signed() && request.resource.data.keys().hasOnly(['ownerId','title','description','status','videoURL','path','createdAt'])
+        && request.resource.data.ownerId == request.auth.uid
+        && request.resource.data.status == 'pending'
+        && request.resource.data.title is string && request.resource.data.title.size() >= 3 && request.resource.data.title.size() <= 90
+        && request.resource.data.description is string && request.resource.data.description.size() <= 400
+        && request.resource.data.path == 'videos/' + request.auth.uid + '/' + vid + '/clip';
+      allow update: if admin() && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])
+        && request.resource.data.status in ['approved','rejected'];
+      allow delete: if self(resource.data.ownerId) || admin();
+    }
+    match /reports/{id} {
+      allow create: if signed() && request.resource.data.keys().hasOnly(['reportedBy','targetId','kind','reason','createdAt'])
+        && request.resource.data.reportedBy == request.auth.uid
+        && request.resource.data.reason is string && request.resource.data.reason.size() > 0 && request.resource.data.reason.size() <= 220;
+      allow read, update, delete: if admin();
+    }
+    match /calls/{id} {
+      allow read: if signed() && (request.auth.uid == resource.data.caller || request.auth.uid == resource.data.callee);
+      allow create: if signed() && request.resource.data.keys().hasOnly(['caller','callee','participants','friendshipId','offer','status','createdAt'])
+        && request.resource.data.caller == request.auth.uid
+        && request.resource.data.status == 'ringing'
+        && request.resource.data.participants is list && request.resource.data.participants.size() == 2
+        && request.resource.data.callee in request.resource.data.participants
+        && request.resource.data.caller in request.resource.data.participants
+        && friend(request.resource.data.friendshipId)
+        && request.resource.data.participants == get(/databases/$(database)/documents/friendships/$(request.resource.data.friendshipId)).data.members
+        && !blocked(request.resource.data.caller,request.resource.data.callee);
+      allow update: if signed() && request.auth.uid in resource.data.participants
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['answer','status'])
+        && request.resource.data.status in ['active','ended','rejected'];
+      allow delete: if false;
+      match /callerCandidates/{cid} {
+        allow read: if signed() && request.auth.uid in get(/databases/$(database)/documents/calls/$(id)).data.participants;
+        allow create: if signed() && request.auth.uid == get(/databases/$(database)/documents/calls/$(id)).data.caller;
+      }
+      match /calleeCandidates/{cid} {
+        allow read: if signed() && request.auth.uid in get(/databases/$(database)/documents/calls/$(id)).data.participants;
+        allow create: if signed() && request.auth.uid == get(/databases/$(database)/documents/calls/$(id)).data.callee;
+      }
+    }
+    // Nuevos juegos HTML: todo envio comienza pendiente; solo un moderador puede aprobarlo.
+    match /ugc_games/{gameId} {
+      allow get, list: if resource.data.status == 'approved' || self(resource.data.ownerId) || admin();
+      allow create: if signed()
+        && request.resource.data.keys().hasOnly(['ownerId','title','description','html','status','createdAt','updatedAt'])
+        && request.resource.data.ownerId == request.auth.uid
+        && request.resource.data.status == 'pending'
+        && request.resource.data.title is string
+        && request.resource.data.title.size() >= 4 && request.resource.data.title.size() <= 60
+        && request.resource.data.description is string
+        && request.resource.data.description.size() <= 180
+        && request.resource.data.html is string
+        && request.resource.data.html.size() > 0 && request.resource.data.html.toUtf8().size() <= 45000;
+      allow update: if admin()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status','updatedAt'])
+        && request.resource.data.status in ['approved','rejected'];
+      allow delete: if self(resource.data.ownerId) || admin();
+    }
+    // Economia mundial: todos los cambios deben proceder del Admin SDK en Functions.
+    match /nexus_wallets/{uid} { allow read: if self(uid); allow write: if false; }
+    match /nexus_items/{id} { allow read: if signed() && self(resource.data.ownerId); allow write: if false; }
+    match /nexus_listings/{id} {
+      allow read: if signed() && (resource.data.status == 'active' || self(resource.data.sellerId) || self(resource.data.buyerId));
+      allow write: if false;
+    }
+    match /nexus_claims/{id} { allow read, write: if false; }
+    match /nexus_trades/{id} { allow read, write: if false; }
+    match /nexus_limits/{id} { allow read, write: if false; }
+    match /nexus_audit/{id} { allow read, write: if false; }
+  }
+}
