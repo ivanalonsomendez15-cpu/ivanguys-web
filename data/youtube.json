@@ -1,10 +1,18 @@
 {
   "status": "ok",
-  "lastUpdated": "2026-10-12T13:38:31.213971+00:00",
+  "lastUpdated": "2026-10-12T14:03:49.005785+00:00",
   "channelTitle": "ivanguys",
   "subscribers": 675,
-  "videoCount": 167,
+  "videoCount": 168,
   "videos": [
+    {
+      "id": "Xg16MZ_GnA8",
+      "title": "ChatGPT se va preparando 🤑🔥#roblox #viral #humor",
+      "url": "https://www.youtube.com/watch?v=Xg16MZ_GnA8",
+      "thumbnail": "https://i1.ytimg.com/vi/Xg16MZ_GnA8/hqdefault.jpg",
+      "published": "2026-10-12T14:00:14+00:00",
+      "type": "video"
+    },
     {
       "id": "unftsBNN0dM",
       "title": "literal 🤣 #meme #funnny #shorts",
@@ -115,14 +123,6 @@
       "url": "https://www.youtube.com/watch?v=iEjtc9cleCY",
       "thumbnail": "https://i2.ytimg.com/vi/iEjtc9cleCY/hqdefault.jpg",
       "published": "2026-09-29T14:00:16+00:00",
-      "type": "video"
-    },
-    {
-      "id": "UGfT7aCZCc8",
-      "title": "que opinan sobre este dato #realmadridcf #fcbarsa #BalonDeOro #futbol",
-      "url": "https://www.youtube.com/watch?v=UGfT7aCZCc8",
-      "thumbnail": "https://i2.ytimg.com/vi/UGfT7aCZCc8/hqdefault.jpg",
-      "published": "2026-09-28T14:00:17+00:00",
       "type": "video"
     }
   ]
