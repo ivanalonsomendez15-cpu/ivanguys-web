@@ -1,10 +1,10 @@
-// Firebase Web App config. Fill in these identifiers from your own Firebase project.
-// This is NOT a private API key and does not replace Firestore/Storage security rules.
+
 export const firebaseConfig = {
-  apiKey: 'REEMPLAZAR_CON_API_KEY_WEB_FIREBASE',
-  authDomain: 'REEMPLAZAR.firebaseapp.com',
-  projectId: 'REEMPLAZAR',
-  storageBucket: 'REEMPLAZAR.firebasestorage.app',
-  messagingSenderId: 'REEMPLAZAR',
-  appId: 'REEMPLAZAR'
+  apiKey: "AIzaSyBfcpRAsnDr79_pK2zFbRTJZ0C_qdmxsLs",
+  authDomain: "ivanguys-web-5e4f6.firebaseapp.com",
+  projectId: "ivanguys-web-5e4f6",
+  storageBucket: "ivanguys-web-5e4f6.firebasestorage.app",
+  messagingSenderId: "432797223080",
+  appId: "1:432797223080:web:803e99070fae6fc63a5a9d",
+  measurementId: "G-9VMTFBGEXR"
 };
