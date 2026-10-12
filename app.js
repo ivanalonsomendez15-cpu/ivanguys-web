@@ -111,7 +111,15 @@
     {id:'reaction',title:'Reflejos PRO',subtitle:'Pulsa justo cuando cambie a verde.',emoji:'⚡',category:'skill',tag:'HABILIDAD',bg:'linear-gradient(135deg,#315f69,#3b9d8b)'},
     {id:'clicker',title:'Mega Clicker',subtitle:'Consigue puntos, combos y mejoras.',emoji:'💎',category:'skill',tag:'HABILIDAD',bg:'linear-gradient(135deg,#573b93,#9c5bb9)'},
     {id:'maze',title:'Laberinto Pixel',subtitle:'Encuentra la salida del laberinto.',emoji:'🧩',category:'puzzle',tag:'PUZLE',bg:'linear-gradient(135deg,#29534e,#4b8b66)'},
-    {id:'simon',title:'Simon Galaxy',subtitle:'Memoriza la secuencia de colores.',emoji:'🌈',category:'puzzle',tag:'PUZLE',bg:'linear-gradient(135deg,#653c84,#834b9c)'}
+    {id:'simon',title:'Simon Galaxy',subtitle:'Memoriza la secuencia de colores.',emoji:'🌈',category:'puzzle',tag:'PUZLE',bg:'linear-gradient(135deg,#653c84,#834b9c)'},
+    {id:'penalty',title:'Penaltis PRO',subtitle:'Diez penaltis contra un portero con reflejos.',emoji:'⚽',category:'skill',tag:'HABILIDAD',bg:'linear-gradient(135deg,#136057,#235e9c)'},
+    {id:'connect4',title:'Conecta Cuatro',subtitle:'Consigue cuatro fichas seguidas contra una IA.',emoji:'🔵',category:'puzzle',tag:'PUZLE',bg:'linear-gradient(135deg,#425c9c,#6e4696)'},
+    {id:'lights',title:'Apaga las Luces',subtitle:'Un reto lógico con interruptores conectados.',emoji:'💡',category:'puzzle',tag:'PUZLE',bg:'linear-gradient(135deg,#6e5236,#7f657b)'},
+    {id:'wordrush',title:'Palabras Relámpago',subtitle:'Escribe lo más rápido posible.',emoji:'⌨️',category:'skill',tag:'HABILIDAD',bg:'linear-gradient(135deg,#295277,#3d9d8c)'},
+    {id:'stardodge',title:'Lluvia de Meteoritos',subtitle:'Esquiva obstáculos y sobrevive.',emoji:'☄️',category:'arcade',tag:'ARCADE',bg:'linear-gradient(135deg,#36285a,#b74f70)'},
+    {id:'jumpsprint',title:'Salto Infinito',subtitle:'Corre y salta hasta batir tu récord.',emoji:'🏃',category:'arcade',tag:'ARCADE',bg:'linear-gradient(135deg,#364a78,#d18965)'},
+    {id:'mathflash',title:'Cálculo Turbo',subtitle:'Resuelve operaciones contra el reloj.',emoji:'🧮',category:'puzzle',tag:'PUZLE',bg:'linear-gradient(135deg,#293a70,#7960ab)'},
+    {id:'taporbit',title:'Objetivo Orbital',subtitle:'Toca objetivos en movimiento.',emoji:'🎯',category:'skill',tag:'HABILIDAD',bg:'linear-gradient(135deg,#57407b,#a94482)'}
   ];
   function renderGameCards(){
     const host=$('gamesGrid');host.replaceChildren();

@@ -1,4 +1,4 @@
-/* 12 minijuegos originales de IVANGUYS ARCADE. Sin librerías ni servicios externos. */
+/* 20 minijuegos originales de IVANGUYS ARCADE. Sin librerías ni servicios externos. */
 (() => {
   'use strict';
   const pick=n=>Math.floor(Math.random()*n), clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
@@ -176,7 +176,83 @@
       function begin(){if(over)return;startBtn.disabled=true;round()}
       function tap(i){if(!accepting||over)return;pads[i].classList.add('lit');after(()=>pads[i].classList.remove('lit'),200);if(seq[idx]!==i){accepting=false;over=true;hint.textContent='¡Secuencia incorrecta! Llegaste a la ronda '+seq.length+'.';return}idx++;if(idx===seq.length){accepting=false;setScore(score+10);hint.textContent='¡BIEN! Siguiente ronda...';after(round,750)}}
     }
-    const implementations={snake,pong,breakout,fly,'2048':fusion,memory,ttt,mole,reaction,clicker,maze,simon};
+    function penalty(){
+      ui.instructions.textContent='Lanza 10 penaltis. Elige una de las 9 zonas de la portería. ¡Cuidado con el portero!';
+      let kicks=0,goals=0;const status=toast('⚽ Penalti 1/10 · Elige dónde tirar');
+      const field=document.createElement('div');field.className='game-board';field.style.gridTemplateColumns='repeat(3,1fr)';field.style.maxWidth='345px';stage.append(field);
+      const cells=Array.from({length:9},(_,i)=>button(['↖️','⬆️','↗️','⬅️','🎯','➡️','↙️','⬇️','↘️'][i],()=>shoot(i),field,'tile'));
+      function shoot(zone){if(kicks>=10)return;const keeper=pick(9);kicks++;const saved=keeper===zone||((zone===4||zone===1||zone===7)&&Math.random()<.19);if(!saved){goals++;setScore(score+10+(zone===0||zone===2||zone===6||zone===8?5:0));}status.textContent=(saved?'🧤 ¡PARADA!':'🥅 ¡GOOOL!')+` · ${goals} goles de ${kicks} lanzamientos`;
+        if(kicks===10){cells.forEach(b=>b.disabled=true);toast(`Final: ${goals}/10 goles. ¡Pulsa Reiniciar para otra tanda!`)}else lineOnce.textContent=`Próximo lanzamiento: ${kicks+1}/10`;}
+      const lineOnce=line('Punta a las esquinas para conseguir puntos extra.');
+    }
+    function connect4(){
+      ui.instructions.textContent='Conecta cuatro fichas azules en horizontal, vertical o diagonal antes que la IA.';
+      const W=7,H=6,board=Array(W*H).fill(0),grid=document.createElement('div');grid.className='game-board';grid.style.gridTemplateColumns='repeat(7,1fr)';grid.style.maxWidth='490px';stage.append(grid);
+      const status=toast('Tu turno · 🔵');let ended=false;
+      const cells=Array.from({length:W*H},(_,i)=>button('·',()=>put(i%W),grid,'tile'));
+      const get=(x,y)=>x>=0&&x<W&&y>=0&&y<H?board[y*W+x]:-1;
+      function outcome(color){for(let y=0;y<H;y++)for(let x=0;x<W;x++)if(get(x,y)===color)for(const [dx,dy] of [[1,0],[0,1],[1,1],[1,-1]])if([1,2,3].every(n=>get(x+dx*n,y+dy*n)===color))return true;return false;}
+      function drop(col,color){for(let y=H-1;y>=0;y--)if(!get(col,y)){board[y*W+col]=color;return true;}return false;}
+      function available(){return Array.from({length:W},(_,x)=>x).filter(x=>get(x,0)===0)}
+      function evaluate(col,color){const fake=board.slice();for(let y=H-1;y>=0;y--)if(fake[y*W+col]===0){fake[y*W+col]=color;break;}const idx=board.slice();for(let j=0;j<board.length;j++)board[j]=fake[j];const wins=outcome(color);for(let j=0;j<board.length;j++)board[j]=idx[j];return wins;}
+      function redraw(){cells.forEach((b,i)=>{b.textContent=board[i]===1?'🔵':board[i]===2?'🟠':'·';b.disabled=ended||get(i%W,0)!==0;});}
+      function put(col){if(ended||!drop(col,1))return;redraw();if(outcome(1)){setScore(score+100);status.textContent='🎉 ¡Has ganado!';ended=true;redraw();return;}
+        if(!available().length){status.textContent='¡Empate!';ended=true;redraw();return;}
+        const choices=available();let ai=choices.find(c=>evaluate(c,2));if(ai===undefined)ai=choices.find(c=>evaluate(c,1));if(ai===undefined)ai=choices.slice().sort((a,b)=>Math.abs(a-3)-Math.abs(b-3))[0];drop(ai,2);redraw();if(outcome(2)){status.textContent='La IA ha conectado cuatro. ¡Revancha!';ended=true;}else if(!available().length){status.textContent='¡Empate!';ended=true;}redraw();}
+      redraw();
+    }
+    function lights(){
+      ui.instructions.textContent='Apaga todas las luces. Cada botón cambia su casilla y las cuatro vecinas.';
+      const N=5,board=Array(25).fill(false),grid=document.createElement('div');grid.className='game-board';grid.style.gridTemplateColumns='repeat(5,1fr)';grid.style.maxWidth='390px';stage.append(grid);let moves=0,solved=false;
+      const status=toast('Apaga todas las luces 💡');
+      function toggle(i){const x=i%N,y=Math.floor(i/N);for(const [dx,dy] of [[0,0],[1,0],[-1,0],[0,1],[0,-1]]){const nx=x+dx,ny=y+dy;if(nx>=0&&nx<N&&ny>=0&&ny<N)board[ny*N+nx]=!board[ny*N+nx];}}
+      for(let i=0;i<12;i++)toggle(pick(25));if(!board.some(Boolean))toggle(12);
+      const cells=Array.from({length:25},(_,i)=>button('',()=>press(i),grid,'tile'));
+      function draw(){cells.forEach((b,i)=>{b.textContent=board[i]?'💡':'·';b.style.background=board[i]?'#ad8549':'#192947';b.disabled=solved;});status.textContent=`Movimientos: ${moves} · Luces encendidas: ${board.filter(Boolean).length}`}
+      function press(i){if(solved)return;moves++;toggle(i);draw();if(!board.some(Boolean)){solved=true;setScore(Math.max(5,200-moves*3));toast('✨ ¡Todas apagadas! Tablero resuelto.');draw();}}draw();
+    }
+    function wordrush(){
+      ui.instructions.textContent='Escribe la palabra que aparece. Cada acierto vale 10 puntos. Tienes 45 segundos.';
+      const words=['aventura','velocidad','cristal','nintendo','laberinto','galaxia','universo','infinito','tormenta','bosque','planeta','leyenda','estrella','diamante','campeon','dragones','porteria','regreso','misterio','arcade','desafio','secreto','estrellas'];
+      let current='',seconds=45,finished=false;const status=toast('45 segundos para empezar.');const prompt=document.createElement('h2');prompt.style.cssText='font-size:clamp(24px,6vw,50px);text-align:center;color:#77f7de;letter-spacing:2px';stage.append(prompt);
+      const input=document.createElement('input');input.type='text';input.autocapitalize='off';input.autocomplete='off';input.spellcheck=false;input.maxLength=30;input.placeholder='Escribe aquí y pulsa Enter';input.style.cssText='display:block;margin:10px auto;padding:13px;border-radius:12px;border:1px solid #8ef4e5;background:#1b2440;color:white;width:min(95%,360px);font-size:18px;text-align:center';stage.append(input);
+      const newWord=()=>{current=words[pick(words.length)];prompt.textContent=current;};newWord();
+      function answer(){if(finished)return;if(input.value.trim().toLocaleLowerCase('es')===current){setScore(score+10);status.textContent='✅ ¡Correcto!';newWord();}else status.textContent='❌ Inténtalo con la palabra exacta.';input.value='';}
+      listen(input,'keydown',e=>{if(e.key==='Enter')answer()});button('✔ COMPROBAR',answer,stage,'game-big-btn');
+      every(()=>{seconds--;if(!finished)status.textContent=`⏳ ${seconds}s · ${score/10} palabras correctas`;if(seconds<=0){finished=true;input.disabled=true;prompt.textContent='¡TIEMPO!';status.textContent=`¡Final! ${score/10} palabras correctas.`;}},1000);input.focus();
+    }
+    function stardodge(){
+      ui.instructions.textContent='Esquiva meteoritos con A/D o las flechas. En móvil, arrastra la nave. Sobrevive el máximo tiempo.';
+      const [c,ctx]=canvas(560,325);let x=280,meteors=[],lastSpawn=0,dead=false,start=performance.now(),hits=0;const hint=toast('← → para moverte. ¡Esquiva!');
+      listen(c,'pointermove',e=>{if(e.buttons||e.pointerType==='touch'){const r=c.getBoundingClientRect();x=clamp((e.clientX-r.left)*c.width/r.width,19,541)}});listen(c,'pointerdown',e=>{const r=c.getBoundingClientRect();x=clamp((e.clientX-r.left)*c.width/r.width,19,541)});
+      let delta=0,last=performance.now();raf(t=>{if(dead)return;const dt=Math.min((t-last)/1000,.04);last=t;delta+=dt;// El teclado se maneja con las pulsaciones de abajo.
+        x=clamp(x+move*dt*255,18,542);if(t-lastSpawn>Math.max(200,660-delta*7)){meteors.push({x:20+pick(520),y:-20,r:12+pick(12),v:95+randSpeed()+delta*3});lastSpawn=t;}
+        background(ctx,560,325);for(const m of meteors){m.y+=m.v*dt;dot(ctx,m.x,m.y,m.r,'#f0839e');dot(ctx,m.x-4,m.y-5,m.r*.28,'#ffdca2');if(Math.abs(m.x-x)<m.r+13&&Math.abs(m.y-280)<m.r+14){dead=true;hint.textContent=`💥 Fin · ${Math.round(delta)} segundos · ${score} puntos`;}}
+        meteors=meteors.filter(m=>m.y<350);ctx.fillStyle='#6ff3db';ctx.beginPath();ctx.moveTo(x,249);ctx.lineTo(x-20,303);ctx.lineTo(x,292);ctx.lineTo(x+20,303);ctx.closePath();ctx.fill();setScore(Math.floor(delta*7));});
+      function randSpeed(){return pick(80)}let move=0;keyboard(k=>{if(k==='ArrowLeft'||k==='a')move=-1;if(k==='ArrowRight'||k==='d')move=1;});listen(document,'keyup',e=>{if(['a','d','ArrowLeft','ArrowRight'].includes(e.key))move=0});
+      buttons([['◀',()=>{x=clamp(x-35,18,542)}],['▶',()=>{x=clamp(x+35,18,542)}]]);
+    }
+    function jumpsprint(){
+      ui.instructions.textContent='Salta obstáculos con ESPACIO, flecha arriba o un toque. Cada tramo superado suma puntos.';
+      const [c,ctx]=canvas(560,310);let y=0,vy=0,obstacles=[],distance=0,speed=230,dead=false,last=performance.now(),spawn=0;
+      const info=toast('Pulsa ESPACIO para saltar.');function jump(){if(!dead&&y<.01)vy=420;}
+      keyboard(k=>{if([' ','ArrowUp','w'].includes(k))jump()});listen(c,'pointerdown',jump);button('⬆ SALTAR',jump,stage,'game-big-btn');
+      raf(t=>{if(dead)return;const dt=Math.min(.045,(t-last)/1000);last=t;distance+=speed*dt;speed=Math.min(450,230+distance/45);y=Math.max(0,y+vy*dt);vy-=1100*dt;if(y===0)vy=0;spawn-=dt;if(spawn<=0){obstacles.push({x:590,w:23+pick(18),h:28+pick(25)});spawn=.85+Math.random()*.65;}
+        background(ctx,560,310);rect(ctx,0,264,560,7,'#69cf9c');for(const o of obstacles){o.x-=speed*dt;rect(ctx,o.x,264-o.h,o.w,o.h,'#ed798a',5);if(o.x<107&&o.x+o.w>76&&y<o.h-7){dead=true;info.textContent=`🏁 Partida finalizada · ${score} puntos`}}obstacles=obstacles.filter(o=>o.x>-40);rect(ctx,77,220-y,29,44,'#76ddf0',7);dot(ctx,97,229-y,3,'#273f5b');if(!dead)setScore(Math.floor(distance/12));});
+    }
+    function mathflash(){
+      ui.instructions.textContent='Resuelve operaciones rápidas sin calculadora. Tienes 60 segundos.';
+      let seconds=60,correct=0,ended=false,solution=0;const info=toast('¡Resuelve tantos como puedas!');const question=document.createElement('h2');question.style.cssText='font-size:clamp(24px,6vw,44px);text-align:center;color:#bca4ff';stage.append(question);const grid=document.createElement('div');grid.className='game-board';grid.style.gridTemplateColumns='repeat(3,1fr)';grid.style.maxWidth='480px';stage.append(grid);
+      const opts=Array.from({length:3},()=>button('?',()=>{},grid,'tile'));
+      function next(){const a=1+pick(16+correct),b=1+pick(15+correct);const op=['+','−','×'][pick(3)];solution=op==='+'?a+b:op==='−'?a-b:a*b;question.textContent=`${a} ${op} ${b} = ?`;const answers=[solution,solution+(pick(7)+1)*(Math.random()<.5?-1:1),solution+(pick(7)+8)*(Math.random()<.5?-1:1)].sort(()=>Math.random()-.5);opts.forEach((bt,i)=>{bt.textContent=String(answers[i]);bt.onclick=()=>{if(ended)return;if(answers[i]===solution){correct++;setScore(score+10);info.textContent='✅ ¡Bien!'}else{info.textContent=`❌ La respuesta era ${solution}`;}next();};});}
+      next();every(()=>{seconds--;if(!ended)info.textContent=`⏳ ${seconds} segundos · ${correct} aciertos`;if(seconds<=0){ended=true;question.textContent='¡TIEMPO!';opts.forEach(b=>b.disabled=true);info.textContent=`Has conseguido ${score} puntos`; }},1000);
+    }
+    function taporbit(){
+      ui.instructions.textContent='Toca los objetivos luminosos en movimiento. 30 segundos para hacer tantos puntos como puedas.';
+      const [c,ctx]=canvas(560,320);let goal={x:280,y:155,vx:1.3,vy:.9},left=30,finished=false,last=performance.now();const hint=toast('Toca el objetivo brillante, no el fondo.');
+      const hit=(e)=>{if(finished)return;const r=c.getBoundingClientRect(),mx=(e.clientX-r.left)*c.width/r.width,my=(e.clientY-r.top)*c.height/r.height;if(Math.hypot(mx-goal.x,my-goal.y)<30){setScore(score+10);goal.x=40+pick(480);goal.y=45+pick(230);goal.vx=(Math.random()-.5)*5;goal.vy=(Math.random()-.5)*5;}};listen(c,'pointerdown',hit);raf(t=>{if(finished)return;const dt=Math.min(.05,(t-last)/1000);last=t;goal.x+=goal.vx*dt*65;goal.y+=goal.vy*dt*65;if(goal.x<30||goal.x>530)goal.vx*=-1;if(goal.y<30||goal.y>290)goal.vy*=-1;background(ctx,560,320);dot(ctx,goal.x,goal.y,28,'#bf9aff');dot(ctx,goal.x,goal.y,16,'#e4f9ff');dot(ctx,goal.x,goal.y,7,'#68f9ee');});every(()=>{left--;hint.textContent=`⏱ ${left}s · ${score} puntos`;if(left<=0){finished=true;hint.textContent=`🏆 Final · ${score} puntos`;}},1000);
+    }
+    const implementations={snake,pong,breakout,fly,'2048':fusion,memory,ttt,mole,reaction,clicker,maze,simon,penalty,connect4,lights,wordrush,stardodge,jumpsprint,mathflash,taporbit};
     return {start,destroy};
   }
   window.IvanguysGames={create};
