@@ -100,6 +100,17 @@
     shell.append(script);
   }
   const games=[
+    {id:'invaders',title:'Galactic Defenders',subtitle:'Defiende tu galaxia de invasores espaciales.',emoji:'👾',category:'arcade',tag:'ARCADE',bg:'linear-gradient(135deg,#232c6c,#6539aa)'},
+    {id:'asteroids',title:'Asteroid Pilot',subtitle:'Pilota tu nave a través de meteoritos.',emoji:'🛸',category:'arcade',tag:'ARCADE',bg:'linear-gradient(135deg,#1a4868,#43799b)'},
+    {id:'blockdrop',title:'Blocks Drop',subtitle:'Completa líneas con piezas que caen.',emoji:'🧱',category:'puzzle',tag:'PUZLE',bg:'linear-gradient(135deg,#45368f,#b75299)'},
+    {id:'sudoku4',title:'Sudoku 4×4',subtitle:'Un reto de números para pensar.',emoji:'🔟',category:'puzzle',tag:'PUZLE',bg:'linear-gradient(135deg,#424c9f,#538db1)'},
+    {id:'mines',title:'Campo Misterioso',subtitle:'Descubre el tablero sin pisar peligros.',emoji:'🚩',category:'puzzle',tag:'PUZLE',bg:'linear-gradient(135deg,#384d64,#6b9c81)'},
+    {id:'reversi',title:'Reversi Duel',subtitle:'Conquista el tablero contra una IA.',emoji:'⚪',category:'puzzle',tag:'PUZLE',bg:'linear-gradient(135deg,#13585b,#3b9a75)'},
+    {id:'kart',title:'Neon Kart Rush',subtitle:'Cambia de carril y supera obstáculos.',emoji:'🏎️',category:'arcade',tag:'ARCADE',bg:'linear-gradient(135deg,#203875,#b54786)'},
+    {id:'towers',title:'Torres de Hanói',subtitle:'Ordena los cuatro discos con ingenio.',emoji:'🏛️',category:'puzzle',tag:'PUZLE',bg:'linear-gradient(135deg,#544e89,#4b8b9a)'},
+    {id:'trivia',title:'Gamer Quiz',subtitle:'Diez preguntas para fans de videojuegos.',emoji:'❓',category:'puzzle',tag:'PUZLE',bg:'linear-gradient(135deg,#774a87,#954e8b)'},
+    {id:'treasure',title:'Treasure Maze',subtitle:'Encuentra los cinco tesoros ocultos.',emoji:'💎',category:'skill',tag:'HABILIDAD',bg:'linear-gradient(135deg,#315c85,#269f7b)'},
+
     {id:'snake',title:'Neon Snake',subtitle:'Come orbes, crece y evita chocar.',emoji:'🐍',category:'arcade',tag:'ARCADE',bg:'linear-gradient(135deg,#263b67,#28766e)'},
     {id:'pong',title:'Cosmic Pong',subtitle:'Defiende tu portería contra la IA.',emoji:'🏓',category:'arcade',tag:'ARCADE',bg:'linear-gradient(135deg,#384c94,#392969)'},
     {id:'breakout',title:'Breakout Nova',subtitle:'Rompe todos los bloques de colores.',emoji:'🧱',category:'arcade',tag:'ARCADE',bg:'linear-gradient(135deg,#71385e,#994974)'},

@@ -1,0 +1,22 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    function signed() { return request.auth != null; }
+    function mod() { return signed() && request.auth.uid == 'PON_AQUI_UID_MODERADOR'; }
+    match /avatars/{uid}/{name} {
+      allow read: if signed();
+      allow write: if signed() && request.auth.uid == uid
+        && request.resource != null && request.resource.size <= 1024 * 1024
+        && request.resource.contentType.matches('image/(jpeg|png|webp)')
+        && name.matches('avatar\\.(png|jpg|webp)');
+    }
+    match /videos/{uid}/{videoId}/clip {
+      allow read: if signed() && (request.auth.uid == uid || mod() ||
+        (firestore.exists(/databases/(default)/documents/videos/$(videoId)) &&
+        firestore.get(/databases/(default)/documents/videos/$(videoId)).data.status == 'approved'));
+      allow create: if signed() && request.auth.uid == uid && request.resource.size <= 35 * 1024 * 1024
+        && request.resource.contentType.matches('video/(mp4|webm)');
+      allow update, delete: if false;
+    }
+  }
+}
