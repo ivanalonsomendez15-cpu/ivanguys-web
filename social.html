@@ -15,4 +15,43 @@
 <div id="incomingCall" class="call-modal hidden" role="dialog" aria-label="Llamada entrante"><div class="panel"><h2 id="callerName">📞 Llamada entrante</h2><p>Una persona de tu lista de amigos quiere llamarte por voz.</p><div class="horizontal"><button id="acceptCall" class="primary">Aceptar</button><button id="rejectCall">Rechazar</button></div></div></div>
 <div id="activeCall" class="call-modal hidden" role="dialog" aria-label="Llamada de voz"><div class="panel"><h2>📞 Llamada de voz</h2><p id="callStatus">Conectando...</p><button id="hangup" class="danger">Finalizar llamada</button><audio id="remoteAudio" autoplay></audio></div></div>
 <footer>IVANGUYS CONNECT · Respeta a los demás y protege tu privacidad. <a href="index.html">Volver a inicio</a></footer>
-<script type="module" src="social.js"></script></body></html>
+
+<script>
+// Arranque inmediato. El registro sigue siendo interactivo aun cuando Firebase tarde o falle.
+(() => {
+  let mode = 'login';
+  const form = document.getElementById('authForm');
+  const modeButton = document.getElementById('authMode');
+  const notice = document.getElementById('authError');
+  window.IVANGUYS_AUTH_MODE = () => mode;
+  window.IVANGUYS_FIREBASE_READY = false;
+
+  modeButton.addEventListener('click', () => {
+    mode = mode === 'login' ? 'register' : 'login';
+    const registering = mode === 'register';
+    document.getElementById('authTitle').textContent = registering ? 'Crear una cuenta' : 'Iniciar sesión';
+    document.getElementById('authSubmit').textContent = registering ? 'Registrarme' : 'Entrar';
+    modeButton.textContent = registering ? '¿Ya tienes cuenta? Entra' : '¿No tienes cuenta? Regístrate';
+    document.getElementById('nicknameWrap').classList.toggle('hidden', !registering);
+    document.getElementById('nickname').required = registering;
+    document.getElementById('password').autocomplete = registering ? 'new-password' : 'current-password';
+    notice.textContent = window.IVANGUYS_FIREBASE_READY ? '' : 'Preparando la conexión con Firebase…';
+  });
+
+  form.addEventListener('submit', event => {
+    if (!window.IVANGUYS_FIREBASE_READY) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      if (!notice.textContent || notice.textContent.includes('Preparando')) {
+        notice.textContent = 'Firebase todavía no está disponible. No hemos enviado tus datos. Espera unos segundos y recarga la página si continúa igual.';
+      }
+    }
+  }, true);
+
+  window.addEventListener('error', event => {
+    if (window.IVANGUYS_FIREBASE_READY || !event.message) return;
+    notice.textContent = 'Error al cargar IVANGUYS CONNECT: ' + event.message;
+  });
+})();
+</script>
+<script type="module" src="social.js?v=registro-2"></script></body></html>

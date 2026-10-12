@@ -1,11 +1,24 @@
 import {firebaseConfig} from './firebase-config.js';
 const $ = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
+
+// La interfaz de acceso funciona aunque las librerías externas aún no se hayan descargado.
+// social.html instala los eventos de los botones antes de cargar este módulo.
+const reportFirebaseProblem = err => {
+  const reason = String(err?.message || err || 'error desconocido').slice(0, 250);
+  const info = 'No se ha podido conectar a Firebase. Comprueba tu conexión, desactiva temporalmente bloqueadores de scripts en esta web y recarga. Detalle: ' + reason;
+  if ($('#authError')) $('#authError').textContent = info;
+  if ($('#setupPanel')) {
+    $('#setupPanel').classList.remove('hidden');
+    $('#setupPanel').querySelector('p').textContent = info;
+  }
+  console.error('IVANGUYS CONNECT · Error al inicializar Firebase:', err);
+};
 if (!firebaseConfig.apiKey || firebaseConfig.apiKey.includes('REEMPLAZAR')) {
-  $('#setupPanel').classList.remove('hidden');
-  $('#authPanel').classList.add('hidden');
+  reportFirebaseProblem(new Error('Falta configurar firebase-config.js'));
 } else {
-  initializeConnect().catch(err=>{$('#setupPanel').classList.remove('hidden');$('#setupPanel').querySelector('p').textContent='No se pudo conectar a Firebase: '+(err.message||'error desconocido');$('#authPanel').classList.add('hidden');});
+  if ($('#authError')) $('#authError').textContent = 'Conectando a Firebase…';
+  initializeConnect().catch(reportFirebaseProblem);
 }
 async function initializeConnect(){
   const [{initializeApp},{getAuth,onAuthStateChanged,createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut,updateProfile},{getFirestore,collection,doc,setDoc,getDoc,getDocs,addDoc,query,where,limit,orderBy,onSnapshot,updateDoc,deleteDoc,serverTimestamp},{getStorage,ref,uploadBytes,getDownloadURL}] = await Promise.all([
@@ -15,7 +28,7 @@ async function initializeConnect(){
     import('https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js')
   ]);
   const firebaseApp=initializeApp(firebaseConfig), auth=getAuth(firebaseApp), db=getFirestore(firebaseApp), storage=getStorage(firebaseApp);
-  let me=null, myProfile=null, friendships=[],friendProfiles=new Map(),selected=null,stop=[],stopChat=()=>{},mode='login',pendingCall=null,call=null,presenceTimer;
+  let me=null, myProfile=null, friendships=[],friendProfiles=new Map(),selected=null,stop=[],stopChat=()=>{},pendingCall=null,call=null,presenceTimer;
   const idPair=(a,b)=>[a,b].sort().join('_');
   const show=(el,visible)=>{(typeof el==='string'?$(el):el)?.classList.toggle('hidden',!visible)};
   const alertText=(text)=>{$('#notice').textContent=text;};
@@ -30,9 +43,8 @@ async function initializeConnect(){
   function clearStops(){for(const f of stop.splice(0))try{f()}catch{}stopChat();stopChat=()=>{};if(presenceTimer)clearInterval(presenceTimer);endCall(false).catch(()=>{});selected=null;friendProfiles.clear();}
   function showTab(tab){$$('[data-panel]').forEach(el=>show(el,el.dataset.panel===tab));$$('[data-tab]').forEach(el=>el.classList.toggle('active',el.dataset.tab===tab));if(tab==='videos')loadVideos().catch(noticeError);}
   $$('[data-tab]').forEach(el=>el.addEventListener('click',()=>showTab(el.dataset.tab)));
-  $('#authMode').onclick=()=>{mode=mode==='login'?'register':'login';$('#authTitle').textContent=mode==='login'?'Iniciar sesión':'Crear una cuenta';$('#authSubmit').textContent=mode==='login'?'Entrar':'Registrarme';$('#authMode').textContent=mode==='login'?'¿No tienes cuenta? Regístrate':'¿Ya tienes cuenta? Entra';show('#nicknameWrap',mode==='register');$('#nickname').required=mode==='register';$('#password').autocomplete=mode==='login'?'current-password':'new-password';};
   $('#authForm').addEventListener('submit',async e=>{e.preventDefault();$('#authError').textContent='Comprobando...';const email=$('#email').value.trim(),password=$('#password').value;try{
-    if(mode==='register'){
+    if(window.IVANGUYS_AUTH_MODE?.()==='register'){
       const name=$('#nickname').value.trim();if(!nicknameOk(name))throw Error('El apodo debe tener 3–24 caracteres, letras, números, guiones o espacios.');
       const cred=await createUserWithEmailAndPassword(auth,email,password);
       await setDoc(doc(db,'users',cred.user.uid),{nickname:name,nicknameLower:name.toLocaleLowerCase('es'),avatarURL:'',isOnline:true,lastSeen:serverTimestamp(),createdAt:serverTimestamp()});
@@ -40,6 +52,8 @@ async function initializeConnect(){
     }else await signInWithEmailAndPassword(auth,email,password);
     $('#authError').textContent='';
   }catch(err){$('#authError').textContent=prettyError(err);}});
+  window.IVANGUYS_FIREBASE_READY = true;
+  if ($('#authError')?.textContent === 'Conectando a Firebase…') $('#authError').textContent = '';
   $('#signOut').onclick=async()=>{try{await updateDoc(doc(db,'users',me.uid),{isOnline:false,lastSeen:serverTimestamp()})}catch{}await signOut(auth)};
   onAuthStateChanged(auth,async u=>{clearStops();me=u;show('#authPanel',!u);show('#appPanel',!!u);$('#accountBadge').textContent=u?'Conectado':'No conectado';if(!u)return;
     try{const profileDoc=doc(db,'users',u.uid);let snap=await getDoc(profileDoc);if(!snap.exists()){
