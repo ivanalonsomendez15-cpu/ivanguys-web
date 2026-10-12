@@ -5,13 +5,12 @@ const $$ = s => [...document.querySelectorAll(s)];
 // La interfaz de acceso funciona aunque las librerías externas aún no se hayan descargado.
 // social.html instala los eventos de los botones antes de cargar este módulo.
 const reportFirebaseProblem = err => {
-  const reason = String(err?.message || err || 'error desconocido').slice(0, 250);
-  const info = 'No se ha podido conectar a Firebase. Comprueba tu conexión, desactiva temporalmente bloqueadores de scripts en esta web y recarga. Detalle: ' + reason;
+  const reason = String(err?.code || err?.message || err || 'error desconocido').slice(0, 300);
+  const info = 'No se pudo iniciar Firebase. Detalle: ' + reason + '. Prueba Recargar conexión o consulta el diagnóstico.';
   if ($('#authError')) $('#authError').textContent = info;
-  if ($('#setupPanel')) {
-    $('#setupPanel').classList.remove('hidden');
-    $('#setupPanel').querySelector('p').textContent = info;
-  }
+  if ($('#connectionStatus')) $('#connectionStatus').textContent = '● ERROR DE CONEXIÓN';
+  if ($('#reloadFirebase')) $('#reloadFirebase').hidden = false;
+  window.IVANGUYS_FIREBASE_READY = false;
   console.error('IVANGUYS CONNECT · Error al inicializar Firebase:', err);
 };
 if (!firebaseConfig.apiKey || firebaseConfig.apiKey.includes('REEMPLAZAR')) {
@@ -21,13 +20,35 @@ if (!firebaseConfig.apiKey || firebaseConfig.apiKey.includes('REEMPLAZAR')) {
   initializeConnect().catch(reportFirebaseProblem);
 }
 async function initializeConnect(){
-  const [{initializeApp},{getAuth,onAuthStateChanged,createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut,updateProfile},{getFirestore,collection,doc,setDoc,getDoc,getDocs,addDoc,query,where,limit,orderBy,onSnapshot,updateDoc,deleteDoc,serverTimestamp},{getStorage,ref,uploadBytes,getDownloadURL}] = await Promise.all([
-    import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js'),
-    import('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js'),
-    import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js'),
-    import('https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js')
-  ]);
-  const firebaseApp=initializeApp(firebaseConfig), auth=getAuth(firebaseApp), db=getFirestore(firebaseApp), storage=getStorage(firebaseApp);
+  // Authentication must not depend on Storage: some projects have not enabled file uploads.
+  // Try the Google CDN first. If its scripts are blocked, try the independent CDNJS mirror.
+  const sdkBases = [
+    'https://www.gstatic.com/firebasejs/10.12.2/',
+    'https://cdnjs.cloudflare.com/ajax/libs/firebase/10.12.2/'
+  ];
+  let sdk, selectedBase, lastError;
+  for (const base of sdkBases) {
+    try {
+      if ($('#connectionStatus')) $('#connectionStatus').textContent = '● CARGANDO FIREBASE: ' + new URL(base).hostname;
+      sdk = await Promise.all(['firebase-app.js','firebase-auth.js','firebase-firestore.js'].map(name=>import(base + name)));
+      selectedBase = base;
+      break;
+    } catch(err) {
+      lastError=err;
+      console.warn('IVANGUYS CONNECT: CDN no disponible',new URL(base).hostname,err);
+    }
+  }
+  if (!sdk) throw new Error('No se pudieron cargar los módulos de Firebase desde los dos servidores. ' + String(lastError?.message || 'Comprueba que el navegador permite scripts externos.'));
+  const [{initializeApp},{getAuth,onAuthStateChanged,createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut,updateProfile},{getFirestore,collection,doc,setDoc,getDoc,getDocs,addDoc,query,where,limit,orderBy,onSnapshot,updateDoc,deleteDoc,serverTimestamp}] = sdk;
+  if ($('#connectionStatus')) $('#connectionStatus').textContent = '● INICIALIZANDO AUTENTICACIÓN';
+  const firebaseApp=initializeApp(firebaseConfig), auth=getAuth(firebaseApp), db=getFirestore(firebaseApp);
+  let storagePromise;
+  async function getStorageTools(){
+    if (!storagePromise) storagePromise=import(selectedBase + 'firebase-storage.js').then(mod=>({
+      storage:mod.getStorage(firebaseApp),ref:mod.ref,uploadBytes:mod.uploadBytes,getDownloadURL:mod.getDownloadURL
+    })).catch(err=>{storagePromise=null;throw err});
+    return storagePromise;
+  }
   let me=null, myProfile=null, friendships=[],friendProfiles=new Map(),selected=null,stop=[],stopChat=()=>{},pendingCall=null,call=null,presenceTimer;
   const idPair=(a,b)=>[a,b].sort().join('_');
   const show=(el,visible)=>{(typeof el==='string'?$(el):el)?.classList.toggle('hidden',!visible)};
@@ -53,7 +74,9 @@ async function initializeConnect(){
     $('#authError').textContent='';
   }catch(err){$('#authError').textContent=prettyError(err);}});
   window.IVANGUYS_FIREBASE_READY = true;
-  if ($('#authError')?.textContent === 'Conectando a Firebase…') $('#authError').textContent = '';
+  if ($('#connectionStatus')) $('#connectionStatus').textContent = '● FIREBASE CONECTADO · FORMULARIO PREPARADO';
+  if ($('#reloadFirebase')) $('#reloadFirebase').hidden = true;
+  if ($('#authError')) $('#authError').textContent = '';
   $('#signOut').onclick=async()=>{try{await updateDoc(doc(db,'users',me.uid),{isOnline:false,lastSeen:serverTimestamp()})}catch{}await signOut(auth)};
   onAuthStateChanged(auth,async u=>{clearStops();me=u;show('#authPanel',!u);show('#appPanel',!!u);$('#accountBadge').textContent=u?'Conectado':'No conectado';if(!u)return;
     try{const profileDoc=doc(db,'users',u.uid);let snap=await getDoc(profileDoc);if(!snap.exists()){
@@ -75,7 +98,7 @@ async function initializeConnect(){
   function renderProfile(){if(!myProfile)return;$('#myAvatar').src=avatar(myProfile);$('#myName').textContent=myProfile.nickname;$('#myCode').textContent='Código de jugador: '+me.uid.slice(0,8);$('#editNickname').value=myProfile.nickname;$('#accountBadge').textContent='● '+myProfile.nickname;}
   $('#profileForm').addEventListener('submit',async e=>{e.preventDefault();if(!me)return;try{
     const name=$('#editNickname').value.trim();if(!nicknameOk(name))throw Error('Apodo no válido.');const f=$('#avatarUpload').files[0];let avatarURL=myProfile.avatarURL||'';
-    if(f){if(!['image/jpeg','image/png','image/webp'].includes(f.type)||f.size>1024*1024)throw Error('La imagen debe ser JPG, PNG o WEBP y medir menos de 1 MB.');const fileRef=ref(storage,'avatars/'+me.uid+'/avatar.'+(f.type==='image/png'?'png':f.type==='image/webp'?'webp':'jpg'));await uploadBytes(fileRef,f,{contentType:f.type});avatarURL=await getDownloadURL(fileRef);}
+    if(f){if(!['image/jpeg','image/png','image/webp'].includes(f.type)||f.size>1024*1024)throw Error('La imagen debe ser JPG, PNG o WEBP y medir menos de 1 MB.');const {storage,ref,uploadBytes,getDownloadURL}=await getStorageTools();const fileRef=ref(storage,'avatars/'+me.uid+'/avatar.'+(f.type==='image/png'?'png':f.type==='image/webp'?'webp':'jpg'));await uploadBytes(fileRef,f,{contentType:f.type});avatarURL=await getDownloadURL(fileRef);}
     await updateDoc(doc(db,'users',me.uid),{nickname:name,nicknameLower:name.toLocaleLowerCase('es'),avatarURL});await updateProfile(auth.currentUser,{displayName:name});myProfile={...myProfile,nickname:name,nicknameLower:name.toLocaleLowerCase('es'),avatarURL};renderProfile();alertText('✅ Perfil guardado.');
   }catch(err){noticeError(err)}});
   function acceptedFriends(){return friendships.filter(f=>f.status==='accepted')}
@@ -93,7 +116,7 @@ async function initializeConnect(){
   $('#searchForm').addEventListener('submit',async e=>{e.preventDefault();if(!me)return;const name=$('#searchName').value.trim().toLocaleLowerCase('es');const el=$('#searchResults');el.textContent='Buscando...';try{
     if(name.length<3)throw Error('Escribe un apodo de al menos tres caracteres.');const docs=await getDocs(query(collection(db,'users'),where('nicknameLower','==',name),limit(10)));el.replaceChildren();if(docs.empty)el.textContent='No se encontraron usuarios con ese apodo.';
     for(const d of docs.docs){if(d.id===me.uid)continue;const other={id:d.id,...d.data()};if(await isBlocked(other.id))continue;friendProfiles.set(d.id,other);const id=idPair(me.uid,other.id);const existing=friendships.find(f=>f.id===id);
-      el.append(userRow(other,'Código: '+d.id.slice(0,8),existing?[[existing.status==='accepted'?'Ya sois amigos':'Solicitud pendiente',()=>{}]]:[['Solicitar amistad',async()=>{await setDoc(roomRef(id),{members:[me.uid,other.id].sort(),requestedBy:me.uid,status:'pending',createdAt:serverTimestamp()});alertText('Solicitud enviada.')}}]));}
+      el.append(userRow(other,'Código: '+d.id.slice(0,8),existing?[[existing.status==='accepted'?'Ya sois amigos':'Solicitud pendiente',()=>{}]]:[['Solicitar amistad',async()=>{await setDoc(roomRef(id),{members:[me.uid,other.id].sort(),requestedBy:me.uid,status:'pending',createdAt:serverTimestamp()});alertText('Solicitud enviada.')}]]));}
   }catch(err){noticeError(err);el.replaceChildren()}});
   async function isBlocked(uid){if(!me)return true;const [a,b]=await Promise.all([getDoc(doc(db,'blocks',me.uid,'targets',uid)),getDoc(doc(db,'blocks',uid,'targets',me.uid))]);return a.exists()||b.exists();}
   async function blockUser(uid){if(!confirm('¿Bloquear a este jugador? No podréis hablar ni llamaros.'))return;await setDoc(doc(db,'blocks',me.uid,'targets',uid),{createdAt:serverTimestamp()});const f=friendships.find(fr=>fr.id===idPair(me.uid,uid));if(f)await deleteDoc(roomRef(f.id));selected=null;stopChat();$('#chatWith').textContent='Amigo bloqueado';$('#messages').replaceChildren();$('#messageInput').disabled=true;$('#messageForm button').disabled=true;$('#callFriend').disabled=true;alertText('Usuario bloqueado.');}
@@ -120,7 +143,7 @@ async function initializeConnect(){
   $('#videoForm').addEventListener('submit',async e=>{e.preventDefault();if(!me)return;const file=$('#videoUpload').files[0],title=$('#videoTitle').value.trim(),description=$('#videoDesc').value.trim();const output=$('#videoMessage');try{
     if(title.length<3||title.length>90)throw Error('El título debe tener entre 3 y 90 caracteres.');
     if(!file||!['video/mp4','video/webm'].includes(file.type)||file.size>35*1024*1024)throw Error('Solo vídeos MP4/WEBM de hasta 35 MB.');
-    output.textContent='Subiendo archivo, puede tardar...';const videoId=crypto.randomUUID();const fileRef=ref(storage,`videos/${me.uid}/${videoId}/clip`);await uploadBytes(fileRef,file,{contentType:file.type});const videoURL=await getDownloadURL(fileRef);
+    output.textContent='Subiendo archivo, puede tardar...';const {storage,ref,uploadBytes,getDownloadURL}=await getStorageTools();const videoId=crypto.randomUUID();const fileRef=ref(storage,`videos/${me.uid}/${videoId}/clip`);await uploadBytes(fileRef,file,{contentType:file.type});const videoURL=await getDownloadURL(fileRef);
     await setDoc(doc(db,'videos',videoId),{ownerId:me.uid,title,description,status:'pending',videoURL,path:fileRef.fullPath,createdAt:serverTimestamp()});output.textContent='✅ Subido. Aparecerá públicamente cuando lo apruebe el moderador.';$('#videoForm').reset();await loadVideos();
   }catch(err){output.textContent=prettyError(err)}});
   // Llamadas de voz: WebRTC. La señalización se guarda en Firestore. Algunas redes necesitan un TURN propio.

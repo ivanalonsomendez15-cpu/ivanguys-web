@@ -2,7 +2,7 @@
 <header class="top"><a class="brand" href="index.html">✦ IVANGUYS <b>CONNECT</b></a><nav><a href="index.html">Inicio</a><a href="hub.html">HUB</a><a href="index.html#arcade">ARCADE</a></nav><div id="accountBadge">No conectado</div></header>
 <main>
 <div id="setupPanel" class="setup hidden"><h1>🔧 Activa IVANGUYS CONNECT</h1><p>Las cuentas y conversaciones reales necesitan Firebase. El administrador debe configurar el proyecto antes de aceptar registros. El servicio no está conectado todavía.</p><a href="CONFIGURAR-CONNECT.md" target="_blank" rel="noopener noreferrer">Leer la guía de configuración ↗</a></div>
-<section id="authPanel" class="auth panel"><div><div class="kicker">IVANGUYS CONNECT</div><h1>Tu universo gamer, con amigos.</h1><p>Crea tu cuenta para enviar solicitudes de amistad, hablar en privado, compartir vídeos y llamar a amigos aceptados. Nunca compartas tu contraseña ni datos personales.</p><div class="safe">🛡️ Solo contactos aceptados · Bloquear y denunciar · No compartas datos privados · Si eres menor, consulta las condiciones del servicio con un adulto</div></div><form id="authForm" autocomplete="on"><h2 id="authTitle">Iniciar sesión</h2><label>Correo electrónico<input id="email" type="email" required maxlength="120" autocomplete="email"></label><label>Contraseña<input id="password" type="password" required minlength="8" maxlength="120" autocomplete="current-password"></label><label id="nicknameWrap" class="hidden">Apodo público<input id="nickname" maxlength="24" minlength="3" placeholder="Mi apodo gamer" autocomplete="nickname"></label><button class="primary" type="submit" id="authSubmit">Entrar</button><button class="minor" type="button" id="authMode">¿No tienes cuenta? Regístrate</button><p id="authError" class="feedback" role="alert"></p></form></section>
+<section id="authPanel" class="auth panel"><div><div class="kicker">IVANGUYS CONNECT</div><h1>Tu universo gamer, con amigos.</h1><p>Crea tu cuenta para enviar solicitudes de amistad, hablar en privado, compartir vídeos y llamar a amigos aceptados. Nunca compartas tu contraseña ni datos personales.</p><div class="safe">🛡️ Solo contactos aceptados · Bloquear y denunciar · No compartas datos privados · Si eres menor, consulta las condiciones del servicio con un adulto</div></div><form id="authForm" autocomplete="on"><h2 id="authTitle">Iniciar sesión</h2><label>Correo electrónico<input id="email" type="email" required maxlength="120" autocomplete="email"></label><label>Contraseña<input id="password" type="password" required minlength="8" maxlength="120" autocomplete="current-password"></label><label id="nicknameWrap" class="hidden">Apodo público<input id="nickname" maxlength="24" minlength="3" placeholder="Mi apodo gamer" autocomplete="nickname"></label><button class="primary" type="submit" id="authSubmit">Entrar</button><button class="minor" type="button" id="authMode">¿No tienes cuenta? Regístrate</button><p id="connectionStatus" class="feedback" role="status" aria-live="polite" style="color:#6be9cb;font-weight:700">● PREPARANDO CONEXIÓN</p><p id="authError" class="feedback" role="alert"></p><button type="button" id="reloadFirebase" class="minor" hidden>↻ Recargar conexión</button><details style="margin-top:12px;color:#aab9d9;font-size:13px"><summary style="cursor:pointer">Diagnóstico de conexión</summary><p id="diagnosticInfo" style="overflow-wrap:anywhere">Preparando comprobaciones…</p></details></form></section>
 <section id="appPanel" class="hidden"><div class="dashboard"><aside class="sidebar panel"><h2>✦ CONNECT</h2><button data-tab="profile" class="active">👤 Mi perfil</button><button data-tab="friends">👥 Amigos</button><button data-tab="chat">💬 Mensajes privados</button><button data-tab="videos">📹 Vídeos</button><button data-tab="requests">🔔 Solicitudes <span id="pendingCount"></span></button><hr><button id="signOut">Salir de mi cuenta</button><div class="safe small">Denuncia mensajes inapropiados y bloquea a quienes te molesten. No quedes con desconocidos.</div></aside>
 <div class="workspace">
 <div class="tab panel" data-panel="profile"><div class="heading"><h1>Mi perfil gamer</h1><span id="presenceMine" class="online">● Conectado</span></div><div class="profile"><img class="avatar" id="myAvatar" alt="Tu foto de perfil"><div><h2 id="myName">Jugador</h2><small id="myCode"></small><p>Tu correo solo se utiliza para iniciar sesión; no aparece en las búsquedas.</p></div></div><form id="profileForm"><label>Apodo (3–24 caracteres)<input id="editNickname" minlength="3" maxlength="24" required></label><label>Cambiar foto (JPG, PNG o WEBP, máximo 1 MB)<input id="avatarUpload" type="file" accept="image/jpeg,image/png,image/webp"></label><button class="primary">Guardar perfil</button></form></div>
@@ -25,6 +25,33 @@
   const notice = document.getElementById('authError');
   window.IVANGUYS_AUTH_MODE = () => mode;
   window.IVANGUYS_FIREBASE_READY = false;
+  const status = document.getElementById('connectionStatus');
+  const diag = document.getElementById('diagnosticInfo');
+  const reload = document.getElementById('reloadFirebase');
+  const start = Date.now();
+  const readyText = () => window.IVANGUYS_FIREBASE_READY ? 'Conectado' : 'No conectado';
+  const check = () => {
+    diag.textContent = 'Estado: ' + readyText() + '. Página: ' + location.hostname +
+      '. Tiempo de espera: ' + Math.floor((Date.now()-start)/1000) +
+      ' s. Código JS: registro-3. Configuración Firebase: revisa consola si continúa el error.';
+  };
+  document.querySelector('details')?.addEventListener('toggle',check);
+  reload.addEventListener('click', () => location.reload());
+  setTimeout(() => {
+    if (window.IVANGUYS_FIREBASE_READY) return;
+    if (!notice.textContent || notice.textContent.includes('Conectando'))
+      notice.textContent = 'El SDK de Firebase está tardando demasiado. Abre Diagnóstico o pulsa Recargar conexión.';
+    status.textContent = '● ESPERANDO RESPUESTA DE FIREBASE';
+    reload.hidden = false;
+    check();
+  }, 12000);
+  window.addEventListener('unhandledrejection', event => {
+    if (!window.IVANGUYS_FIREBASE_READY) {
+      notice.textContent = 'Error al iniciar Firebase: ' + String(event.reason?.message || event.reason || 'Error de red').slice(0,240);
+      reload.hidden = false;
+      check();
+    }
+  });
 
   modeButton.addEventListener('click', () => {
     mode = mode === 'login' ? 'register' : 'login';
@@ -35,7 +62,8 @@
     document.getElementById('nicknameWrap').classList.toggle('hidden', !registering);
     document.getElementById('nickname').required = registering;
     document.getElementById('password').autocomplete = registering ? 'new-password' : 'current-password';
-    notice.textContent = window.IVANGUYS_FIREBASE_READY ? '' : 'Preparando la conexión con Firebase…';
+    if (window.IVANGUYS_FIREBASE_READY) notice.textContent = '';
+    else if (!notice.textContent || notice.textContent.includes('Preparando')) notice.textContent = 'Preparando la conexión con Firebase…';
   });
 
   form.addEventListener('submit', event => {
@@ -43,8 +71,9 @@
       event.preventDefault();
       event.stopImmediatePropagation();
       if (!notice.textContent || notice.textContent.includes('Preparando')) {
-        notice.textContent = 'Firebase todavía no está disponible. No hemos enviado tus datos. Espera unos segundos y recarga la página si continúa igual.';
+        notice.textContent = 'Firebase todavía está cargando. No se ha enviado ningún dato. Si persiste, abre Diagnóstico.';
       }
+      check();
     }
   }, true);
 
@@ -54,4 +83,4 @@
   });
 })();
 </script>
-<script type="module" src="social.js?v=registro-2"></script></body></html>
+<script type="module" src="social.js?v=registro-3" onerror="document.getElementById('authError').textContent='No se pudo cargar social.js desde GitHub Pages. Pulsa Ctrl+F5.';document.getElementById('reloadFirebase').hidden=false;"></script></body></html>
