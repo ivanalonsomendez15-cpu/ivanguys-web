@@ -1,10 +1,18 @@
 {
   "status": "ok",
-  "lastUpdated": "2026-10-20T21:33:11.890066+00:00",
+  "lastUpdated": "2026-10-21T00:06:52.515168+00:00",
   "channelTitle": "ivanguys",
   "subscribers": 675,
-  "videoCount": 175,
+  "videoCount": 176,
   "videos": [
+    {
+      "id": "tAgrjRB3zxU",
+      "title": "FALTAN 15 DÍAS... 💚🗡️ | ZELDA OCARINA OF TIME REMAKE",
+      "url": "https://www.youtube.com/watch?v=tAgrjRB3zxU",
+      "thumbnail": "https://i1.ytimg.com/vi/tAgrjRB3zxU/hqdefault.jpg",
+      "published": "2026-10-20T22:00:23+00:00",
+      "type": "video"
+    },
     {
       "id": "KLCsVixNpKY",
       "title": "también te pasa🤔",
@@ -115,14 +123,6 @@
       "url": "https://www.youtube.com/watch?v=2A8tQZiq1pI",
       "thumbnail": "https://i3.ytimg.com/vi/2A8tQZiq1pI/hqdefault.jpg",
       "published": "2026-10-05T22:00:04+00:00",
-      "type": "video"
-    },
-    {
-      "id": "KAkrmXEGCGk",
-      "title": "XD",
-      "url": "https://www.youtube.com/watch?v=KAkrmXEGCGk",
-      "thumbnail": "https://i4.ytimg.com/vi/KAkrmXEGCGk/hqdefault.jpg",
-      "published": "2026-10-05T14:00:35+00:00",
       "type": "video"
     }
   ]
