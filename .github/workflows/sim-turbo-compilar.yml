@@ -46,6 +46,20 @@ jobs:
           $data=[Convert]::FromBase64String((Get-Content -Raw 'SIM_TURBO_BUILD/Windows_source.tar.xz.b64').Trim())
           [IO.File]::WriteAllBytes((Join-Path $pwd 'Windows_source.tar.xz'), $data)
           tar -xf Windows_source.tar.xz
+      - name: Corregir capas WinForms y compatibilidad TLS
+        shell: pwsh
+        run: |
+          $path='PC_Windows/SIM_TURBO_PC.cs'
+          $cs=[IO.File]::ReadAllText((Join-Path $pwd $path))
+          $anchor='            Append("No se necesitan permisos de administrador. No se comparte la SIM.");'
+          if(-not $cs.Contains($anchor)) { throw 'No se encontró ancla UI' }
+          $fixed=$anchor + [Environment]::NewLine + '            foreach (Panel card in Controls.OfType<Panel>()) card.SendToBack();'
+          $cs=$cs.Replace($anchor,$fixed)
+          $tlsAnchor='string url="https://speed.cloudflare.com/'
+          if(-not $cs.Contains($tlsAnchor)) { throw 'No se encontró punto TLS' }
+          $cs=$cs.Replace($tlsAnchor,'ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12;' + [Environment]::NewLine + '                ' + $tlsAnchor)
+          $cs=$cs.Replace('ULTRA   V3.0','ULTRA   V3.2')
+          [IO.File]::WriteAllText((Join-Path $pwd $path),$cs,[Text.UTF8Encoding]::new($true))
       - name: Compilar ejecutable real
         shell: pwsh
         run: |
@@ -59,7 +73,7 @@ jobs:
           [Setup]
           AppId={{6D9797F5-2438-49E6-B5E7-0C26FE91B88A}
           AppName=SIM TURBO PC ULTRA
-          AppVersion=3.1
+          AppVersion=3.2
           DefaultDirName={localappdata}\Programs\SIM TURBO PC ULTRA
           PrivilegesRequired=lowest
           OutputDir=release
