@@ -57,6 +57,8 @@ namespace SimTurboPC {
     int cycle=0;
     string selectedProvider="AUTO";
     double lastPing=-1,lastDnsMs=-1;
+    DateTime lastRemoteProbe=DateTime.MinValue;
+    const string RemoteHealth="https://aether-remote-health-node-cbsx2i.v2.appdeploy.ai/api/health";
     const int MaxSampleLines=3000;
     readonly string[] providerNames={"Cloudflare","Google"};
     readonly string[] providerUrls={
@@ -89,8 +91,9 @@ namespace SimTurboPC {
       run=ActionButton("EJECUTAR MÓDULO SELECCIONADO",407,247,650,50,()=>Execute());
       serverStatus=TextLabel(this,"Diagnóstico DNS: sin evaluar",407,315,650,53,11,true,sea);
       chosen=TextLabel(this,"DNS seleccionado para el laboratorio: "+selectedProvider,407,372,650,55,10,false,Color.White);
-      ActionButton("COMPARAR DNS REALES",407,445,313,51,()=>StartWork(()=>CompareDns(true)));
-      ActionButton("ABRIR DNS DE WINDOWS",734,445,323,51,()=>Open("ms-settings:network-wifi"));
+      ActionButton("COMPARAR DNS",407,445,202,51,()=>StartWork(()=>CompareDns(true)));
+      ActionButton("PROBAR NODO ONLINE",620,445,204,51,()=>StartWork(ProbeRemote));
+      ActionButton("AJUSTES DNS WINDOWS",836,445,221,51,()=>Open("ms-settings:network-wifi"));
       pilotDiagnostics=new CheckBox{Text="Autopiloto: medir ping y guardar historial",Checked=true,
         Location=new Point(24,524),Size=new Size(393,30),ForeColor=Color.White};
       pilotDns=new CheckBox{Text="Autopiloto: comparar DNS cada ~3 min",Checked=false,
@@ -108,7 +111,7 @@ namespace SimTurboPC {
       menu.SelectedIndex=0;
       timer.Interval=10000;
       timer.Tick+=(s,e)=>{if(pilot&&!running) AutoCycle();};
-      Log("La V10 no puede crear un servidor de Internet sin infraestructura online. Compara dos resolutores DoH reales.");
+      Log("Nodo de diagnóstico HTTPS online disponible; no es un acelerador ni un DNS propio.");
       Log("El DNS elegido solo afecta a futuras pruebas de este laboratorio, no cambia DNS Windows.");
     }
     static Label TextLabel(Control c,string text,int x,int y,int w,int h,float size,bool bold,Color color){
@@ -228,7 +231,13 @@ namespace SimTurboPC {
       Log("PING "+(ext<0?"sin respuesta":ext.ToString("0")+" ms")+
         " · router "+(local<0?"sin respuesta":local.ToString("0")+" ms")+
         " · CPU "+(cp<0?"sin dato":cp.ToString("0.0")+"%"));
-      if(ext>120)Log("ALERTA: latencia alta en esta muestra; examinar carga y router, sin tocar sistema.");
+      if(ext>120) {
+        Log("ALERTA: latencia alta. No cambiar DNS ni rutas sin medición.");
+        if(DateTime.UtcNow-lastRemoteProbe>TimeSpan.FromMinutes(3)){
+          lastRemoteProbe=DateTime.UtcNow;
+          ProbeRemote();
+        }
+      }
     }
     void AutoCycle(){
       cycle++;
@@ -247,6 +256,31 @@ namespace SimTurboPC {
       Log("Autopiloto iniciado; solamente supervisa y compara.");
       AutoCycle();
     }
+
+    void ProbeRemote(){
+      // Stateless HTTPS diagnostics: no VPN/DNS relay and no Internet route changes.
+      try {
+        ServicePointManager.SecurityProtocol|=(SecurityProtocolType)3072;
+        var req=(HttpWebRequest)WebRequest.Create(RemoteHealth);
+        req.Method="GET";req.Timeout=6000;req.ReadWriteTimeout=6000;
+        req.AllowAutoRedirect=false;req.Accept="application/json";
+        var sw=Stopwatch.StartNew();
+        using(var res=(HttpWebResponse)req.GetResponse()){
+          if(res.StatusCode!=HttpStatusCode.OK)throw new IOException("Nodo HTTP "+(int)res.StatusCode);
+          using(var reader=new StreamReader(res.GetResponseStream())){
+            string result=reader.ReadToEnd();
+            sw.Stop();
+            if(!result.Contains("\"online\":true") && !Regex.IsMatch(result,@"[""']online[""']\s*:\s*true"))
+              throw new IOException("Respuesta de estado no válida");
+            Log("AETHER ONLINE: nodo responde; petición HTTPS "+sw.ElapsedMilliseconds+
+                " ms. Solo diagnóstico, sin cambios en Internet.");
+          }
+        }
+      }catch(Exception ex){
+        Log("AETHER ONLINE: nodo no disponible ("+ex.Message+"). No se cambia la conexión.");
+      }
+    }
+
     struct DoHResult {public string Provider;public double Ms;public int Passes;public int Total;}
     DoHResult ProbeDns(int index,int tests){
       var watch=new Stopwatch();int passes=0;double total=0;
