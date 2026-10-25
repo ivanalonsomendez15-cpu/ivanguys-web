@@ -43,6 +43,7 @@ jobs:
                 'Android/app/src/main/java/com/simturbopc/ultra/GameProfiles.java',
                 'Android/app/src/main/java/com/simturbopc/ultra/PcDiscovery.java',
                 'CHANGELOG_V12.md',
+                'SHA256SUMS.txt',
                 'compilar_windows.ps1',
                 'LEEME.txt'
               ]
@@ -51,6 +52,8 @@ jobs:
               assert not any(f.endswith(('.exe','.apk')) for f in paths)
           print('Proyecto fuente validado; archivos:',len(paths),'bytes:',p.stat().st_size)
           PY
+      - name: Registrar hash SHA256 del ZIP V12
+        run: sha256sum EXPORTS/SIM_TURBO_PC_ULTRA_V12_PROYECTO_COMPLETO.zip
       - uses: actions/upload-artifact@v4
         with:
           name: SIM_TURBO_PC_ULTRA_V12_PROYECTO_COMPLETO_FUENTES
