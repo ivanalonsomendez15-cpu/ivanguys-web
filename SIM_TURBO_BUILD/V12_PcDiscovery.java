@@ -15,6 +15,43 @@ import java.util.Locale;
 /** Local, user-triggered UDP discovery. No token is broadcast. */
 public final class PcDiscovery {
     private PcDiscovery(){}
+    public static String capabilities(Context context,String host,String code) throws IOException {
+        if(code==null||!code.matches("[0-9A-Fa-f]{10}"))
+            throw new IOException("Introduce primero el código de emparejamiento");
+        InetAddress ip=InetAddress.getByName(host);
+        if(!ip.isSiteLocalAddress())throw new IOException("PC fuera de la LAN");
+        ConnectivityManager cm=(ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        Network wifi=null;
+        if(cm!=null)for(Network n:cm.getAllNetworks()){
+            NetworkCapabilities cap=cm.getNetworkCapabilities(n);
+            if(cap!=null&&cap.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)){wifi=n;break;}
+        }
+        if(wifi==null)throw new IOException("Conecta el móvil por Wi-Fi");
+        byte[] nonceBytes=new byte[8];
+        new SecureRandom().nextBytes(nonceBytes);
+        StringBuilder nonce=new StringBuilder();
+        for(byte b:nonceBytes)nonce.append(String.format(Locale.ROOT,"%02X",b&255));
+        String request="STPC-CAPS|"+code.toUpperCase(Locale.ROOT)+"|"+nonce;
+        try(DatagramSocket socket=new DatagramSocket()){
+            wifi.bindSocket(socket);
+            socket.setSoTimeout(2200);
+            byte[] bytes=request.getBytes(StandardCharsets.US_ASCII);
+            socket.send(new DatagramPacket(bytes,bytes.length,ip,45728));
+            byte[] buffer=new byte[400];
+            DatagramPacket response=new DatagramPacket(buffer,buffer.length);
+            socket.receive(response);
+            if(!response.getAddress().equals(ip))throw new IOException("Respuesta de otro equipo");
+            String body=new String(buffer,0,response.getLength(),StandardCharsets.US_ASCII);
+            String prefix="STPC-CAPS-OK|"+nonce+"|";
+            if(!body.startsWith(prefix))throw new IOException("Respuesta de emparejamiento no válida");
+            String[] fields=body.substring(prefix.length()).split("\\|",3);
+            if(fields.length!=3)throw new IOException("Respuesta incompleta");
+            return "CPU lógica: "+fields[0]+" · RAM: "+fields[1]+" · GPU: "+fields[2];
+        }catch(java.net.SocketTimeoutException ex){
+            throw new IOException("PC no respondió: abre el receptor y comprueba el código");
+        }
+    }
+
     public static String find(Context context) throws IOException {
         ConnectivityManager cm=(ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
         Network wifi=null;
