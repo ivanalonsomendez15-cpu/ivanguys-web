@@ -23,7 +23,8 @@ namespace SimTurboPC {
         readonly ComboBox category;
         readonly NumericUpDown wifiSpeed,simSpeed,latencyAlert;
         readonly Label caption;
-        readonly CheckBox localOnly,logToFile;
+        readonly CheckBox localOnly,logToFile,autoExtra;
+        volatile bool autoExtraOn=false;
         readonly System.Windows.Forms.Timer live=new System.Windows.Forms.Timer();
         readonly string[] groups={
             "A · Wi-Fi y Ethernet","B · Wi-Fi + SIM","C · Latencia y estabilidad","D · Transferencias",
@@ -64,7 +65,7 @@ namespace SimTurboPC {
             "Modificar tamaño de los fragmentos según el archivo (prototipo de heurística por tamaño).",
             "Requiere telemetría fiable de batería Android y consentimiento explícito.",
             "Requiere telemetría térmica fiable del móvil.",
-            "Requiere contador verificable de bytes de SIM y bloqueo por presupuesto.",
+            "Permite fijar un tope por descarga en AETHER-LINK; el contador PC es aproximado y no limita el consumo total de Android.",
             "Requiere servidor remoto y túnel cifrado; no existe aún para todo Windows.",
             "Fallback por ruta principal cuando la SIM falla durante descargas compatibles.",
             "Comparación de rutas por pruebas repetidas con el mismo servidor y muestras.",
@@ -129,8 +130,8 @@ namespace SimTurboPC {
             "Guardar resultados de distintas versiones, con unidad y condiciones.",
             "Guardar un diario de hipótesis/experimentos y resultados reproducibles."
         };
-        readonly HashSet<int> working=new HashSet<int>{1,2,3,4,5,6,7,9,10,13,14,19,21,22,25,26,27,28,29,30,31,33,36,39,40,42,45,47,48,49,50,51,53,54,55,56,57,59,60,61,62,63,64,69,70,71,72,73,75,78,79,80};
-        readonly HashSet<int> prototype=new HashSet<int>{8,17,20,23,24,37,41,43,44,46,52,58,65,68,74,76,77};
+        readonly HashSet<int> working=new HashSet<int>{1,2,3,4,5,6,7,9,10,13,14,17,19,21,22,25,26,27,28,29,30,31,33,36,39,40,42,45,47,48,49,50,51,53,54,55,56,57,59,60,61,62,63,64,69,70,71,72,73,75,78,79,80};
+        readonly HashSet<int> prototype=new HashSet<int>{8,20,23,24,37,41,43,44,46,52,58,65,68,74,76,77};
         long sampleIndex=0;
         bool pilot=false;
         int pingFailures=0;
@@ -154,6 +155,9 @@ namespace SimTurboPC {
             Controls.Add(localOnly);
             logToFile=new CheckBox{Text="GUARDAR AUDITORÍA",Location=new Point(647,94),Size=new Size(228,30),Checked=false,ForeColor=Color.White};
             Controls.Add(logToFile);
+            autoExtra=new CheckBox{Text="AUTO DIAGNÓSTICOS",Location=new Point(885,94),Size=new Size(207,30),Checked=false,ForeColor=Color.White};
+            autoExtra.CheckedChanged+=(s,e)=>autoExtraOn=autoExtra.Checked;
+            Controls.Add(autoExtra);
             catalog=new ListView{Location=new Point(22,137),Size=new Size(512,429),View=View.Details,
                 FullRowSelect=true,MultiSelect=false,GridLines=false,BackColor=panel,ForeColor=Color.White,
                 HideSelection=false};
@@ -393,6 +397,35 @@ namespace SimTurboPC {
             if(wifi>0&&sim>0)Log("Relación SIM/Wi-Fi: "+(sim/wifi).ToString("0.00")+
                 ". Una SIM lenta no debería recibir fragmentos críticos en el motor adaptativo.");
         }
+        void ManualAB(bool fps){
+            using(var frm=new Form()){
+                frm.Text=fps?"FPS: COMPARACIÓN A/B":"RED: COMPARACIÓN A/B";
+                frm.Size=new Size(465,310);frm.StartPosition=FormStartPosition.CenterParent;
+                frm.FormBorderStyle=FormBorderStyle.FixedDialog;frm.MaximizeBox=false;frm.MinimizeBox=false;
+                frm.BackColor=panel;frm.ForeColor=Color.White;
+                var text=new Label{Text=fps?"Introduce FPS reales en el MISMO juego y escena.":"Introduce Mb/s medidos en condiciones comparables.",
+                    Location=new Point(20,15),Size=new Size(410,45)};frm.Controls.Add(text);
+                frm.Controls.Add(new Label{Text="Antes:",Location=new Point(26,78),Size=new Size(120,26)});
+                frm.Controls.Add(new Label{Text="Después:",Location=new Point(238,78),Size=new Size(125,26)});
+                var before=new NumericUpDown{Location=new Point(26,109),Size=new Size(178,35),Maximum=3000,DecimalPlaces=2,Value=fps?60:36};
+                var after=new NumericUpDown{Location=new Point(235,109),Size=new Size(178,35),Maximum=3000,DecimalPlaces=2,Value=fps?65:36};
+                frm.Controls.Add(before);frm.Controls.Add(after);
+                var accept=new Button{Text="GUARDAR COMPARACIÓN",Location=new Point(25,173),Size=new Size(384,45),
+                    DialogResult=DialogResult.OK,BackColor=Color.FromArgb(12,100,98),ForeColor=Color.White,FlatStyle=FlatStyle.Flat};
+                frm.Controls.Add(accept);frm.AcceptButton=accept;
+                if(frm.ShowDialog(this)!=DialogResult.OK)return;
+                double old=(double)before.Value,now=(double)after.Value;
+                if(old<=0){Log("A/B: referencia anterior debe ser positiva.");return;}
+                double delta=(now/old-1)*100;
+                Log("A/B "+(fps?"FPS":"Mbps")+": antes="+old.ToString("0.00")+
+                    " después="+now.ToString("0.00")+" cambio="+delta.ToString("+0.0;-0.0;0.0")+"%.");
+                string csv=Path.Combine(root,"comparaciones_ab.csv");
+                File.AppendAllText(csv,DateTime.UtcNow.ToString("o")+
+                    ","+(fps?"FPS":"Mbps")+","+old.ToString(System.Globalization.CultureInfo.InvariantCulture)+
+                    ","+now.ToString(System.Globalization.CultureInfo.InvariantCulture)+"\n");
+                Log("Comparación guardada. No demuestra causalidad sin ensayos repetidos.");
+            }
+        }
         void WriteReport(int id){
             var filename=Path.Combine(root,"informe_"+DateTime.Now.ToString("yyyyMMdd_HHmmss")+".txt");
             string content="SIM TURBO PC ULTRA V9 / "+DateTime.Now.ToString("u")+"\r\n"+
@@ -424,6 +457,16 @@ namespace SimTurboPC {
             if(host.Length==0){Log("No hay router para diagnóstico local.");return;}
             PingSurvey(host,3);
             sampleIndex++;
+            if(autoExtraOn) {
+                if(sampleIndex%6==0) ScanNetwork(); // every minute
+                if(sampleIndex%12==0) ProcessAdvice(); // every two minutes
+                if(sampleIndex%18==0) {
+                    try{ChannelScan();}catch(Exception e){Log("Escaneo de canales: "+e.Message);}
+                }
+                if(sampleIndex%90==0) {
+                    try{DriverHistory();}catch(Exception e){Log("Inventario drivers: "+e.Message);}
+                }
+            }
             if(sampleIndex%12==0)Log("Autopiloto: "+sampleIndex+" iteraciones; nunca modifica drivers o firewall.");
         }
         void RunSelected(){
@@ -452,6 +495,8 @@ namespace SimTurboPC {
                     catch(Exception ex){Log("Curl: "+ex.Message);}
                 });return;
                 case 39:case 47:case 49:Threaded(ProcessAdvice);return;
+                case 40:ManualAB(false);return;
+                case 48:ManualAB(true);return;
                 case 42:Threaded(CpuLoad);return;
                 case 45:case 50:case 51:case 54:case 55:new AetherAutopilotV8().ShowDialog(this);return;
                 case 56:case 59:case 79:case 80:WriteReport(id);return;
