@@ -299,8 +299,8 @@ namespace SimTurboPC {
           if(res.StatusCode!=HttpStatusCode.OK)throw new IOException("API de regiones HTTP "+(int)res.StatusCode);
           using(var reader=new StreamReader(res.GetResponseStream())){
             string result=reader.ReadToEnd();
-            var count=Regex.Match(result,@"""plannedCount""\s*:\s*(\d+)");
-            var physical=Regex.Match(result,@"""physicallyDeployedInRequestedRegions""\s*:\s*(\d+)");
+            var count=Regex.Match(result,@"""(?:plannedCount|totalRegions)""\s*:\s*(\d+)");
+            var physical=Regex.Match(result,@"""(?:physicallyDeployedInRequestedRegions|deployedRegionalServers)""\s*:\s*(\d+)");
             if(!count.Success||!physical.Success)
               throw new IOException("La API regional no contiene los campos esperados");
             int planned=int.Parse(count.Groups[1].Value,CultureInfo.InvariantCulture);
