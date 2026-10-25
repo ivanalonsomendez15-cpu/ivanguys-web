@@ -1,0 +1,58 @@
+name: Publicar proyecto fuente completo editable
+on:
+  push:
+    branches: [sim-turbo-build-v3-20261025]
+    paths:
+      - '.github/workflows/sim-turbo-fuentes.yml'
+      - 'SIM_TURBO_BUILD/source_project_export.py'
+      - 'AETHER_CLOUDFLARE/**'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  fuentes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reconstruir Windows V10, Android V4 y Cloudflare desde codigo fuente
+        run: python3 SIM_TURBO_BUILD/source_project_export.py
+      - name: Comprobar integridad del ZIP y archivos editables
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+          p=Path('EXPORTS/SIM_TURBO_PC_ULTRA_V10_PROYECTO_COMPLETO.zip')
+          assert p.is_file()
+          with ZipFile(p) as z:
+              assert z.testzip() is None
+              paths=z.namelist()
+              required=[
+                'PC_Windows/SIM_TURBO_PC_ULTRA.sln',
+                'PC_Windows/SIM_TURBO_PC_ULTRA.csproj',
+                'PC_Windows/V10_InnovationLab.cs',
+                'Android/app/src/main/java/com/simturbopc/ultra/BondedServer.java',
+                'Cloudflare/aether-worker.js',
+                'compilar_windows.ps1',
+                'LEEME.txt'
+              ]
+              for suffix in required:
+                  assert any(f.endswith(suffix) for f in paths),suffix
+              assert not any(f.endswith(('.exe','.apk')) for f in paths)
+          print('Proyecto fuente validado; archivos:',len(paths),'bytes:',p.stat().st_size)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: SIM_TURBO_PC_ULTRA_V10_PROYECTO_COMPLETO_FUENTES
+          path: EXPORTS/SIM_TURBO_PC_ULTRA_V10_PROYECTO_COMPLETO.zip
+          if-no-files-found: error
+      - name: Publicar ZIP en GitHub para descarga directa
+        run: |
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add EXPORTS/SIM_TURBO_PC_ULTRA_V10_PROYECTO_COMPLETO.zip
+          if ! git diff --cached --quiet; then
+            git commit -m "Entregar fuentes editables V10 de Windows Android y Cloudflare"
+            git push
+          fi
