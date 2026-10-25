@@ -192,9 +192,9 @@ namespace SimTurboPC {
       return b.ToString();
     }
     static string ReadProcesses(){
-      var p=Process.GetProcesses().OrderByDescending(p=>SafeMemory(p)).Take(12);
+      var processes=Process.GetProcesses().OrderByDescending(proc=>SafeMemory(proc)).Take(12);
       var b=new StringBuilder("PROCESOS ORDENADOS POR MEMORIA RESIDENTE:\r\n");
-      foreach(var x in p){
+      foreach(var x in processes){
         b.AppendLine(x.ProcessName+" · "+(SafeMemory(x)/1048576.0).ToString("0")+" MiB");
         x.Dispose();
       }
