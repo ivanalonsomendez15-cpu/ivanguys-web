@@ -23,9 +23,10 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Not an Xbox/XInput virtual gamepad; it maps to keyboard actions.
  */
 public final class ControllerSender {
-    private static final Set<String> ALLOWED = Set.of(
+    private static final Set<String> ALLOWED = Collections.unmodifiableSet(
+        new java.util.HashSet<>(java.util.Arrays.asList(
         "W","A","S","D","SPACE","ESC","ENTER","F","E","Q","SHIFT"
-    );
+    )));
     private final Set<String> held = Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
     private final AtomicInteger serial = new AtomicInteger();
