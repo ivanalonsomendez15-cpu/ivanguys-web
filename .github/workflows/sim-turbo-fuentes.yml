@@ -4,7 +4,11 @@ on:
     branches: [sim-turbo-build-v3-20261025]
     paths:
       - '.github/workflows/sim-turbo-fuentes.yml'
-      - 'SIM_TURBO_BUILD/source_project_export.py'
+      - 'SIM_TURBO_BUILD/*.py'
+      - 'SIM_TURBO_BUILD/*.cs'
+      - 'SIM_TURBO_BUILD/*.java'
+      - 'SIM_TURBO_BUILD/*.md'
+      - 'SIM_TURBO_BUILD/*.b64'
       - 'AETHER_CLOUDFLARE/**'
   workflow_dispatch:
 permissions:
@@ -15,7 +19,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
-      - name: Reconstruir Windows V10, Android V4 y Cloudflare desde codigo fuente
+      - name: Reconstruir Windows V12, Android V12 y Cloudflare desde codigo fuente
         run: python3 SIM_TURBO_BUILD/source_project_export.py
       - name: Comprobar integridad del ZIP y archivos editables
         shell: bash
@@ -23,7 +27,7 @@ jobs:
           python3 - <<'PY'
           from pathlib import Path
           from zipfile import ZipFile
-          p=Path('EXPORTS/SIM_TURBO_PC_ULTRA_V10_PROYECTO_COMPLETO.zip')
+          p=Path('EXPORTS/SIM_TURBO_PC_ULTRA_V12_PROYECTO_COMPLETO.zip')
           assert p.is_file()
           with ZipFile(p) as z:
               assert z.testzip() is None
@@ -31,9 +35,14 @@ jobs:
               required=[
                 'PC_Windows/SIM_TURBO_PC_ULTRA.sln',
                 'PC_Windows/SIM_TURBO_PC_ULTRA.csproj',
-                'PC_Windows/V10_InnovationLab.cs',
+                'PC_Windows/V12_SuperResolution.cs',
                 'Android/app/src/main/java/com/simturbopc/ultra/BondedServer.java',
                 'Cloudflare/aether-worker.js',
+                'PC_Windows/V12_LanDiscovery.cs',
+                'Android/app/src/main/java/com/simturbopc/ultra/AetherMonitorService.java',
+                'Android/app/src/main/java/com/simturbopc/ultra/GameProfiles.java',
+                'Android/app/src/main/java/com/simturbopc/ultra/PcDiscovery.java',
+                'CHANGELOG_V12.md',
                 'compilar_windows.ps1',
                 'LEEME.txt'
               ]
@@ -44,15 +53,16 @@ jobs:
           PY
       - uses: actions/upload-artifact@v4
         with:
-          name: SIM_TURBO_PC_ULTRA_V10_PROYECTO_COMPLETO_FUENTES
-          path: EXPORTS/SIM_TURBO_PC_ULTRA_V10_PROYECTO_COMPLETO.zip
+          name: SIM_TURBO_PC_ULTRA_V12_PROYECTO_COMPLETO_FUENTES
+          path: EXPORTS/SIM_TURBO_PC_ULTRA_V12_PROYECTO_COMPLETO.zip
           if-no-files-found: error
       - name: Publicar ZIP en GitHub para descarga directa
         run: |
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config user.name "github-actions[bot]"
-          git add EXPORTS/SIM_TURBO_PC_ULTRA_V10_PROYECTO_COMPLETO.zip
+          git add EXPORTS/SIM_TURBO_PC_ULTRA_V12_PROYECTO_COMPLETO.zip
           if ! git diff --cached --quiet; then
-            git commit -m "Entregar fuentes editables V10 de Windows Android y Cloudflare"
+            git commit -m "Entregar fuentes editables V12 Windows Android y Cloudflare"
+            git pull --rebase origin sim-turbo-build-v3-20261025
             git push
           fi
