@@ -37,13 +37,14 @@ ReplaceOnce 'lastMbps = result.Mbps;' @'
 lastMbps = result.Mbps;
                     if(!hybridOn) lastMeasuredAt=DateTime.Now;
 '@
-ReplaceOnce 'string warning = "HÍBRIDO EXPERIMENTAL:' @'
+$guard=@'
 if(tester.IsBusy || lastMbps <= 0 || (DateTime.Now-lastMeasuredAt).TotalMinutes>3) {
                 MessageBox.Show("Antes de activar la SIM, pulsa MEDIR VELOCIDAD con el modo hibrido apagado.\n\nNecesitamos una medicion del PC solo hecha en los ultimos 3 minutos. Si no logramos medir, no activamos el proxy.", "Proteccion de velocidad",MessageBoxButtons.OK,MessageBoxIcon.Information);
                 return;
             }
             string warning = "HÍBRIDO EXPERIMENTAL:
 '@
+ReplaceOnce 'string warning = "HÍBRIDO EXPERIMENTAL:' ($guard.TrimEnd([char]13,[char]10))
 ReplaceOnce 'Temporalmente configura el proxy HTTP/HTTPS' 'Se descargaran hasta 8 MB automaticamente para comparar antes/despues. Si no mejora al menos un 10%, se detiene y restaura el proxy.\n" + "Temporalmente configura el proxy HTTP/HTTPS'
 ReplaceOnce 'lblHybrid.Text="HÍBRIDO ON · 1 de cada 3 conexiones HTTPS -> SIM (si responde)";' @'
 hybridGuardBaseline=lastMbps;
