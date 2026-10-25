@@ -182,7 +182,7 @@ namespace SimTurboPC {
                         bool found=Playing(selectedGames);
                         if(InvokeRequired)BeginInvoke((Action)(()=>{
                             try {if(enabled&&optGames.Checked) SetBoost(found);
-                                else if(!enabled) RestoreGameMode();
+                                else if(gameBoost) RestoreGameMode();
                             }catch(Exception ex){Log("Game Mode: "+ex.Message);}
                         }));
                     }
