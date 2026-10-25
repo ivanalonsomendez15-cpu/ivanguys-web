@@ -18,6 +18,8 @@ jobs:
         run: base64 -d SIM_TURBO_BUILD/Android_source.tar.xz.b64 | tar -xJf -
       - name: Integrar motor Android V4
         run: python3 SIM_TURBO_BUILD/V4Patch.py
+      - name: Integrar mando Android V11 sin quitar puente SIM V4
+        run: python3 SIM_TURBO_BUILD/V11Patch.py
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -83,11 +85,14 @@ jobs:
       - name: Integrar AETHER Innovation y DNS Guard V10
         shell: pwsh
         run: python SIM_TURBO_BUILD/V10Patch.py
+      - name: Integrar System Clinic V11 y receptor seguro de mando Android
+        shell: pwsh
+        run: python SIM_TURBO_BUILD/V11Patch.py
       - name: Compilar ejecutable real
         shell: pwsh
         run: |
           $csc="$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\csc.exe"
-          & $csc /nologo /optimize+ /target:winexe /out:SIM_TURBO_PC_ULTRA_V3.exe /r:System.dll /r:System.Core.dll /r:System.Drawing.dll /r:System.Windows.Forms.dll /r:System.Management.dll PC_Windows\SIM_TURBO_PC.cs PC_Windows\V4_BondedDownloader.cs PC_Windows\V5_PerformanceCenter.cs PC_Windows\V6_HyperAdaptive.cs PC_Windows\V7_PulseRoute.cs PC_Windows\V8_AetherDownloader.cs PC_Windows\V8_AetherAutopilot.cs PC_Windows\V9_Aether80Lab.cs PC_Windows\V9_Radar.cs PC_Windows\V9_ResearchLab.cs PC_Windows\V10_InnovationLab.cs PC_Windows\V10_IdeaEngine.cs
+          & $csc /nologo /optimize+ /target:winexe /out:SIM_TURBO_PC_ULTRA_V3.exe /r:System.dll /r:System.Core.dll /r:System.Drawing.dll /r:System.Windows.Forms.dll /r:System.Management.dll PC_Windows\SIM_TURBO_PC.cs PC_Windows\V4_BondedDownloader.cs PC_Windows\V5_PerformanceCenter.cs PC_Windows\V6_HyperAdaptive.cs PC_Windows\V7_PulseRoute.cs PC_Windows\V8_AetherDownloader.cs PC_Windows\V8_AetherAutopilot.cs PC_Windows\V9_Aether80Lab.cs PC_Windows\V9_Radar.cs PC_Windows\V9_ResearchLab.cs PC_Windows\V10_InnovationLab.cs PC_Windows\V10_IdeaEngine.cs PC_Windows\V11_SystemClinic.cs PC_Windows\V11_AndroidGamepad.cs
           if($LASTEXITCODE -ne 0) { throw 'Error compilando C#' }
       - name: Crear instalador Inno Setup
         shell: pwsh
@@ -96,7 +101,7 @@ jobs:
           [Setup]
           AppId={{6D9797F5-2438-49E6-B5E7-0C26FE91B88A}
           AppName=SIM TURBO PC ULTRA
-          AppVersion=10.0
+          AppVersion=11.0
           DefaultDirName={localappdata}\Programs\SIM TURBO PC ULTRA
           PrivilegesRequired=lowest
           OutputDir=release
