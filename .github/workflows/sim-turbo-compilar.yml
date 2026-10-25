@@ -84,7 +84,7 @@ jobs:
         shell: pwsh
         run: |
           $csc="$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\csc.exe"
-          & $csc /nologo /optimize+ /target:winexe /out:SIM_TURBO_PC_ULTRA_V3.exe /r:System.dll /r:System.Core.dll /r:System.Drawing.dll /r:System.Windows.Forms.dll /r:System.Management.dll PC_Windows\SIM_TURBO_PC.cs PC_Windows\V4_BondedDownloader.cs PC_Windows\V5_PerformanceCenter.cs PC_Windows\V6_HyperAdaptive.cs PC_Windows\V7_PulseRoute.cs PC_Windows\V8_AetherDownloader.cs PC_Windows\V8_AetherAutopilot.cs PC_Windows\V9_Aether80Lab.cs PC_Windows\V9_Radar.cs
+          & $csc /nologo /optimize+ /target:winexe /out:SIM_TURBO_PC_ULTRA_V3.exe /r:System.dll /r:System.Core.dll /r:System.Drawing.dll /r:System.Windows.Forms.dll /r:System.Management.dll PC_Windows\SIM_TURBO_PC.cs PC_Windows\V4_BondedDownloader.cs PC_Windows\V5_PerformanceCenter.cs PC_Windows\V6_HyperAdaptive.cs PC_Windows\V7_PulseRoute.cs PC_Windows\V8_AetherDownloader.cs PC_Windows\V8_AetherAutopilot.cs PC_Windows\V9_Aether80Lab.cs PC_Windows\V9_Radar.cs PC_Windows\V9_ResearchLab.cs
           if($LASTEXITCODE -ne 0) { throw 'Error compilando C#' }
       - name: Crear instalador Inno Setup
         shell: pwsh
