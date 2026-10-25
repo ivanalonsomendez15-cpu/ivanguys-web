@@ -27,6 +27,7 @@ jobs:
           python3 - <<'PY'
           from pathlib import Path
           from zipfile import ZipFile
+          import hashlib
           p=Path('EXPORTS/SIM_TURBO_PC_ULTRA_V12_PROYECTO_COMPLETO.zip')
           assert p.is_file()
           with ZipFile(p) as z:
@@ -50,6 +51,18 @@ jobs:
               for suffix in required:
                   assert any(f.endswith(suffix) for f in paths),suffix
               assert not any(f.endswith(('.exe','.apk')) for f in paths)
+              root='SIM_TURBO_PC_ULTRA_V12_PROYECTO_COMPLETO/'
+              manifest=z.read(root+'SHA256SUMS.txt').decode('utf-8')
+              checked=0
+              for line in manifest.splitlines():
+                  expected,rel=line.split('  ',1)
+                  actual=hashlib.sha256(z.read(root+rel)).hexdigest()
+                  assert actual==expected,rel
+                  checked+=1
+              assert checked>=40,checked
+              assert 'connectedDevice' in z.read(root+'Android/app/src/main/AndroidManifest.xml').decode()
+              assert 'HighQualityBicubic' in z.read(root+'PC_Windows/V12_SuperResolution.cs').decode()
+              print('Hashes de fuentes verificados:',checked)
           print('Proyecto fuente validado; archivos:',len(paths),'bytes:',p.stat().st_size)
           PY
       - name: Registrar hash SHA256 del ZIP V12
