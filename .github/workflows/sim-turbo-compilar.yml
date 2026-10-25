@@ -3,7 +3,11 @@ on:
   push:
     branches: [sim-turbo-build-v3-20261025]
     paths:
-      - 'SIM_TURBO_BUILD/**'
+      - 'SIM_TURBO_BUILD/*.py'
+      - 'SIM_TURBO_BUILD/*.cs'
+      - 'SIM_TURBO_BUILD/*.java'
+      - 'SIM_TURBO_BUILD/*.md'
+      - 'SIM_TURBO_BUILD/*.b64'
       - '.github/workflows/sim-turbo-compilar.yml'
   workflow_dispatch:
 permissions:
@@ -20,6 +24,8 @@ jobs:
         run: python3 SIM_TURBO_BUILD/V4Patch.py
       - name: Integrar mando Android V11 sin quitar puente SIM V4
         run: python3 SIM_TURBO_BUILD/V11Patch.py
+      - name: Integrar monitor Android V12 y perfiles por juego
+        run: python3 SIM_TURBO_BUILD/V12Patch.py
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -88,11 +94,14 @@ jobs:
       - name: Integrar System Clinic V11 y receptor seguro de mando Android
         shell: pwsh
         run: python SIM_TURBO_BUILD/V11Patch.py
+      - name: Integrar superresolucion y descubrimiento LAN V12
+        shell: pwsh
+        run: python SIM_TURBO_BUILD/V12Patch.py
       - name: Compilar ejecutable real
         shell: pwsh
         run: |
           $csc="$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\csc.exe"
-          & $csc /nologo /optimize+ /target:winexe /out:SIM_TURBO_PC_ULTRA_V3.exe /r:System.dll /r:System.Core.dll /r:System.Drawing.dll /r:System.Windows.Forms.dll /r:System.Management.dll PC_Windows\SIM_TURBO_PC.cs PC_Windows\V4_BondedDownloader.cs PC_Windows\V5_PerformanceCenter.cs PC_Windows\V6_HyperAdaptive.cs PC_Windows\V7_PulseRoute.cs PC_Windows\V8_AetherDownloader.cs PC_Windows\V8_AetherAutopilot.cs PC_Windows\V9_Aether80Lab.cs PC_Windows\V9_Radar.cs PC_Windows\V9_ResearchLab.cs PC_Windows\V10_InnovationLab.cs PC_Windows\V10_IdeaEngine.cs PC_Windows\V11_SystemClinic.cs PC_Windows\V11_AndroidGamepad.cs
+          & $csc /nologo /optimize+ /target:winexe /out:SIM_TURBO_PC_ULTRA_V12.exe /r:System.dll /r:System.Core.dll /r:System.Drawing.dll /r:System.Windows.Forms.dll /r:System.Management.dll PC_Windows\SIM_TURBO_PC.cs PC_Windows\V4_BondedDownloader.cs PC_Windows\V5_PerformanceCenter.cs PC_Windows\V6_HyperAdaptive.cs PC_Windows\V7_PulseRoute.cs PC_Windows\V8_AetherDownloader.cs PC_Windows\V8_AetherAutopilot.cs PC_Windows\V9_Aether80Lab.cs PC_Windows\V9_Radar.cs PC_Windows\V9_ResearchLab.cs PC_Windows\V10_InnovationLab.cs PC_Windows\V10_IdeaEngine.cs PC_Windows\V11_SystemClinic.cs PC_Windows\V11_AndroidGamepad.cs PC_Windows\V12_LanDiscovery.cs PC_Windows\V12_SuperResolution.cs
           if($LASTEXITCODE -ne 0) { throw 'Error compilando C#' }
       - name: Crear instalador Inno Setup
         shell: pwsh
@@ -101,24 +110,24 @@ jobs:
           [Setup]
           AppId={{6D9797F5-2438-49E6-B5E7-0C26FE91B88A}
           AppName=SIM TURBO PC ULTRA
-          AppVersion=11.0
+          AppVersion=12.0
           DefaultDirName={localappdata}\Programs\SIM TURBO PC ULTRA
           PrivilegesRequired=lowest
           OutputDir=release
-          OutputBaseFilename=SIM_TURBO_PC_ULTRA_V3_SETUP
+          OutputBaseFilename=SIM_TURBO_PC_ULTRA_V12_SETUP
           Compression=lzma
           SolidCompression=yes
           WizardStyle=modern
-          UninstallDisplayIcon={app}\SIM_TURBO_PC_ULTRA_V3.exe
+          UninstallDisplayIcon={app}\SIM_TURBO_PC_ULTRA_V12.exe
           [Files]
-          Source: "SIM_TURBO_PC_ULTRA_V3.exe"; DestDir: "{app}"; Flags: ignoreversion
+          Source: "SIM_TURBO_PC_ULTRA_V12.exe"; DestDir: "{app}"; Flags: ignoreversion
           [Icons]
-          Name: "{autoprograms}\SIM TURBO PC ULTRA"; Filename: "{app}\SIM_TURBO_PC_ULTRA_V3.exe"
-          Name: "{autodesktop}\SIM TURBO PC ULTRA"; Filename: "{app}\SIM_TURBO_PC_ULTRA_V3.exe"; Tasks: desktopicon
+          Name: "{autoprograms}\SIM TURBO PC ULTRA"; Filename: "{app}\SIM_TURBO_PC_ULTRA_V12.exe"
+          Name: "{autodesktop}\SIM TURBO PC ULTRA"; Filename: "{app}\SIM_TURBO_PC_ULTRA_V12.exe"; Tasks: desktopicon
           [Tasks]
           Name: desktopicon; Description: "Crear acceso directo en el escritorio"; GroupDescription: "Accesos directos:"; Flags: unchecked
           [Run]
-          Filename: "{app}\SIM_TURBO_PC_ULTRA_V3.exe"; Description: "Abrir SIM TURBO PC ULTRA"; Flags: nowait postinstall skipifsilent
+          Filename: "{app}\SIM_TURBO_PC_ULTRA_V12.exe"; Description: "Abrir SIM TURBO PC ULTRA"; Flags: nowait postinstall skipifsilent
           '@
           Set-Content -Path 'installer.iss' -Value $iss -Encoding UTF8
           $compiler='C:\Program Files (x86)\Inno Setup 6\ISCC.exe'
@@ -130,8 +139,8 @@ jobs:
         with:
           name: exe
           path: |
-            release/SIM_TURBO_PC_ULTRA_V3_SETUP.exe
-            SIM_TURBO_PC_ULTRA_V3.exe
+            release/SIM_TURBO_PC_ULTRA_V12_SETUP.exe
+            SIM_TURBO_PC_ULTRA_V12.exe
           if-no-files-found: error
   publicar:
     runs-on: ubuntu-latest
@@ -149,11 +158,14 @@ jobs:
           path: resultados/exe
       - name: Publicar archivos compilados en rama aislada
         run: |
-          cp resultados/apk/app-debug.apk SIM_TURBO_BUILD/SIM_TURBO_PC_ULTRA_V3.apk
-          cp resultados/exe/release/SIM_TURBO_PC_ULTRA_V3_SETUP.exe SIM_TURBO_BUILD/SIM_TURBO_PC_ULTRA_V3_SETUP.exe
-          cp resultados/exe/SIM_TURBO_PC_ULTRA_V3.exe SIM_TURBO_BUILD/SIM_TURBO_PC_ULTRA_V3_PORTABLE.exe
+          cp resultados/apk/app-debug.apk SIM_TURBO_BUILD/SIM_TURBO_PC_ULTRA_V12.apk
+          cp resultados/exe/release/SIM_TURBO_PC_ULTRA_V12_SETUP.exe SIM_TURBO_BUILD/SIM_TURBO_PC_ULTRA_V12_SETUP.exe
+          cp resultados/exe/SIM_TURBO_PC_ULTRA_V12.exe SIM_TURBO_BUILD/SIM_TURBO_PC_ULTRA_V12_PORTABLE.exe
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git config user.name 'github-actions[bot]'
           git add SIM_TURBO_BUILD/*.apk SIM_TURBO_BUILD/*.exe
-          git commit -m 'Publicar APK y EXE compilados SIM TURBO PC ULTRA V3'
-          git push
+          if ! git diff --cached --quiet; then
+            git commit -m 'Publicar compilaciones AETHER V12 Windows y Android'
+            git pull --rebase origin sim-turbo-build-v3-20261025
+            git push
+          fi
