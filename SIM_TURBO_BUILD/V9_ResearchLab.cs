@@ -59,7 +59,7 @@ namespace SimTurboPC {
             experimentPath=Path.Combine(folder,"experiment_log.csv");
             Label heading=new Label{Text="AETHER RESEARCH LAB · 80 MÓDULOS",Location=new Point(22,14),Size=new Size(1060,42),
                 Font=new Font("Segoe UI",19,FontStyle.Bold),ForeColor=accent};Controls.Add(heading);
-            Label expl=new Label{Text="36 herramientas funcionales o de diagnóstico · 29 prototipos parciales · 15 dependientes de infraestructura futura. Estado visible en cada módulo.",
+            Label expl=new Label{Text="37 herramientas funcionales o de diagnóstico · 29 prototipos parciales · 14 dependientes de infraestructura futura. Estado visible en cada módulo.",
                 Location=new Point(24,61),Size=new Size(1040,27),ForeColor=Color.Gainsboro};Controls.Add(expl);
             tabs=new TabControl{Location=new Point(18,99),Size=new Size(1075,526),Anchor=AnchorStyles.Left|AnchorStyles.Right|AnchorStyles.Top|AnchorStyles.Bottom};
             Controls.Add(tabs);
