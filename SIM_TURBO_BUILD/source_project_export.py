@@ -5,9 +5,9 @@ from zipfile import ZipFile, ZIP_DEFLATED
 import base64, io, shutil, subprocess, sys, tarfile, tempfile
 BASE=Path(__file__).resolve().parent
 ROOT=BASE.parent
-NAME="SIM_TURBO_PC_ULTRA_V10_PROYECTO_COMPLETO"
-SRC=["SIM_TURBO_PC.cs","V4_BondedDownloader.cs","V5_PerformanceCenter.cs","V6_HyperAdaptive.cs","V7_PulseRoute.cs","V8_AetherDownloader.cs","V8_AetherAutopilot.cs","V9_Aether80Lab.cs","V9_Radar.cs","V9_ResearchLab.cs","V10_InnovationLab.cs","V10_IdeaEngine.cs"]
-PATCHES=["V%dPatch.py"%n for n in range(4,11)]
+NAME="SIM_TURBO_PC_ULTRA_V11_PROYECTO_COMPLETO"
+SRC=["SIM_TURBO_PC.cs","V4_BondedDownloader.cs","V5_PerformanceCenter.cs","V6_HyperAdaptive.cs","V7_PulseRoute.cs","V8_AetherDownloader.cs","V8_AetherAutopilot.cs","V9_Aether80Lab.cs","V9_Radar.cs","V9_ResearchLab.cs","V10_InnovationLab.cs","V10_IdeaEngine.cs","V11_SystemClinic.cs","V11_AndroidGamepad.cs"]
+PATCHES=["V%dPatch.py"%n for n in range(4,12)]
 def unpack(archive,dst):
     data=base64.b64decode(archive.read_text(encoding="utf-8").strip())
     with tarfile.open(fileobj=io.BytesIO(data),mode="r:xz") as t:
@@ -30,7 +30,7 @@ def visual_studio(pc):
     compile="\n".join('    <Compile Include="%s" />'%n for n in SRC)
     csproj='''<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-<PropertyGroup><Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration><Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform><ProjectGuid>%s</ProjectGuid><OutputType>WinExe</OutputType><RootNamespace>SimTurboPC</RootNamespace><AssemblyName>SIM_TURBO_PC_ULTRA_V10</AssemblyName><TargetFrameworkVersion>v4.8</TargetFrameworkVersion><FileAlignment>512</FileAlignment></PropertyGroup>
+<PropertyGroup><Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration><Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform><ProjectGuid>%s</ProjectGuid><OutputType>WinExe</OutputType><RootNamespace>SimTurboPC</RootNamespace><AssemblyName>SIM_TURBO_PC_ULTRA_V11</AssemblyName><TargetFrameworkVersion>v4.8</TargetFrameworkVersion><FileAlignment>512</FileAlignment></PropertyGroup>
 <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' "><DebugSymbols>true</DebugSymbols><DebugType>full</DebugType><Optimize>false</Optimize><OutputPath>bin\Debug\</OutputPath><DefineConstants>DEBUG;TRACE</DefineConstants><WarningLevel>4</WarningLevel></PropertyGroup>
 <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' "><DebugType>pdbonly</DebugType><Optimize>true</Optimize><OutputPath>bin\Release\</OutputPath><DefineConstants>TRACE</DefineConstants><WarningLevel>4</WarningLevel></PropertyGroup>
 <ItemGroup><Reference Include="System" /><Reference Include="System.Core" /><Reference Include="System.Drawing" /><Reference Include="System.Windows.Forms" /><Reference Include="System.Management" /></ItemGroup>
@@ -83,7 +83,7 @@ def main():
         (project/"AETHER_generador_ideas.py").write_text("#!/usr/bin/env python3\n\"\"\"Generate a deterministic range from 1,000,000,000 combinatorial ideas.\nThese are templates, NOT independently researched inventions.\n\"\"\"\nimport argparse\nfrom pathlib import Path\nAXES=[\n[\"Wi-Fi\",\"Ethernet\",\"SIM 4G/5G\",\"router\",\"latencia\",\"subida\",\"descarga\",\"FPS\",\"seguridad\",\"diagnóstico\"],\n[\"en casa\",\"en videojuegos\",\"en streaming\",\"en videollamadas\",\"en portátil\",\"en escritorio\",\"en móviles\",\"en redes mixtas\",\"en LAN\",\"en servidor remoto\"],\n[\"detectar fallos\",\"medir patrones\",\"predecir congestión\",\"comparar rutas\",\"detectar regresiones\",\"medir capacidad\",\"registrar evidencias\",\"controlar carga\",\"detectar interrupciones\",\"estimar estabilidad\"],\n[\"historial\",\"muestras en vivo\",\"pruebas A/B\",\"simulación\",\"auditoría\",\"métricas agregadas\",\"muestreo limitado\",\"repetición de pruebas\",\"reglas configurables\",\"comprobación cruzada\"],\n[\"comparación estadística\",\"umbral adaptativo\",\"modelo probabilístico\",\"interpolación\",\"colas dinámicas\",\"detección de anomalías\",\"modelo lineal\",\"mediana robusta\",\"clasificador sencillo\",\"priorización heurística\"],\n[\"sin tocar Windows\",\"con intervención manual\",\"con confirmación\",\"en modo lectura\",\"con deshacer\",\"solo en LAN\",\"con datos mínimos\",\"con protección de datos\",\"en modo experimental\",\"con apagado inmediato\"],\n[\"ping\",\"jitter\",\"pérdida\",\"Mbps\",\"MB/s\",\"FPS\",\"latencia p95\",\"uso de CPU\",\"uso de memoria\",\"estabilidad horaria\"],\n[\"sin permisos elevados\",\"con registros locales\",\"sin enviar contraseñas\",\"con cifrado\",\"con controles visibles\",\"con límite de consumo\",\"con revisión de resultados\",\"con historial reversible\",\"con privacidad por diseño\",\"con modo offline\"],\n[\"panel de control\",\"mapa de calor\",\"alertas\",\"informe\",\"gráfico\",\"tabla comparativa\",\"línea temporal\",\"simulador\",\"panel de pruebas\",\"asistente técnico\"]]\ndef idea(n):\n    if n<0 or n>=1_000_000_000:raise ValueError(\"Fuera de rango\")\n    selected=[\"\"]*9\n    for i in range(8,-1,-1):\n        selected[i]=AXES[i][n%10]\n        n//=10\n    return \"Herramienta para %s %s: %s con %s y %s, operando %s, midiendo %s, protegiendo datos %s y mostrando %s.\"%tuple(selected)\nif __name__==\"__main__\":\n    p=argparse.ArgumentParser()\n    p.add_argument(\"--inicio\",type=int,default=0)\n    p.add_argument(\"--cantidad\",type=int,default=1000)\n    p.add_argument(\"--salida\",default=\"ideas_AETHER.txt\")\n    a=p.parse_args()\n    if not 0<=a.inicio<1_000_000_000 or not 1<=a.cantidad<=100_000 or a.inicio+a.cantidad>1_000_000_000:\n        p.error(\"Usa --cantidad entre 1 y 100000, sin superar el índice 999999999\")\n    with Path(a.salida).open(\"w\",encoding=\"utf-8\") as f:\n        f.write(\"Plantillas combinatorias, sin garantías ni validación\\n\")\n        for n in range(a.inicio,a.inicio+a.cantidad):\n            f.write(\"%09d: %s\\n\"%(n,idea(n)))\n    print(\"Generado:\",a.salida)\n",encoding="utf-8")
         assert "/api/health" in (cloud/"aether-worker.js").read_text()
         assert "/api/nodes" in (cloud/"aether-worker.js").read_text()
-        previous=project/"scripts_originales_V4_a_V10"
+        previous=project/"scripts_originales_V4_a_V11"
         previous.mkdir()
         for item in PATCHES:shutil.copy2(BASE/item,previous/item)
         for ext in ("*.cs","*.java"):
@@ -91,9 +91,9 @@ def main():
         workflow=project/".github/workflows"
         workflow.mkdir(parents=True)
         shutil.copy2(ROOT/".github/workflows/sim-turbo-compilar.yml",workflow/"sim-turbo-compilar.yml")
-        readme="""SIM TURBO PC ULTRA V10 — CÓDIGO FUENTE COMPLETO, SIN EJECUTABLES
+        readme="""SIM TURBO PC ULTRA V11 — CÓDIGO FUENTE COMPLETO, SIN EJECUTABLES
 ==============================================================
-PC_Windows/: programa C# WinForms, V4-V10 aplicadas; abre la solución .sln
+PC_Windows/: programa C# WinForms, V4-V11 aplicadas; abre la solución .sln
 en Visual Studio (con .NET Framework 4.8 Developer Pack).
 Android/: proyecto Java Gradle, con BondedServer V4; abre en Android Studio
 (JDK 17, Gradle 8.9, SDK Android API 35).
@@ -126,7 +126,7 @@ Set-Location (Join-Path $PSScriptRoot "PC_Windows")
 $csc = "$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\csc.exe"
 if (!(Test-Path $csc)) { throw "Falta el compilador csc.exe de .NET Framework" }
 $fuentes = (Get-ChildItem -Filter "*.cs" | Sort-Object Name).Name
-& $csc /nologo /optimize+ /target:winexe /out:SIM_TURBO_PC_ULTRA_V10.exe /r:System.dll /r:System.Core.dll /r:System.Drawing.dll /r:System.Windows.Forms.dll /r:System.Management.dll $fuentes
+& $csc /nologo /optimize+ /target:winexe /out:SIM_TURBO_PC_ULTRA_V11.exe /r:System.dll /r:System.Core.dll /r:System.Drawing.dll /r:System.Windows.Forms.dll /r:System.Management.dll $fuentes
 if ($LASTEXITCODE -ne 0) { throw "Error compilando C#" }
 Write-Host "Compilación completa"
 '''
