@@ -268,6 +268,7 @@ namespace SimTurboPC {
             }
             if(MessageBox.Show("AUTOPILOTO V6:\n\nCada 8 segundos detectará si estás jugando a los procesos de la lista.\nAl detectar un juego activará Game Mode y, si lo autorizas, el plan Alto rendimiento. Al salir del juego restaurará lo anterior.\n\nNo instala drivers, no termina procesos ni toca el antivirus. Debes mantener abierta esta ventana.\n\n¿Activarlo?",
                 "Autopiloto de juegos",MessageBoxButtons.YesNo,MessageBoxIcon.Question)!=DialogResult.Yes)return;
+            if(boostActive) { Restore(false); if(File.Exists(backupPath)) { Log("No se pudo recuperar el estado previo; no se inicia autopiloto."); return; } }
             autoEnabled=true;gameWasRunning=false;manualEnabled=false;
             autopilotButton.Text="AUTOPILOTO: ACTIVADO";autoLabel.Text="Buscando procesos de juegos...";
             gameTimer.Start();AutoTick();Log("Autopiloto iniciado (8 s por comprobación).");
