@@ -59,13 +59,34 @@ jobs:
           name: SIM_TURBO_PC_ULTRA_V12_PROYECTO_COMPLETO_FUENTES
           path: EXPORTS/SIM_TURBO_PC_ULTRA_V12_PROYECTO_COMPLETO.zip
           if-no-files-found: error
-      - name: Publicar ZIP en GitHub para descarga directa
+      - name: Publicar ZIP sin pisar cambios nuevos de otras ejecuciones
+        shell: bash
         run: |
+          set -euo pipefail
+          branch=sim-turbo-build-v3-20261025
+          archive=EXPORTS/SIM_TURBO_PC_ULTRA_V12_PROYECTO_COMPLETO.zip
+          cp "$archive" /tmp/aether-v12-sources.zip
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config user.name "github-actions[bot]"
-          git add EXPORTS/SIM_TURBO_PC_ULTRA_V12_PROYECTO_COMPLETO.zip
-          if ! git diff --cached --quiet; then
-            git commit -m "Entregar fuentes editables V12 Windows Android y Cloudflare"
-            git pull --rebase origin sim-turbo-build-v3-20261025
-            git push
-          fi
+          for attempt in 1 2 3; do
+            git fetch origin "$branch"
+            # Never publish a stale ZIP after another run changed the source files.
+            if ! git diff --quiet "$GITHUB_SHA" "origin/$branch" -- SIM_TURBO_BUILD AETHER_CLOUDFLARE .github/workflows/sim-turbo-fuentes.yml; then
+              echo "Newer source changes detected; newer workflow will publish the ZIP."
+              exit 0
+            fi
+            git reset --hard "origin/$branch"
+            cp /tmp/aether-v12-sources.zip "$archive"
+            git add "$archive"
+            if git diff --cached --quiet; then
+              echo "Same archive already published."
+              exit 0
+            fi
+            git commit -m "Publicar ZIP editable AETHER V12 con hashes"
+            if git push origin "HEAD:$branch"; then
+              echo "Published source ZIP."
+              exit 0
+            fi
+            echo "Concurrent update; retry $attempt"
+          done
+          exit 1
