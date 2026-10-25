@@ -58,7 +58,8 @@ namespace SimTurboPC {
     string selectedProvider="AUTO";
     double lastPing=-1,lastDnsMs=-1;
     DateTime lastRemoteProbe=DateTime.MinValue;
-    const string RemoteHealth="https://aether-remote-health-node-cbsx2i.v2.appdeploy.ai/api/health";
+    const string RemoteHealth="https://long-sky-d531.ivanalonsomendez15-26e.workers.dev/api/health";
+    const string RemoteNodes="https://long-sky-d531.ivanalonsomendez15-26e.workers.dev/api/nodes";
     const int MaxSampleLines=3000;
     readonly string[] providerNames={"Cloudflare","Google"};
     readonly string[] providerUrls={
@@ -92,7 +93,7 @@ namespace SimTurboPC {
       serverStatus=TextLabel(this,"Diagnóstico DNS: sin evaluar",407,315,650,53,11,true,sea);
       chosen=TextLabel(this,"DNS seleccionado para el laboratorio: "+selectedProvider,407,372,650,55,10,false,Color.White);
       ActionButton("COMPARAR DNS",407,445,202,51,()=>StartWork(()=>CompareDns(true)));
-      ActionButton("PROBAR NODO ONLINE",620,445,204,51,()=>StartWork(ProbeRemote));
+      ActionButton("CLOUDFLARE + 14 NODOS",620,445,204,51,()=>StartWork(ProbeCloudflareNetwork));
       ActionButton("AJUSTES DNS WINDOWS",836,445,221,51,()=>Open("ms-settings:network-wifi"));
       pilotDiagnostics=new CheckBox{Text="Autopiloto: medir ping y guardar historial",Checked=true,
         Location=new Point(24,524),Size=new Size(393,30),ForeColor=Color.White};
@@ -111,7 +112,7 @@ namespace SimTurboPC {
       menu.SelectedIndex=0;
       timer.Interval=10000;
       timer.Tick+=(s,e)=>{if(pilot&&!running) AutoCycle();};
-      Log("Nodo de diagnóstico HTTPS online disponible; no es un acelerador ni un DNS propio.");
+      Log("AETHER Cloudflare configurado como origen de diagnostico; comprueba el estado con el boton. No es un acelerador ni un DNS.");
       Log("El DNS elegido solo afecta a futuras pruebas de este laboratorio, no cambia DNS Windows.");
     }
     static Label TextLabel(Control c,string text,int x,int y,int w,int h,float size,bool bold,Color color){
@@ -272,12 +273,47 @@ namespace SimTurboPC {
             sw.Stop();
             if(!result.Contains("\"online\":true") && !Regex.IsMatch(result,@"[""']online[""']\s*:\s*true"))
               throw new IOException("Respuesta de estado no válida");
-            Log("AETHER ONLINE: nodo responde; petición HTTPS "+sw.ElapsedMilliseconds+
+            Log("AETHER CLOUDFLARE: nodo responde; petición HTTPS "+sw.ElapsedMilliseconds+
                 " ms. Solo diagnóstico, sin cambios en Internet.");
           }
         }
       }catch(Exception ex){
-        Log("AETHER ONLINE: nodo no disponible ("+ex.Message+"). No se cambia la conexión.");
+        Log("AETHER CLOUDFLARE: nodo no disponible ("+ex.Message+"). No se cambia la conexión.");
+      }
+    }
+
+
+    void ProbeCloudflareNetwork() {
+      ProbeRemote();
+      ProbeRegionalRegistry();
+    }
+    void ProbeRegionalRegistry(){
+      // The registry reports planned regions, not machines proven to run in those cities.
+      // For every check, fetch the API rather than treating the configured URL as proof it is online.
+      try {
+        ServicePointManager.SecurityProtocol|=(SecurityProtocolType)3072;
+        var req=(HttpWebRequest)WebRequest.Create(RemoteNodes);
+        req.Method="GET";req.Timeout=6000;req.ReadWriteTimeout=6000;
+        req.AllowAutoRedirect=false;req.Accept="application/json";
+        using(var res=(HttpWebResponse)req.GetResponse()){
+          if(res.StatusCode!=HttpStatusCode.OK)throw new IOException("API de regiones HTTP "+(int)res.StatusCode);
+          using(var reader=new StreamReader(res.GetResponseStream())){
+            string result=reader.ReadToEnd();
+            var count=Regex.Match(result,@"""plannedCount""\s*:\s*(\d+)");
+            var physical=Regex.Match(result,@"""physicallyDeployedInRequestedRegions""\s*:\s*(\d+)");
+            if(!count.Success||!physical.Success)
+              throw new IOException("La API regional no contiene los campos esperados");
+            int planned=int.Parse(count.Groups[1].Value,CultureInfo.InvariantCulture);
+            int deployed=int.Parse(physical.Groups[1].Value,CultureInfo.InvariantCulture);
+            if(planned!=14||deployed<0||deployed>planned)
+              throw new IOException("Valores regionales incoherentes");
+            Log("AETHER REGIONES: "+planned+" objetivos registrados, "+deployed+
+              " nodos físicos regionales declarados. Declaración del servidor, no verificación independiente.");
+            if(deployed==0) Log("ASTURIAS PRIORITARIA: todavía no existe un VPS regional verificado. Cloudflare sirve esta petición donde determine.");
+          }
+        }
+      }catch(Exception ex) {
+        Log("AETHER REGIONES: no se pudo consultar el inventario ("+ex.Message+"). Sin datos verificados.");
       }
     }
 
