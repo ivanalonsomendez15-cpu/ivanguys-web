@@ -1,10 +1,18 @@
 {
   "status": "ok",
-  "lastUpdated": "2026-10-25T20:45:28.617093+00:00",
+  "lastUpdated": "2026-10-25T23:11:28.245474+00:00",
   "channelTitle": "ivanguys",
   "subscribers": 675,
-  "videoCount": 176,
+  "videoCount": 177,
   "videos": [
+    {
+      "id": "1UGfnb1Dq7o",
+      "title": "SOLO FALTAN 10 DÍAS. 💀🗡️ | ZELDA OCARINA OF TIME REMAKE",
+      "url": "https://www.youtube.com/watch?v=1UGfnb1Dq7o",
+      "thumbnail": "https://i2.ytimg.com/vi/1UGfnb1Dq7o/hqdefault.jpg",
+      "published": "2026-10-25T23:00:14+00:00",
+      "type": "video"
+    },
     {
       "id": "tAgrjRB3zxU",
       "title": "FALTAN 15 DÍAS... 💚🗡️ | ZELDA OCARINA OF TIME REMAKE",
@@ -115,14 +123,6 @@
       "url": "https://www.youtube.com/watch?v=CNYMHTKSoP0",
       "thumbnail": "https://i4.ytimg.com/vi/CNYMHTKSoP0/hqdefault.jpg",
       "published": "2026-10-07T14:00:32+00:00",
-      "type": "video"
-    },
-    {
-      "id": "2A8tQZiq1pI",
-      "title": "FALTA 1 MES. 💚🗡️ | ZELDA OCARINA OF TIME REMAKE",
-      "url": "https://www.youtube.com/watch?v=2A8tQZiq1pI",
-      "thumbnail": "https://i3.ytimg.com/vi/2A8tQZiq1pI/hqdefault.jpg",
-      "published": "2026-10-05T22:00:04+00:00",
       "type": "video"
     }
   ]
