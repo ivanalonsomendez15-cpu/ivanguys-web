@@ -16,8 +16,10 @@ pc=Path("PC_Windows")
 if pc.is_dir():
     main_window=pc/"SIM_TURBO_PC.cs"
     change(main_window,'AETHER CLINIC V11','AETHER CLINIC V12',"Windows main clinic label")
-    change(main_window,'SIM TURBO PC ULTRA V11  |  Centro de red y mando Android',
-           'SIM TURBO PC ULTRA V12  |  Red, juegos y móvil',"Windows main window title")
+    title=main_window.read_text(encoding="utf-8-sig")
+    title=title.replace('SIM TURBO PC ULTRA V11  |  Centro de red y mando Android',
+                        'SIM TURBO PC ULTRA V12  |  Red, juegos y móvil')
+    main_window.write_text(title,encoding="utf-8-sig")
     clinic=pc/"V11_SystemClinic.cs"
     change(clinic,'var pad=Tab(tabs,"MANDO ANDROID");',
            'var pad=Tab(tabs,"MANDO ANDROID");\n      var image=Tab(tabs,"IMAGEN / 4K");',"Windows image tab")
@@ -49,8 +51,10 @@ if android.is_dir():
         private android.widget.Spinner v12ProfileMode;
         private TextView v12Info;
         private boolean v12MonitorRequested=false;''',"Android V12 fields")
-    change(main,'HYPERLINK ANDROID V11 · MANDO PC',
-           'HYPERLINK ANDROID V12 · MONITOR Y MANDO PC',"Android V12 title")
+    label=main.read_text(encoding="utf-8")
+    label=label.replace('HYPERLINK ANDROID V11 · MANDO PC',
+                        'HYPERLINK ANDROID V12 · MONITOR Y MANDO PC')
+    main.write_text(label,encoding="utf-8")
     section='''        LinearLayout aetherCard=card();root.addView(aetherCard);
         aetherCard.addView(text("AETHER V12 · MONITOR MÓVIL Y JUEGOS",15,CYAN,true));
         gap(aetherCard,9);
