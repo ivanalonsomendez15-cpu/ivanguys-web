@@ -257,7 +257,7 @@ namespace SimTurboPC {
           var request=(HttpWebRequest)WebRequest.Create(providerUrls[index]);
           request.Timeout=4200;request.ReadWriteTimeout=4200;
           request.Method="GET";request.AllowAutoRedirect=false;
-          request.Headers["Accept"]="application/dns-json";
+          request.Accept="application/dns-json";
           request.UserAgent="SimTurboAetherV10/1.0";
           watch.Restart();
           using(var resp=(HttpWebResponse)request.GetResponse()){
