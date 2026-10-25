@@ -2,7 +2,7 @@
 """Package all editable SIM TURBO V10 PC / Android V4 / Cloudflare sources."""
 from pathlib import Path
 from zipfile import ZipFile, ZIP_DEFLATED
-import base64, io, shutil, subprocess, sys, tarfile, tempfile
+import base64, io, shutil, subprocess, sys, tarfile, tempfile, hashlib
 BASE=Path(__file__).resolve().parent
 ROOT=BASE.parent
 NAME="SIM_TURBO_PC_ULTRA_V12_PROYECTO_COMPLETO"
@@ -139,6 +139,13 @@ if ($LASTEXITCODE -ne 0) { throw "Error compilando C#" }
 Write-Host "Compilación completa"
 '''
         (project/"compilar_windows.ps1").write_text(powershell,encoding="utf-8")
+        # Reproducible file-by-file hashes inside the editable source package.
+        hashes=[]
+        for f in sorted(project.rglob("*")):
+            if f.is_file():
+                hashes.append(hashlib.sha256(f.read_bytes()).hexdigest()+"  "+f.relative_to(project).as_posix())
+        (project/"SHA256SUMS.txt").write_text("\n".join(hashes)+"\n",encoding="utf-8")
+        assert len(hashes)>=40
         dest=ROOT/"EXPORTS"
         dest.mkdir(exist_ok=True)
         zip_path=dest/(NAME+".zip")
@@ -153,6 +160,7 @@ Write-Host "Compilación completa"
             assert any(n.endswith("Cloudflare/aether-worker.js") for n in entries)
             assert any(n.endswith("Cloudflare/region_node.py") for n in entries)
             assert any(n.endswith("AETHER_generador_ideas.py") for n in entries)
+            assert any(n.endswith("SHA256SUMS.txt") for n in entries)
             assert any(n.endswith("PC_Windows/V12_LanDiscovery.cs") for n in entries)
             assert any(n.endswith("PC_Windows/V12_SuperResolution.cs") for n in entries)
             assert any(n.endswith("Android/app/src/main/java/com/simturbopc/ultra/AetherMonitorService.java") for n in entries)
