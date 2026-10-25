@@ -19,6 +19,7 @@ if (e.Error != null) {
 '@
 ReplaceOnce 'var result = (SpeedResult)e.Result;' @'
 var result = (SpeedResult)e.Result;
+                bool speedWasHybrid = hybridGuardPending;
                 if(hybridGuardPending) {
                     hybridGuardPending=false;
                     double baseMbps=hybridGuardBaseline;
@@ -34,8 +35,8 @@ var result = (SpeedResult)e.Result;
                 }
 '@
 ReplaceOnce 'lastMbps = result.Mbps;' @'
-lastMbps = result.Mbps;
-                    if(!hybridOn) lastMeasuredAt=DateTime.Now;
+if(!speedWasHybrid) lastMbps = result.Mbps;
+                    if(!speedWasHybrid && !hybridOn) lastMeasuredAt=DateTime.Now;
 '@
 $guard=@'
 if(tester.IsBusy || lastMbps <= 0 || (DateTime.Now-lastMeasuredAt).TotalMinutes>3) {
