@@ -18,6 +18,9 @@ namespace SimTurboPC {
         Label info;
         Button go, cancel;
         CancellationTokenSource cts;
+        TcpClient activeCellClient;
+        readonly object cellClientLock=new object();
+        void CloseCellSocket() { lock(cellClientLock){ if(activeCellClient!=null) try{activeCellClient.Close();}catch{} } }
         volatile bool running;
         long wifiBytes, cellBytes;
         readonly object writeLock = new object();
@@ -41,8 +44,8 @@ namespace SimTurboPC {
             info=new Label{Text="Conexión móvil: "+phoneIp+" · Puerto 45726 (la APK debe tener SIM activa)",Location=new Point(24,281),Size=new Size(730,49),ForeColor=Color.LightCyan};Controls.Add(info);
             log=new TextBox{Multiline=true,ReadOnly=true,ScrollBars=ScrollBars.Vertical,Location=new Point(24,329),Size=new Size(719,125),Font=new Font("Consolas",10),BackColor=Color.FromArgb(14,23,40),ForeColor=Color.White};Controls.Add(log);
             go.Click += (s,e)=>StartDownload();
-            cancel.Click += (s,e)=>{if(cts!=null)cts.Cancel();Log("Cancelación solicitada...");};
-            FormClosing += (s,e)=>{if(cts!=null)cts.Cancel();};
+            cancel.Click += (s,e)=>{if(cts!=null)cts.Cancel();CloseCellSocket();Log("Cancelación solicitada...");};
+            FormClosing += (s,e)=>{if(cts!=null)cts.Cancel();CloseCellSocket();};
             Log("Límite de esta prueba: 128 MiB. Requiere HTTPS, soporte Range e identificador de versión.");
             Log("Los datos de la SIM se descuentan de la tarifa. Puede ir peor si Wi-Fi local es débil.");
         }
@@ -119,6 +122,7 @@ namespace SimTurboPC {
         }
         byte[] CellPart(Uri url,long start,long end,long total,string validator,CancellationToken ct) {
             using(var client=new TcpClient()) {
+                lock(cellClientLock) activeCellClient=client;
                 IAsyncResult ar=client.BeginConnect(phoneIp,45726,null,null);
                 try{if(!ar.AsyncWaitHandle.WaitOne(5000))throw new IOException("No responde puerto 45726 del móvil (activa SIM y emparejamiento)");client.EndConnect(ar);}
                 finally{ar.AsyncWaitHandle.Close();}
@@ -222,6 +226,7 @@ namespace SimTurboPC {
                                         Interlocked.Exchange(ref disableCell,1);
                                         Interlocked.Exchange(ref cellPending,2);
                                         queue.Enqueue(cellPart);
+                                        CloseCellSocket();
                                         Log("AETHER-GUARD: fragmento móvil tardando demasiado; recuperado por el PC.");
                                     } else Thread.Sleep(35);
                                 } else if(queue.IsEmpty)break;
@@ -252,7 +257,7 @@ namespace SimTurboPC {
                                 if(!cancellation.IsCancellationRequested){
                                     firstSimError=true;
                                     Interlocked.Exchange(ref disableCell,1);
-                                    queue.Enqueue(part);
+                                    if(Volatile.Read(ref cellPending)!=2) queue.Enqueue(part);
                                     Log("AETHER-FALLBACK: fallo móvil ("+ex.Message+
                                         "). La red principal continuará sola.");
                                 }
@@ -270,7 +275,9 @@ namespace SimTurboPC {
                         // No perder una pieza aunque la SIM falle después de vaciar la cola.
                         if(Volatile.Read(ref cellPending)!=0) {
                             Interlocked.Exchange(ref disableCell,1);
-                            if(!written.Contains(cellPart.start)){
+                            bool cellWritten;
+                            lock(writeLock) cellWritten=written.Contains(cellPart.start);
+                            if(!cellWritten){
                                 var data=WifiPart(uri,cellPart.start,cellPart.end,total,validator,cancellation);
                                 commit(cellPart,data,false);
                             }
@@ -282,7 +289,8 @@ namespace SimTurboPC {
                         throw new IOException("Descarga incompleta: "+finished+"/"+jobsTotal+" fragmentos");
                     // Impide que un worker de la SIM escriba después de cerrar el archivo.
                     if(cts!=null)cts.Cancel();
-                    sim.Join(100);
+                    CloseCellSocket();
+                    sim.Join(200);
                     fs.Flush();
                 }
                 success=true;
