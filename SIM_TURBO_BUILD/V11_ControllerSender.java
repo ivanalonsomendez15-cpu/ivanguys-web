@@ -82,7 +82,7 @@ public final class ControllerSender {
     }
 
     public void up(String key) {
-        if (!ALLOWED.contains(key)) return;
+        if (!running || !ALLOWED.contains(key)) return;
         held.remove(key);
         scheduler.execute(() -> send("UP",key));
     }
