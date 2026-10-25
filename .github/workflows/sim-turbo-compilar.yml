@@ -1,0 +1,116 @@
+name: SIM TURBO PC ULTRA - Compilar instaladores
+on:
+  push:
+    branches: [sim-turbo-build-v3-20261025]
+    paths:
+      - 'SIM_TURBO_BUILD/**'
+      - '.github/workflows/sim-turbo-compilar.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extraer proyecto Android
+        run: base64 -d SIM_TURBO_BUILD/Android_source.tar.xz.b64 | tar -xJf -
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+      - name: Instalar SDK Android
+        run: sdkmanager 'platforms;android-35' 'build-tools;35.0.0'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+      - name: Compilar APK de desarrollo
+        working-directory: Android
+        run: gradle --no-daemon :app:assembleDebug
+      - uses: actions/upload-artifact@v4
+        with:
+          name: apk
+          path: Android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extraer proyecto Windows
+        shell: pwsh
+        run: |
+          $data=[Convert]::FromBase64String((Get-Content -Raw 'SIM_TURBO_BUILD/Windows_source.tar.xz.b64').Trim())
+          [IO.File]::WriteAllBytes((Join-Path $pwd 'Windows_source.tar.xz'), $data)
+          tar -xf Windows_source.tar.xz
+      - name: Compilar ejecutable real
+        shell: pwsh
+        run: |
+          $csc="$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\csc.exe"
+          & $csc /nologo /optimize+ /target:winexe /out:SIM_TURBO_PC_ULTRA_V3.exe /r:System.dll /r:System.Core.dll /r:System.Drawing.dll /r:System.Windows.Forms.dll PC_Windows/SIM_TURBO_PC.cs
+          if($LASTEXITCODE -ne 0) { throw 'Error compilando C#' }
+      - name: Crear instalador Inno Setup
+        shell: pwsh
+        run: |
+          $iss=@'
+          [Setup]
+          AppId={{6D9797F5-2438-49E6-B5E7-0C26FE91B88A}
+          AppName=SIM TURBO PC ULTRA
+          AppVersion=3.1
+          DefaultDirName={localappdata}\Programs\SIM TURBO PC ULTRA
+          PrivilegesRequired=lowest
+          OutputDir=release
+          OutputBaseFilename=SIM_TURBO_PC_ULTRA_V3_SETUP
+          Compression=lzma
+          SolidCompression=yes
+          WizardStyle=modern
+          UninstallDisplayIcon={app}\SIM_TURBO_PC_ULTRA_V3.exe
+          [Files]
+          Source: "SIM_TURBO_PC_ULTRA_V3.exe"; DestDir: "{app}"; Flags: ignoreversion
+          [Icons]
+          Name: "{autoprograms}\SIM TURBO PC ULTRA"; Filename: "{app}\SIM_TURBO_PC_ULTRA_V3.exe"
+          Name: "{autodesktop}\SIM TURBO PC ULTRA"; Filename: "{app}\SIM_TURBO_PC_ULTRA_V3.exe"; Tasks: desktopicon
+          [Tasks]
+          Name: desktopicon; Description: "Crear acceso directo en el escritorio"; GroupDescription: "Accesos directos:"; Flags: unchecked
+          [Run]
+          Filename: "{app}\SIM_TURBO_PC_ULTRA_V3.exe"; Description: "Abrir SIM TURBO PC ULTRA"; Flags: nowait postinstall skipifsilent
+          '@
+          Set-Content -Path 'installer.iss' -Value $iss -Encoding UTF8
+          $compiler='C:\Program Files (x86)\Inno Setup 6\ISCC.exe'
+          if(!(Test-Path $compiler)) { choco install innosetup -y --no-progress }
+          if(!(Test-Path $compiler)) { throw 'No se pudo instalar Inno Setup' }
+          & $compiler installer.iss
+          if($LASTEXITCODE -ne 0) { throw 'Error generando instalador' }
+      - uses: actions/upload-artifact@v4
+        with:
+          name: exe
+          path: |
+            release/SIM_TURBO_PC_ULTRA_V3_SETUP.exe
+            SIM_TURBO_PC_ULTRA_V3.exe
+          if-no-files-found: error
+  publicar:
+    runs-on: ubuntu-latest
+    needs: [android, windows]
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: apk
+          path: resultados/apk
+      - uses: actions/download-artifact@v4
+        with:
+          name: exe
+          path: resultados/exe
+      - name: Publicar archivos compilados en rama aislada
+        run: |
+          cp resultados/apk/app-debug.apk SIM_TURBO_BUILD/SIM_TURBO_PC_ULTRA_V3.apk
+          cp resultados/exe/release/SIM_TURBO_PC_ULTRA_V3_SETUP.exe SIM_TURBO_BUILD/SIM_TURBO_PC_ULTRA_V3_SETUP.exe
+          cp resultados/exe/SIM_TURBO_PC_ULTRA_V3.exe SIM_TURBO_BUILD/SIM_TURBO_PC_ULTRA_V3_PORTABLE.exe
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git config user.name 'github-actions[bot]'
+          git add SIM_TURBO_BUILD/*.apk SIM_TURBO_BUILD/*.exe
+          git commit -m 'Publicar APK y EXE compilados SIM TURBO PC ULTRA V3'
+          git push
