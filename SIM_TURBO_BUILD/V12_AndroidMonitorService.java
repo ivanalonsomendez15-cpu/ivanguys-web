@@ -51,8 +51,8 @@ public final class AetherMonitorService extends Service {
                     int scale=battery.getIntExtra(BatteryManager.EXTRA_SCALE,-1);
                     if(level>=0 && scale>0) percent=Math.round(level*100f/scale);
                 }
-                String game=GameProfiles.lastConfiguredGame(this,5*60*1000L);
-                String profile=game==null?"Sin juego configurado":GameProfiles.profile(this,game);
+                String game=GameProfiles.lastConfiguredGame(AetherMonitorService.this,5*60*1000L);
+                String profile=game==null?"Sin juego configurado":GameProfiles.profile(AetherMonitorService.this,game);
                 String status=transport+" · batería "+(percent<0?"?":percent+"%")+
                     " · juego "+(game==null?"no detectado":game)+" · perfil "+profile;
                 getSharedPreferences(PREFS,MODE_PRIVATE).edit()
