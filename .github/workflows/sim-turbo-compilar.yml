@@ -65,11 +65,14 @@ jobs:
       - name: Integrar motor Windows V4
         shell: pwsh
         run: python SIM_TURBO_BUILD/V4Patch.py
+      - name: Integrar centro gaming FPS + drivers V5
+        shell: pwsh
+        run: python SIM_TURBO_BUILD/V5Patch.py
       - name: Compilar ejecutable real
         shell: pwsh
         run: |
           $csc="$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\csc.exe"
-          & $csc /nologo /optimize+ /target:winexe /out:SIM_TURBO_PC_ULTRA_V3.exe /r:System.dll /r:System.Core.dll /r:System.Drawing.dll /r:System.Windows.Forms.dll PC_Windows\SIM_TURBO_PC.cs PC_Windows\V4_BondedDownloader.cs
+          & $csc /nologo /optimize+ /target:winexe /out:SIM_TURBO_PC_ULTRA_V3.exe /r:System.dll /r:System.Core.dll /r:System.Drawing.dll /r:System.Windows.Forms.dll /r:System.Management.dll PC_Windows\SIM_TURBO_PC.cs PC_Windows\V4_BondedDownloader.cs PC_Windows\V5_PerformanceCenter.cs
           if($LASTEXITCODE -ne 0) { throw 'Error compilando C#' }
       - name: Crear instalador Inno Setup
         shell: pwsh
@@ -78,7 +81,7 @@ jobs:
           [Setup]
           AppId={{6D9797F5-2438-49E6-B5E7-0C26FE91B88A}
           AppName=SIM TURBO PC ULTRA
-          AppVersion=4.0
+          AppVersion=5.0
           DefaultDirName={localappdata}\Programs\SIM TURBO PC ULTRA
           PrivilegesRequired=lowest
           OutputDir=release
