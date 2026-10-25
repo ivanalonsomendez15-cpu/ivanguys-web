@@ -60,6 +60,9 @@ jobs:
           $cs=$cs.Replace($tlsAnchor,'ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12;' + [Environment]::NewLine + '                ' + $tlsAnchor)
           $cs=$cs.Replace('ULTRA   V3.0','ULTRA   V3.2')
           [IO.File]::WriteAllText((Join-Path $pwd $path),$cs,[Text.UTF8Encoding]::new($true))
+      - name: Aplicar proteccion de velocidad V3.3
+        shell: pwsh
+        run: ./SIM_TURBO_BUILD/GuardV33.ps1
       - name: Compilar ejecutable real
         shell: pwsh
         run: |
@@ -73,7 +76,7 @@ jobs:
           [Setup]
           AppId={{6D9797F5-2438-49E6-B5E7-0C26FE91B88A}
           AppName=SIM TURBO PC ULTRA
-          AppVersion=3.2
+          AppVersion=3.3
           DefaultDirName={localappdata}\Programs\SIM TURBO PC ULTRA
           PrivilegesRequired=lowest
           OutputDir=release
