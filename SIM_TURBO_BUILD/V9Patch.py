@@ -45,4 +45,12 @@ s=s.replace('"AETHER-LINK V8', '"AETHER-LINK V9')
 p.write_text(s,encoding="utf-8-sig")
 for fn in ["V9_Aether80Lab.cs","V9_Radar.cs"]:
     shutil.copyfile(base/fn,"PC_Windows/"+fn)
+# Precision workbench: additional measurable tools instead of placeholder-only buttons.
+p=Path("PC_Windows/V5_PerformanceCenter.cs")
+s=p.read_text(encoding="utf-8-sig")
+old='AddButton(info,"ABRIR ADMINISTRADOR TAREAS",450,172,420,()=>Start("taskmgr.exe",""));'
+if old not in s:raise SystemExit("V9 precision: info tab anchor missing")
+s=s.replace(old,'AddButton(info,"INVESTIGACIÓN DE PRECISIÓN V9",450,172,420,()=>new AetherResearchV9().ShowDialog(this));')
+p.write_text(s,encoding="utf-8-sig")
+shutil.copyfile(base/"V9_ResearchLab.cs","PC_Windows/V9_ResearchLab.cs")
 print("V9: 80 modules, Wi-Fi Radar, adaptive chunks, SIM budget and prior modules integrated")
