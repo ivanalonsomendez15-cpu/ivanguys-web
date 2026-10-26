@@ -197,16 +197,37 @@ jobs:
         with:
           name: exe
           path: resultados/exe
-      - name: Publicar archivos compilados en rama aislada
+      - name: Publicar compilaciones V17 sin conflictos concurrentes
+        shell: bash
         run: |
-          cp resultados/apk/app-debug.apk SIM_TURBO_BUILD/SIM_TURBO_PC_ULTRA_V17.apk
-          cp resultados/exe/release/SIM_TURBO_PC_ULTRA_V17_SETUP.exe SIM_TURBO_BUILD/SIM_TURBO_PC_ULTRA_V17_SETUP.exe
-          cp resultados/exe/SIM_TURBO_PC_ULTRA_V17.exe SIM_TURBO_BUILD/SIM_TURBO_PC_ULTRA_V17_PORTABLE.exe
+          set -euo pipefail
+          branch=sim-turbo-build-v3-20261025
+          cp resultados/apk/app-debug.apk /tmp/AETHER_V17.apk
+          cp resultados/exe/release/SIM_TURBO_PC_ULTRA_V17_SETUP.exe /tmp/AETHER_V17_SETUP.exe
+          cp resultados/exe/SIM_TURBO_PC_ULTRA_V17.exe /tmp/AETHER_V17_PORTABLE.exe
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git config user.name 'github-actions[bot]'
-          git add SIM_TURBO_BUILD/*.apk SIM_TURBO_BUILD/*.exe
-          if ! git diff --cached --quiet; then
+          for attempt in 1 2 3; do
+            git fetch origin "$branch"
+            changed="$(git diff --name-only "$GITHUB_SHA" "origin/$branch" -- SIM_TURBO_BUILD AETHER_CLOUDFLARE)"
+            if printf '%s\n' "$changed" | grep -Eq '^(SIM_TURBO_BUILD/.*\.(py|cs|java|md|b64)|AETHER_CLOUDFLARE/)'; then
+              echo "Fuentes posteriores detectadas; no publicar binarios obsoletos."
+              exit 0
+            fi
+            git reset --hard "origin/$branch"
+            cp /tmp/AETHER_V17.apk SIM_TURBO_BUILD/SIM_TURBO_PC_ULTRA_V17.apk
+            cp /tmp/AETHER_V17_SETUP.exe SIM_TURBO_BUILD/SIM_TURBO_PC_ULTRA_V17_SETUP.exe
+            cp /tmp/AETHER_V17_PORTABLE.exe SIM_TURBO_BUILD/SIM_TURBO_PC_ULTRA_V17_PORTABLE.exe
+            git add SIM_TURBO_BUILD/SIM_TURBO_PC_ULTRA_V17.apk SIM_TURBO_BUILD/SIM_TURBO_PC_ULTRA_V17_SETUP.exe SIM_TURBO_BUILD/SIM_TURBO_PC_ULTRA_V17_PORTABLE.exe
+            if git diff --cached --quiet; then
+              echo "Binarios ya publicados con el mismo contenido."
+              exit 0
+            fi
             git commit -m 'Publicar compilaciones AETHER V17 Windows y Android'
-            git pull --rebase origin sim-turbo-build-v3-20261025
-            git push
-          fi
+            if git push origin "HEAD:$branch"; then
+              echo "Binarios V17 publicados."
+              exit 0
+            fi
+            echo "Actualización simultánea; reintentando $attempt"
+          done
+          exit 1
