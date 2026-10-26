@@ -96,7 +96,7 @@ def convert(input_file, output_file, tile=192):
     if not ok:
         raise RuntimeError("Error al codificar PNG.")
     bytes_png.tofile(str(dst))
-    return f"ÉXITO: {w}×{h} → {w*2}×{h*2} PNG · CNN FSRCNN x2 · {dst}"
+    return f"ÉXITO: {w}×{h} -> {w*2}×{h*2} PNG · CNN FSRCNN x2 · {dst}"
 
 
 def self_test():
@@ -119,8 +119,8 @@ def self_test():
     decoded = cv2.imdecode(data, cv2.IMREAD_COLOR)
     assert decoded is not None and decoded.shape==up.shape
     assert (1920*SCALE,1080*SCALE)==(3840,2160)
-    print(f"TEST CNN REAL: OK; 83x67 → 166x134; diferencia de bicúbica MAE={mae:.3f}")
-    print("Entrada 1920x1080 → salida 3840x2160 conforme a escala x2.")
+    print(f"TEST CNN REAL: OK; 83x67 -> 166x134; diferencia de bicúbica MAE={mae:.3f}")
+    print("Entrada 1920x1080 -> salida 3840x2160 conforme a escala x2.")
     return 0
 
 
