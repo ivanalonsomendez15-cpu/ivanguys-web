@@ -4,6 +4,7 @@ on:
     branches: [sim-turbo-build-v3-20261025]
     paths:
       - '.github/workflows/sim-turbo-fuentes.yml'
+      - '.github/workflows/sim-turbo-compilar.yml'
       - 'SIM_TURBO_BUILD/*.py'
       - 'SIM_TURBO_BUILD/*.cs'
       - 'SIM_TURBO_BUILD/*.java'
@@ -114,8 +115,8 @@ jobs:
           for attempt in 1 2 3; do
             git fetch origin "$branch"
             # Never publish a stale ZIP after another run changed the source files.
-            changed="$(git diff --name-only "$GITHUB_SHA" "origin/$branch" -- SIM_TURBO_BUILD AETHER_CLOUDFLARE .github/workflows/sim-turbo-fuentes.yml)"
-            if printf '%s\n' "$changed" | grep -Eq '^(SIM_TURBO_BUILD/.*\.(py|cs|java|md|b64)|AETHER_CLOUDFLARE/|\.github/workflows/sim-turbo-fuentes\.yml)'; then
+            changed="$(git diff --name-only "$GITHUB_SHA" "origin/$branch" -- SIM_TURBO_BUILD AETHER_CLOUDFLARE .github/workflows/sim-turbo-fuentes.yml .github/workflows/sim-turbo-compilar.yml)"
+            if printf '%s\n' "$changed" | grep -Eq '^(SIM_TURBO_BUILD/.*\.(py|cs|java|md|b64)|AETHER_CLOUDFLARE/|\.github/workflows/sim-turbo-fuentes\.yml|\.github/workflows/sim-turbo-compilar\.yml)'; then
               echo "Newer source changes detected; do not publish a stale ZIP."
               exit 0
             fi
