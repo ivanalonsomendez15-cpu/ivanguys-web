@@ -35,6 +35,8 @@ jobs:
       - name: Construir IA 4K autónoma para Windows sin instalar Python
         shell: pwsh
         run: |
+          $env:PYTHONIOENCODING='utf-8'
+          $env:PYTHONUTF8='1'
           python -m pip install --disable-pip-version-check --quiet 'opencv-contrib-python==4.11.0.86' 'pyinstaller==6.16.0'
           if ($LASTEXITCODE -ne 0) { throw 'No se pudo preparar la IA' }
           $src='fuentes/SIM_TURBO_PC_ULTRA_V21_PROYECTO_COMPLETO/IA_SUPERRESOLUCION'
