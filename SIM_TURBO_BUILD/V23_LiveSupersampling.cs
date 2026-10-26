@@ -53,7 +53,8 @@ namespace SimTurboPC {
         mode=NewMode();
         if(!EnumSettings(null,index,ref mode))break;
         if((mode.dmPelsWidth!=2560||mode.dmPelsHeight!=1440) &&
-           (mode.dmPelsWidth!=3840||mode.dmPelsHeight!=2160))continue;
+           (mode.dmPelsWidth!=3840||mode.dmPelsHeight!=2160) &&
+           (mode.dmPelsWidth!=2880||mode.dmPelsHeight!=1620))continue;
         string name=mode.dmPelsWidth+"x"+mode.dmPelsHeight;
         if(seen.Add(name))list.Add(name);
       }
@@ -108,6 +109,7 @@ namespace SimTurboPC {
       quality=new ComboBox{DropDownStyle=ComboBoxStyle.DropDownList,
         Location=new Point(25,297),Width=650,Height=34};
       quality.Items.Add("EQUILIBRADO · 2560x1440 (menos coste en GPU)");
+      quality.Items.Add("IA DLDSR · 2880x1620 (si NVIDIA lo permite)");
       quality.Items.Add("MÁXIMO · 3840x2160 (4K virtual · más coste en GPU)");
       quality.SelectedIndex=LoadPreferred();
       quality.SelectedIndexChanged+=(s,e)=>SavePreferred();
@@ -146,13 +148,17 @@ namespace SimTurboPC {
       b.FlatAppearance.BorderSize=0;Controls.Add(b);return b;
     }
     int LoadPreferred(){
-      try{if(File.Exists(preferences) && File.ReadAllText(preferences).Trim()=="1440p")return 0;}catch{}
-      return 1; // 4K selected by default; nothing happens until user confirms.
+      try{if(File.Exists(preferences)){
+          string stored=File.ReadAllText(preferences).Trim();
+          if(stored=="1440p")return 0;
+          if(stored=="DLDSR")return 1;
+        }}catch{}
+      return 2; // 4K selected by default; nothing happens until user confirms.
     }
     void SavePreferred(){
       try{
         Directory.CreateDirectory(Path.GetDirectoryName(preferences));
-        File.WriteAllText(preferences,quality.SelectedIndex==0?"1440p":"4K");
+        File.WriteAllText(preferences,quality.SelectedIndex==0?"1440p":quality.SelectedIndex==1?"DLDSR":"4K");
       }catch{} // preference write never prevents manual access.
     }
     void RefreshStatus(){
@@ -178,8 +184,8 @@ namespace SimTurboPC {
     }
     void Activate(){
       if(active){status.Text="Ya está activo. Primero restaura para cambiar de calidad.";return;}
-      int width=quality.SelectedIndex==0?2560:3840;
-      int height=quality.SelectedIndex==0?1440:2160;
+      int width=quality.SelectedIndex==0?2560:quality.SelectedIndex==1?2880:3840;
+      int height=quality.SelectedIndex==0?1440:quality.SelectedIndex==1?1620:2160;
       var current=NewMode();
       if(!EnumSettings(null,CURRENT,ref current)){
         status.Text="No se puede consultar la resolución actual.";return;
@@ -191,7 +197,7 @@ namespace SimTurboPC {
       if(!HasMode(width,height,out target)){
         status.Text="NO DISPONIBLE: Windows no anuncia "+width+"x"+height+" como modo compatible.\r\n"+
           "Abre Panel de control NVIDIA > Controlar configuración 3D > Factores DSR.\r\n"+
-          "Para 1080p->4K marca DSR 4,00x, pulsa Aplicar y vuelve a AETHER.\r\n"+
+          "Para 1080p->4K marca DSR 4,00x; para DLDSR selecciona 2,25x. Pulsa Aplicar.\r\n"+
           "No fuerces resoluciones personalizadas que el controlador no ofrezca.";
         RefreshStatus();return;
       }
@@ -236,7 +242,7 @@ namespace SimTurboPC {
       MessageBox.Show(this,
         "1. Abre el Panel de control de NVIDIA desde el escritorio.\r\n"+
         "2. En Controlar configuración 3D busca «Factores DSR».\r\n"+
-        "3. Para una pantalla 1920x1080 activa «DSR 4,00x» (3840x2160).\r\n"+
+        "3. Para una pantalla 1920x1080 activa «DSR 4,00x» (3840x2160) o DLDSR 2,25x (2880x1620).\r\n"+
         "4. Pulsa Aplicar. Regresa a AETHER y elige MÁXIMO 4K.\r\n"+
         "5. AETHER solo cambiará el escritorio si el modo aparece en la lista del controlador.\r\n"+
         "6. Si un juego tiene menú de resolución propio, elige 3840x2160 dentro del juego.\r\n\r\n"+
