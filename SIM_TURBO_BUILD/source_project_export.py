@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
-"""Package all editable SIM TURBO V18 PC / Android / Cloudflare sources."""
+"""Package all editable SIM TURBO V21 PC / Android / Cloudflare / AI sources."""
 from pathlib import Path
 from zipfile import ZipFile, ZIP_DEFLATED
 import base64, io, shutil, subprocess, sys, tarfile, tempfile, hashlib
 BASE=Path(__file__).resolve().parent
 ROOT=BASE.parent
-NAME="SIM_TURBO_PC_ULTRA_V19_PROYECTO_COMPLETO"
-SRC=["SIM_TURBO_PC.cs","V4_BondedDownloader.cs","V5_PerformanceCenter.cs","V6_HyperAdaptive.cs","V7_PulseRoute.cs","V8_AetherDownloader.cs","V8_AetherAutopilot.cs","V9_Aether80Lab.cs","V9_Radar.cs","V9_ResearchLab.cs","V10_InnovationLab.cs","V10_IdeaEngine.cs","V11_SystemClinic.cs","V11_AndroidGamepad.cs","V12_LanDiscovery.cs","V12_SuperResolution.cs","V13_NetworkLab.cs","V14_LinkAudit.cs","V15_PerformanceProfiler.cs","V16_ExperimentLab.cs","V17_SecurePacket.cs","V17_GraphicsAdvisor.cs","V18_StorageClinic.cs","V19_GameProcessClinic.cs"]
-PATCHES=["V%dPatch.py"%n for n in range(4,20)]
+NAME="SIM_TURBO_PC_ULTRA_V21_PROYECTO_COMPLETO"
+SRC=["SIM_TURBO_PC.cs","V4_BondedDownloader.cs","V5_PerformanceCenter.cs","V6_HyperAdaptive.cs","V7_PulseRoute.cs","V8_AetherDownloader.cs","V8_AetherAutopilot.cs","V9_Aether80Lab.cs","V9_Radar.cs","V9_ResearchLab.cs","V10_InnovationLab.cs","V10_IdeaEngine.cs","V11_SystemClinic.cs","V11_AndroidGamepad.cs","V12_LanDiscovery.cs","V12_SuperResolution.cs","V13_NetworkLab.cs","V14_LinkAudit.cs","V15_PerformanceProfiler.cs","V16_ExperimentLab.cs","V17_SecurePacket.cs","V17_GraphicsAdvisor.cs","V18_StorageClinic.cs","V19_GameProcessClinic.cs","V20_NetworkStability.cs","V21_AiSuperResolution.cs"]
+PATCHES=["V%dPatch.py"%n for n in range(4,22)]
 def unpack(archive,dst):
     data=base64.b64decode(archive.read_text(encoding="utf-8").strip())
     with tarfile.open(fileobj=io.BytesIO(data),mode="r:xz") as t:
@@ -30,7 +30,7 @@ def visual_studio(pc):
     compile="\n".join('    <Compile Include="%s" />'%n for n in SRC)
     csproj='''<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-<PropertyGroup><Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration><Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform><ProjectGuid>%s</ProjectGuid><OutputType>WinExe</OutputType><RootNamespace>SimTurboPC</RootNamespace><AssemblyName>SIM_TURBO_PC_ULTRA_V19</AssemblyName><TargetFrameworkVersion>v4.8</TargetFrameworkVersion><FileAlignment>512</FileAlignment></PropertyGroup>
+<PropertyGroup><Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration><Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform><ProjectGuid>%s</ProjectGuid><OutputType>WinExe</OutputType><RootNamespace>SimTurboPC</RootNamespace><AssemblyName>SIM_TURBO_PC_ULTRA_V21</AssemblyName><TargetFrameworkVersion>v4.8</TargetFrameworkVersion><FileAlignment>512</FileAlignment></PropertyGroup>
 <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' "><DebugSymbols>true</DebugSymbols><DebugType>full</DebugType><Optimize>false</Optimize><OutputPath>bin\Debug\</OutputPath><DefineConstants>DEBUG;TRACE</DefineConstants><WarningLevel>4</WarningLevel></PropertyGroup>
 <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' "><DebugType>pdbonly</DebugType><Optimize>true</Optimize><OutputPath>bin\Release\</OutputPath><DefineConstants>TRACE</DefineConstants><WarningLevel>4</WarningLevel></PropertyGroup>
 <ItemGroup><Reference Include="System" /><Reference Include="System.Core" /><Reference Include="System.Drawing" /><Reference Include="System.Windows.Forms" /><Reference Include="System.Management" /></ItemGroup>
@@ -75,6 +75,23 @@ def main():
         assert "long-sky-d531" in (pc/"V10_InnovationLab.cs").read_text(encoding="utf-8-sig")
         assert (android/"app/src/main/java/com/simturbopc/ultra/BondedServer.java").is_file()
         visual_studio(pc)
+        ai=project/"IA_SUPERRESOLUCION"
+        ai.mkdir()
+        model=base64.b64decode((BASE/"V21_FSRCNN_x2.pb.b64").read_text(encoding="utf-8").strip(),validate=True)
+        if len(model)!=38973:raise ValueError("V21: modelo FSRCNN incompleto")
+        (ai/"FSRCNN_x2.pb").write_bytes(model)
+        shutil.copy2(BASE/"V21_IA_4K.py",ai/"AETHER_IA_4K.py")
+        shutil.copy2(BASE/"V21_APACHE_LICENSE.txt",ai/"LICENSE_MODELO_APACHE_2.0.txt")
+        (ai/"requirements.txt").write_text("opencv-contrib-python==4.11.0.86\\nnumpy>=1.23,<3\\n",encoding="utf-8")
+        (ai/"INSTRUCCIONES.txt").write_text(
+          "AETHER IA 4K V21 - modelo neuronal FSRCNN 2x preentrenado.\\n"
+          "1. Instalar Python 3.11 o 3.12.\\n"
+          "2. Ejecutar: py -m pip install opencv-contrib-python==4.11.0.86\\n"
+          "3. Ejecutar: py AETHER_IA_4K.py\\n"
+          "CLI: py AETHER_IA_4K.py --input foto1080p.png --output foto4k.png\\n"
+          "Test: py AETHER_IA_4K.py --self-test\\n"
+          "Pantalla 1080p nunca equivale a panel fisico 4K. No mejora FPS/juegos en vivo.\\n",
+          encoding="utf-8")
         cloud=project/"Cloudflare"
         cloud.mkdir()
         shutil.copy2(ROOT/"AETHER_CLOUDFLARE/aether-worker.js",cloud/"aether-worker.js")
@@ -83,7 +100,7 @@ def main():
         (project/"AETHER_generador_ideas.py").write_text("#!/usr/bin/env python3\n\"\"\"Generate a deterministic range from 1,000,000,000 combinatorial ideas.\nThese are templates, NOT independently researched inventions.\n\"\"\"\nimport argparse\nfrom pathlib import Path\nAXES=[\n[\"Wi-Fi\",\"Ethernet\",\"SIM 4G/5G\",\"router\",\"latencia\",\"subida\",\"descarga\",\"FPS\",\"seguridad\",\"diagnóstico\"],\n[\"en casa\",\"en videojuegos\",\"en streaming\",\"en videollamadas\",\"en portátil\",\"en escritorio\",\"en móviles\",\"en redes mixtas\",\"en LAN\",\"en servidor remoto\"],\n[\"detectar fallos\",\"medir patrones\",\"predecir congestión\",\"comparar rutas\",\"detectar regresiones\",\"medir capacidad\",\"registrar evidencias\",\"controlar carga\",\"detectar interrupciones\",\"estimar estabilidad\"],\n[\"historial\",\"muestras en vivo\",\"pruebas A/B\",\"simulación\",\"auditoría\",\"métricas agregadas\",\"muestreo limitado\",\"repetición de pruebas\",\"reglas configurables\",\"comprobación cruzada\"],\n[\"comparación estadística\",\"umbral adaptativo\",\"modelo probabilístico\",\"interpolación\",\"colas dinámicas\",\"detección de anomalías\",\"modelo lineal\",\"mediana robusta\",\"clasificador sencillo\",\"priorización heurística\"],\n[\"sin tocar Windows\",\"con intervención manual\",\"con confirmación\",\"en modo lectura\",\"con deshacer\",\"solo en LAN\",\"con datos mínimos\",\"con protección de datos\",\"en modo experimental\",\"con apagado inmediato\"],\n[\"ping\",\"jitter\",\"pérdida\",\"Mbps\",\"MB/s\",\"FPS\",\"latencia p95\",\"uso de CPU\",\"uso de memoria\",\"estabilidad horaria\"],\n[\"sin permisos elevados\",\"con registros locales\",\"sin enviar contraseñas\",\"con cifrado\",\"con controles visibles\",\"con límite de consumo\",\"con revisión de resultados\",\"con historial reversible\",\"con privacidad por diseño\",\"con modo offline\"],\n[\"panel de control\",\"mapa de calor\",\"alertas\",\"informe\",\"gráfico\",\"tabla comparativa\",\"línea temporal\",\"simulador\",\"panel de pruebas\",\"asistente técnico\"]]\ndef idea(n):\n    if n<0 or n>=1_000_000_000:raise ValueError(\"Fuera de rango\")\n    selected=[\"\"]*9\n    for i in range(8,-1,-1):\n        selected[i]=AXES[i][n%10]\n        n//=10\n    return \"Herramienta para %s %s: %s con %s y %s, operando %s, midiendo %s, protegiendo datos %s y mostrando %s.\"%tuple(selected)\nif __name__==\"__main__\":\n    p=argparse.ArgumentParser()\n    p.add_argument(\"--inicio\",type=int,default=0)\n    p.add_argument(\"--cantidad\",type=int,default=1000)\n    p.add_argument(\"--salida\",default=\"ideas_AETHER.txt\")\n    a=p.parse_args()\n    if not 0<=a.inicio<1_000_000_000 or not 1<=a.cantidad<=100_000 or a.inicio+a.cantidad>1_000_000_000:\n        p.error(\"Usa --cantidad entre 1 y 100000, sin superar el índice 999999999\")\n    with Path(a.salida).open(\"w\",encoding=\"utf-8\") as f:\n        f.write(\"Plantillas combinatorias, sin garantías ni validación\\n\")\n        for n in range(a.inicio,a.inicio+a.cantidad):\n            f.write(\"%09d: %s\\n\"%(n,idea(n)))\n    print(\"Generado:\",a.salida)\n",encoding="utf-8")
         assert "/api/health" in (cloud/"aether-worker.js").read_text()
         assert "/api/nodes" in (cloud/"aether-worker.js").read_text()
-        previous=project/"scripts_originales_V4_a_V19"
+        previous=project/"scripts_originales_V4_a_V21"
         previous.mkdir()
         for item in PATCHES:shutil.copy2(BASE/item,previous/item)
         for ext in ("*.cs","*.java"):
@@ -91,9 +108,9 @@ def main():
         workflow=project/".github/workflows"
         workflow.mkdir(parents=True)
         shutil.copy2(ROOT/".github/workflows/sim-turbo-compilar.yml",workflow/"sim-turbo-compilar.yml")
-        readme="""SIM TURBO PC ULTRA V19 — CÓDIGO FUENTE COMPLETO, SIN EJECUTABLES
+        readme="""SIM TURBO PC ULTRA V21 — CÓDIGO FUENTE COMPLETO, SIN EJECUTABLES
 ==============================================================
-PC_Windows/: programa C# WinForms, V4-V19 aplicadas; abre la solución .sln
+PC_Windows/: programa C# WinForms, V4-V21 aplicadas; abre la solución .sln
 en Visual Studio (con .NET Framework 4.8 Developer Pack).
 Android/: proyecto Java Gradle, con BondedServer V4 y mando V11;
 monitor visible, perfiles locales, acceso de uso opcional y detección PC V12.
@@ -101,7 +118,7 @@ V13: informe de capacidades de red del móvil, sin descarga ni ajustes.
 Abre en Android Studio
 (JDK 17, Gradle 8.9, SDK Android API 35).
 Cloudflare/aether-worker.js: código fuente del diagnóstico HTTPS.
-scripts_originales_V4_a_V19/: parches originales y módulos de cada versión.
+scripts_originales_V4_a_V21/: parches originales y módulos de cada versión.
 .github/workflows/: compilación automática de Windows y Android.
 
 Para compilar Windows desde esta carpeta sin usar el instalador:
@@ -139,6 +156,12 @@ V17: autenticación HMAC-SHA256 del mando Android-PC y de la consulta de capacid
 V18: Windows: auditoría de espacio en discos e inicio de sesión (solo nombres). Android: monitor con cadencia 20-60 s según batería, con notificación visible y sin ejecución oculta.
 V19: Windows: diagnóstico CPU/RAM por proceso seleccionado, sin estimar FPS. Android: detección voluntaria de juego registrado y selección de perfil del mando, sin modificar otros juegos.
 Cloudflare permanece sin servidores regionales físicamente verificados.
+V20: estabilidad ICMP Windows; diseños Android de mando por juego guardados.
+V21: IA neuronal auténtica FSRCNN x2 para archivos de imagen. Python/OpenCV Contrib necesarios.
+    En Windows: py -m pip install opencv-contrib-python==4.11.0.86
+    Ejecuta: py IA_SUPERRESOLUCION\\AETHER_IA_4K.py (GUI) o prueba con --self-test.
+    Si es 1920x1080 la salida es PNG 3840x2160. No 4K nativo en pantalla 1080p.
+    No mejora juegos en tiempo real; la IA solo procesa imágenes fijas.
 No incluye claves privadas, APK ni ejecutables.
 """
         (project/"LEEME.txt").write_text(readme,encoding="utf-8")
@@ -149,12 +172,14 @@ No incluye claves privadas, APK ni ejecutables.
         shutil.copy2(BASE/"CHANGELOG_V17.md",project/"CHANGELOG_V17.md")
         shutil.copy2(BASE/"CHANGELOG_V18.md",project/"CHANGELOG_V18.md")
         shutil.copy2(BASE/"CHANGELOG_V19.md",project/"CHANGELOG_V19.md")
+        shutil.copy2(BASE/"CHANGELOG_V20.md",project/"CHANGELOG_V20.md")
+        shutil.copy2(BASE/"CHANGELOG_V21.md",project/"CHANGELOG_V21.md")
         powershell='''$ErrorActionPreference = "Stop"
 Set-Location (Join-Path $PSScriptRoot "PC_Windows")
 $csc = "$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\csc.exe"
 if (!(Test-Path $csc)) { throw "Falta el compilador csc.exe de .NET Framework" }
 $fuentes = (Get-ChildItem -Filter "*.cs" | Sort-Object Name).Name
-& $csc /nologo /optimize+ /target:winexe /out:SIM_TURBO_PC_ULTRA_V19.exe /r:System.dll /r:System.Core.dll /r:System.Drawing.dll /r:System.Windows.Forms.dll /r:System.Management.dll $fuentes
+& $csc /nologo /optimize+ /target:winexe /out:SIM_TURBO_PC_ULTRA_V21.exe /r:System.dll /r:System.Core.dll /r:System.Drawing.dll /r:System.Windows.Forms.dll /r:System.Management.dll $fuentes
 if ($LASTEXITCODE -ne 0) { throw "Error compilando C#" }
 Write-Host "Compilación completa"
 '''
@@ -194,6 +219,12 @@ Write-Host "Compilación completa"
             assert any(n.endswith("CHANGELOG_V18.md") for n in entries)
             assert any(n.endswith("CHANGELOG_V19.md") for n in entries)
             assert any(n.endswith("PC_Windows/V19_GameProcessClinic.cs") for n in entries)
+            assert any(n.endswith("PC_Windows/V20_NetworkStability.cs") for n in entries)
+            assert any(n.endswith("PC_Windows/V21_AiSuperResolution.cs") for n in entries)
+            assert any(n.endswith("IA_SUPERRESOLUCION/FSRCNN_x2.pb") for n in entries)
+            assert any(n.endswith("IA_SUPERRESOLUCION/AETHER_IA_4K.py") for n in entries)
+            assert any(n.endswith("CHANGELOG_V20.md") for n in entries)
+            assert any(n.endswith("CHANGELOG_V21.md") for n in entries)
             assert any(n.endswith("Android/app/src/main/java/com/simturbopc/ultra/GameAutoProfileV19.java") for n in entries)
             assert any(n.endswith("PC_Windows/V18_StorageClinic.cs") for n in entries)
             assert any(n.endswith("Android/app/src/main/java/com/simturbopc/ultra/MonitorCadenceV18.java") for n in entries)
