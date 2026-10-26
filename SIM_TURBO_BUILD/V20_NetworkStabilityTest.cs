@@ -12,7 +12,7 @@ class NetworkStabilityTestV20 {
     var c=AetherNetworkStabilityV20.Analyze(new int[]{-1,-1});
     Check(double.IsNaN(c.MedianMs)&&c.LossPercent==100,"no ICMP replies");
     Check(AetherNetworkStabilityV20.Advice(c).Contains("bloqueo"),"no-reply advice");
-    Check(AetherNetworkStabilityV20.Advice(b).Contains("perdidas")==false || b.LossPercent==50,"advice");
+    Check(AetherNetworkStabilityV20.Advice(b).Contains("perdidas"),"advice");
     Console.WriteLine("OK V20 Windows ICMP stability: 7 assertions");
   }
 }
