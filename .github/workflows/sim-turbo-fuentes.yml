@@ -20,7 +20,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
-      - name: Reconstruir Windows V19, Android V19 y Cloudflare desde codigo fuente
+      - name: Reconstruir Windows V21, Android V20, Cloudflare e IA 4K desde codigo fuente
         run: python3 SIM_TURBO_BUILD/source_project_export.py
       - name: Comprobar integridad del ZIP y archivos editables
         shell: bash
@@ -29,7 +29,7 @@ jobs:
           from pathlib import Path
           from zipfile import ZipFile
           import hashlib
-          p=Path('EXPORTS/SIM_TURBO_PC_ULTRA_V19_PROYECTO_COMPLETO.zip')
+          p=Path('EXPORTS/SIM_TURBO_PC_ULTRA_V21_PROYECTO_COMPLETO.zip')
           assert p.is_file()
           with ZipFile(p) as z:
               assert z.testzip() is None
@@ -74,7 +74,7 @@ jobs:
               for suffix in required:
                   assert any(f.endswith(suffix) for f in paths),suffix
               assert not any(f.endswith(('.exe','.apk')) for f in paths)
-              root='SIM_TURBO_PC_ULTRA_V19_PROYECTO_COMPLETO/'
+              root='SIM_TURBO_PC_ULTRA_V21_PROYECTO_COMPLETO/'
               manifest=z.read(root+'SHA256SUMS.txt').decode('utf-8')
               checked=0
               for line in manifest.splitlines():
@@ -103,25 +103,43 @@ jobs:
               assert 'MonitorCadenceV18.intervalMs' in z.read(root+'Android/app/src/main/java/com/simturbopc/ultra/AetherMonitorService.java').decode()
               assert 'intervalMs' in z.read(root+'Android/app/src/main/java/com/simturbopc/ultra/MonitorCadenceV18.java').decode()
               assert 'AetherGameProcessClinicV19' in z.read(root+'PC_Windows/V19_GameProcessClinic.cs').decode()
-              assert 'GameAutoProfileV19.layoutForPackage' in z.read(root+'Android/app/src/main/java/com/simturbopc/ultra/MainActivity.java').decode()
+              assert 'GameLayoutOverridesV20.resolve' in z.read(root+'Android/app/src/main/java/com/simturbopc/ultra/MainActivity.java').decode()
               assert 'GameAutoProfileV19' in z.read(root+'Android/app/src/main/java/com/simturbopc/ultra/GameAutoProfileV19.java').decode()
+              # FSRCNN weights must be truly embedded and the editable GUI included.
+              assert len(z.read(root+'IA_SUPERRESOLUCION/FSRCNN_x2.pb'))==38973
+              assert 'engine.upsample' in z.read(root+'IA_SUPERRESOLUCION/AETHER_IA_4K.py').decode()
+              assert 'AetherAi4KV21' in z.read(root+'PC_Windows/V21_AiSuperResolution.cs').decode()
+              assert 'AetherNetworkStabilityV20' in z.read(root+'PC_Windows/V20_NetworkStability.cs').decode()
               print('Hashes de fuentes verificados:',checked)
           print('Proyecto fuente validado; archivos:',len(paths),'bytes:',p.stat().st_size)
           PY
-      - name: Registrar hash SHA256 del ZIP V19
-        run: sha256sum EXPORTS/SIM_TURBO_PC_ULTRA_V19_PROYECTO_COMPLETO.zip
+      - name: Ejecutar IA neuronal REAL FSRCNN x2 sobre imagen sintética
+        run: |
+          python3 -m pip install --quiet opencv-contrib-python-headless==4.11.0.86
+          mkdir -p /tmp/aether-v21-neural
+          python3 - <<'PY'
+          from zipfile import ZipFile
+          from pathlib import Path
+          with ZipFile('EXPORTS/SIM_TURBO_PC_ULTRA_V21_PROYECTO_COMPLETO.zip') as z:
+              for name in ('AETHER_IA_4K.py','FSRCNN_x2.pb'):
+                  member=next(n for n in z.namelist() if n.endswith('/IA_SUPERRESOLUCION/'+name))
+                  (Path('/tmp/aether-v21-neural')/name).write_bytes(z.read(member))
+          PY
+          python3 /tmp/aether-v21-neural/AETHER_IA_4K.py --self-test
+      - name: Registrar hash SHA256 del ZIP V21
+        run: sha256sum EXPORTS/SIM_TURBO_PC_ULTRA_V21_PROYECTO_COMPLETO.zip
       - uses: actions/upload-artifact@v4
         with:
-          name: SIM_TURBO_PC_ULTRA_V19_PROYECTO_COMPLETO_FUENTES
-          path: EXPORTS/SIM_TURBO_PC_ULTRA_V19_PROYECTO_COMPLETO.zip
+          name: SIM_TURBO_PC_ULTRA_V21_PROYECTO_COMPLETO_FUENTES
+          path: EXPORTS/SIM_TURBO_PC_ULTRA_V21_PROYECTO_COMPLETO.zip
           if-no-files-found: error
       - name: Publicar ZIP sin pisar cambios nuevos de otras ejecuciones
         shell: bash
         run: |
           set -euo pipefail
           branch=sim-turbo-build-v3-20261025
-          archive=EXPORTS/SIM_TURBO_PC_ULTRA_V19_PROYECTO_COMPLETO.zip
-          cp "$archive" /tmp/aether-v19-sources.zip
+          archive=EXPORTS/SIM_TURBO_PC_ULTRA_V21_PROYECTO_COMPLETO.zip
+          cp "$archive" /tmp/aether-v21-sources.zip
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config user.name "github-actions[bot]"
           for attempt in 1 2 3; do
@@ -133,13 +151,13 @@ jobs:
               exit 0
             fi
             git reset --hard "origin/$branch"
-            cp /tmp/aether-v19-sources.zip "$archive"
+            cp /tmp/aether-v21-sources.zip "$archive"
             git add "$archive"
             if git diff --cached --quiet; then
               echo "Same archive already published."
               exit 0
             fi
-            git commit -m "Publicar ZIP editable AETHER V19 con hashes"
+            git commit -m "Publicar ZIP editable AETHER V21 con pesos IA neuronales"
             if git push origin "HEAD:$branch"; then
               echo "Published source ZIP."
               exit 0
