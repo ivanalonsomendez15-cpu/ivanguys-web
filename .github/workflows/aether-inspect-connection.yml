@@ -1,0 +1,40 @@
+name: AETHER Diagnose Connect and Measure Button
+on:
+  push:
+    branches: [sim-turbo-build-v3-20261025]
+    paths: ['.github/workflows/aether-inspect-connection.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inspect original Android and PC connection sources
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import base64,lzma,tarfile,io,pathlib,re
+          root=pathlib.Path('SIM_TURBO_BUILD')
+          for kind in ('Android','Windows'):
+            f=root/(kind+'_source.tar.xz.b64')
+            with tarfile.open(fileobj=io.BytesIO(lzma.decompress(base64.b64decode(f.read_text().strip()))),mode='r:') as tar:
+              print('SOURCE FILES',kind,tar.getnames())
+              for member in tar.getmembers():
+                if not member.isfile() or not (member.name.endswith('MainActivity.java') or member.name.endswith('SIM_TURBO_PC.cs') or member.name.endswith('AndroidManifest.xml')):continue
+                content=tar.extractfile(member).read().decode('utf-8-sig')
+                lines=content.splitlines()
+                candidates=set()
+                tokens=['CONECTAR Y MEDIR','start()','onPause','onStop','setOnClickListener','start() {','void start','btnConnect','btnMeasure','connected','45721','ServerSocket','datagram','lastPhoneAt','pairedPcIp','startCell','pair']
+                for i,s in enumerate(lines):
+                  if any(t.lower() in s.lower() for t in tokens):
+                    for j in range(max(0,i-9),min(len(lines),i+15)):candidates.add(j)
+                print('BEGIN SOURCE',member.name, 'TOTAL',len(lines))
+                last=-2
+                for j in sorted(candidates):
+                  if j>last+1:print('... omitted ...')
+                  print(str(j+1)+': '+lines[j][:400]);last=j
+                print('END SOURCE',member.name)
+          PY
