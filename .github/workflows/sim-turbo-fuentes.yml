@@ -167,3 +167,29 @@ jobs:
           exit 1
 
 # V13 reproducible source bundle: latest sources after compiler workflow changes.
+
+
+  validar_windows_v21:
+    name: Compilar Windows con IA 4K V21
+    needs: fuentes
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: SIM_TURBO_PC_ULTRA_V21_PROYECTO_COMPLETO_FUENTES
+          path: descargas
+      - name: Extraer proyecto fuente y compilar aplicación C# con la pestaña IA
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          Expand-Archive -Path 'descargas/SIM_TURBO_PC_ULTRA_V21_PROYECTO_COMPLETO.zip' -DestinationPath 'extraido' -Force
+          $proyecto=Join-Path $pwd 'extraido/SIM_TURBO_PC_ULTRA_V21_PROYECTO_COMPLETO'
+          $sources=Get-ChildItem (Join-Path $proyecto 'PC_Windows/*.cs') | ForEach-Object { $_.FullName }
+          $csc="$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\csc.exe"
+          & $csc /nologo /optimize+ /target:winexe /out:SIM_TURBO_PC_ULTRA_V21_TEST.exe /r:System.dll /r:System.Core.dll /r:System.Drawing.dll /r:System.Windows.Forms.dll /r:System.Management.dll $sources
+          if ($LASTEXITCODE -ne 0) { throw 'Error compilando C# V21' }
+          if (!(Test-Path 'SIM_TURBO_PC_ULTRA_V21_TEST.exe')) { throw 'No existe el exe de prueba' }
+          Write-Host ('Windows V21 compilado correctamente: ' + (Get-Item 'SIM_TURBO_PC_ULTRA_V21_TEST.exe').Length + ' bytes')
+          if (!(Test-Path (Join-Path $proyecto 'IA_SUPERRESOLUCION/FSRCNN_x2.pb'))) { throw 'Modelo IA no incluido' }
+          if (!(Test-Path (Join-Path $proyecto 'IA_SUPERRESOLUCION/AETHER_IA_4K.py'))) { throw 'Código IA no incluido' }
