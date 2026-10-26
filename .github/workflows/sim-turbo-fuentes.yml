@@ -20,7 +20,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
-      - name: Reconstruir Windows V17, Android V17 y Cloudflare desde codigo fuente
+      - name: Reconstruir Windows V18, Android V18 y Cloudflare desde codigo fuente
         run: python3 SIM_TURBO_BUILD/source_project_export.py
       - name: Comprobar integridad del ZIP y archivos editables
         shell: bash
@@ -29,7 +29,7 @@ jobs:
           from pathlib import Path
           from zipfile import ZipFile
           import hashlib
-          p=Path('EXPORTS/SIM_TURBO_PC_ULTRA_V17_PROYECTO_COMPLETO.zip')
+          p=Path('EXPORTS/SIM_TURBO_PC_ULTRA_V18_PROYECTO_COMPLETO.zip')
           assert p.is_file()
           with ZipFile(p) as z:
               assert z.testzip() is None
@@ -44,6 +44,8 @@ jobs:
                 'PC_Windows/V16_ExperimentLab.cs',
                 'PC_Windows/V17_GraphicsAdvisor.cs',
                 'PC_Windows/V17_SecurePacket.cs',
+                'PC_Windows/V18_StorageClinic.cs',
+                'Android/app/src/main/java/com/simturbopc/ultra/MonitorCadenceV18.java',
                 'Android/app/src/main/java/com/simturbopc/ultra/NetworkQuality.java',
                 'Android/app/src/main/java/com/simturbopc/ultra/ControllerLayoutsV14.java',
                 'Android/app/src/main/java/com/simturbopc/ultra/TouchJoystickV15.java',
@@ -61,6 +63,7 @@ jobs:
                 'CHANGELOG_V15.md',
                 'CHANGELOG_V16.md',
                 'CHANGELOG_V17.md',
+                'CHANGELOG_V18.md',
                 'SHA256SUMS.txt',
                 'compilar_windows.ps1',
                 'LEEME.txt'
@@ -68,7 +71,7 @@ jobs:
               for suffix in required:
                   assert any(f.endswith(suffix) for f in paths),suffix
               assert not any(f.endswith(('.exe','.apk')) for f in paths)
-              root='SIM_TURBO_PC_ULTRA_V17_PROYECTO_COMPLETO/'
+              root='SIM_TURBO_PC_ULTRA_V18_PROYECTO_COMPLETO/'
               manifest=z.read(root+'SHA256SUMS.txt').decode('utf-8')
               checked=0
               for line in manifest.splitlines():
@@ -93,23 +96,26 @@ jobs:
               assert 'AetherSecurePacketV17.TryParseController' in z.read(root+'PC_Windows/V11_AndroidGamepad.cs').decode()
               assert 'SecurePacketV17.encode' in z.read(root+'Android/app/src/main/java/com/simturbopc/ultra/ControllerSender.java').decode()
               assert 'AetherGraphicsAdvisorV17' in z.read(root+'PC_Windows/V17_GraphicsAdvisor.cs').decode()
+              assert 'SpaceAdvice' in z.read(root+'PC_Windows/V18_StorageClinic.cs').decode()
+              assert 'MonitorCadenceV18.intervalMs' in z.read(root+'Android/app/src/main/java/com/simturbopc/ultra/AetherMonitorService.java').decode()
+              assert 'intervalMs' in z.read(root+'Android/app/src/main/java/com/simturbopc/ultra/MonitorCadenceV18.java').decode()
               print('Hashes de fuentes verificados:',checked)
           print('Proyecto fuente validado; archivos:',len(paths),'bytes:',p.stat().st_size)
           PY
-      - name: Registrar hash SHA256 del ZIP V17
-        run: sha256sum EXPORTS/SIM_TURBO_PC_ULTRA_V17_PROYECTO_COMPLETO.zip
+      - name: Registrar hash SHA256 del ZIP V18
+        run: sha256sum EXPORTS/SIM_TURBO_PC_ULTRA_V18_PROYECTO_COMPLETO.zip
       - uses: actions/upload-artifact@v4
         with:
-          name: SIM_TURBO_PC_ULTRA_V17_PROYECTO_COMPLETO_FUENTES
-          path: EXPORTS/SIM_TURBO_PC_ULTRA_V17_PROYECTO_COMPLETO.zip
+          name: SIM_TURBO_PC_ULTRA_V18_PROYECTO_COMPLETO_FUENTES
+          path: EXPORTS/SIM_TURBO_PC_ULTRA_V18_PROYECTO_COMPLETO.zip
           if-no-files-found: error
       - name: Publicar ZIP sin pisar cambios nuevos de otras ejecuciones
         shell: bash
         run: |
           set -euo pipefail
           branch=sim-turbo-build-v3-20261025
-          archive=EXPORTS/SIM_TURBO_PC_ULTRA_V17_PROYECTO_COMPLETO.zip
-          cp "$archive" /tmp/aether-v17-sources.zip
+          archive=EXPORTS/SIM_TURBO_PC_ULTRA_V18_PROYECTO_COMPLETO.zip
+          cp "$archive" /tmp/aether-v18-sources.zip
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config user.name "github-actions[bot]"
           for attempt in 1 2 3; do
@@ -121,13 +127,13 @@ jobs:
               exit 0
             fi
             git reset --hard "origin/$branch"
-            cp /tmp/aether-v17-sources.zip "$archive"
+            cp /tmp/aether-v18-sources.zip "$archive"
             git add "$archive"
             if git diff --cached --quiet; then
               echo "Same archive already published."
               exit 0
             fi
-            git commit -m "Publicar ZIP editable AETHER V17 con hashes"
+            git commit -m "Publicar ZIP editable AETHER V18 con hashes"
             if git push origin "HEAD:$branch"; then
               echo "Published source ZIP."
               exit 0
