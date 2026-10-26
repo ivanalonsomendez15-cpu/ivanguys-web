@@ -71,7 +71,9 @@ jobs:
         shell: pwsh
         run: |
           $csc="$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\csc.exe"
-          & $csc /nologo /target:exe /out:V22_SettingsTest.exe /r:System.dll /r:System.Core.dll /r:System.Drawing.dll /r:System.Windows.Forms.dll 'SIM_TURBO_BUILD/V22_Settings.cs' 'SIM_TURBO_BUILD/V22_SettingsTest.cs'
+          $settingsSource=(Resolve-Path 'SIM_TURBO_BUILD/V22_Settings.cs').Path
+          $settingsTest=(Resolve-Path 'SIM_TURBO_BUILD/V22_SettingsTest.cs').Path
+          & $csc /nologo /target:exe /out:V22_SettingsTest.exe /r:System.dll /r:System.Core.dll /r:System.Drawing.dll /r:System.Windows.Forms.dll $settingsSource $settingsTest
           if ($LASTEXITCODE -ne 0) { throw 'Test guardado V22 no compila' }
           & './V22_SettingsTest.exe'
           if ($LASTEXITCODE -ne 0) { throw 'Guardado y recuperación de ajustes fallaron' }
