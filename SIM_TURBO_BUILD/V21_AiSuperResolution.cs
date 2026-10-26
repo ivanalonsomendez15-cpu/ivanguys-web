@@ -9,7 +9,7 @@ using System.Windows.Forms;
 namespace SimTurboPC {
   /// <summary>
   /// AETHER IA 4K V21 launches the real FSRCNN x2 neural model bundled
-  /// with the COMPLETE SOURCE PROJECT. Requires local Python + OpenCV contrib.
+  /// with the COMPLETE SOURCE PROJECT. Prefers bundled AETHER_IA_4K.exe; Python is fallback.
   /// It produces files; not live gaming upscaling or a change in display pixels.
   /// </summary>
   public sealed class AetherAi4KV21 : Form {
@@ -34,7 +34,7 @@ namespace SimTurboPC {
       Controls.Add(new Label{Text=
         "RED NEURONAL FSRCNN x2 entrenada: PNG/JPG 1920×1080 → archivo PNG 3840×2160.\r\n"+
         "No es bicúbico. Las imágenes se procesan localmente; el modelo neuronal está incluido en el ZIP.\r\n"+
-        "Necesitas Python y OpenCV Contrib instalados. La primera ejecución no descarga modelos.\r\n"+
+        "El instalador completo incluye IA autónoma: no necesita instalar Python.\r\n"+
         "Un monitor 1080p mantiene 1920×1080 píxeles físicos. No modifica los gráficos de juegos en vivo.",
         Location=new Point(22,76),Size=new Size(855,106),ForeColor=Color.Gainsboro});
       var choose=Btn("1. ELEGIR IMAGEN",22,196,254);
@@ -58,9 +58,11 @@ namespace SimTurboPC {
     static string FindScript(){
       string dir=AppDomain.CurrentDomain.BaseDirectory;
       for(int depth=0;depth<7;depth++){
-        string file=Path.Combine(dir,"IA_SUPERRESOLUCION","AETHER_IA_4K.py");
-        if(File.Exists(file) && File.Exists(Path.Combine(dir,"IA_SUPERRESOLUCION","FSRCNN_x2.pb")))
-          return file;
+        string folder=Path.Combine(dir,"IA_SUPERRESOLUCION");
+        string native=Path.Combine(folder,"AETHER_IA_4K.exe");
+        if(File.Exists(native))return native;
+        string file=Path.Combine(folder,"AETHER_IA_4K.py");
+        if(File.Exists(file) && File.Exists(Path.Combine(folder,"FSRCNN_x2.pb")))return file;
         dir=Path.GetDirectoryName(Path.GetFullPath(dir.TrimEnd(Path.DirectorySeparatorChar)));
         if(string.IsNullOrEmpty(dir))break;
       }
@@ -77,8 +79,8 @@ namespace SimTurboPC {
     void ShowRequirements(){
       MessageBox.Show(this,
         "AETHER V21 utiliza FSRCNN x2 (red neuronal entrenada), no bicúbico.\r\n\r\n"+
-        "1. Instala Python 3.11 o 3.12 para Windows si no lo tienes.\r\n"+
-        "2. Abre PowerShell y ejecuta:\r\n"+
+        "Si instalaste la versión V21 completa, no necesitas instalar Python: la IA ya viene incluida.\r\n"+
+        "Solo para la versión de código fuente sin EXE, instala OpenCV:\r\n"+
         "py -m pip install opencv-contrib-python==4.11.0.86\r\n\r\n"+
         "3. Abre esta ventana desde el proyecto fuente V21 completo.\r\n"+
         "El modelo FSRCNN_x2.pb va dentro de IA_SUPERRESOLUCION.\r\n\r\n"+
@@ -86,9 +88,10 @@ namespace SimTurboPC {
         "Requisitos para IA 4K",MessageBoxButtons.OK,MessageBoxIcon.Information);
     }
     static Tuple<int,string> RunScript(string py,string script,string input,string output){
-      string arguments="\""+script+"\" --input \""+input+"\" --output \""+output+"\"";
+      bool embedded=script.EndsWith(".exe",StringComparison.OrdinalIgnoreCase);
+      string arguments=(embedded?"":"\""+script+"\" ")+"--input \""+input+"\" --output \""+output+"\"";
       using(var p=new Process()){
-        p.StartInfo=new ProcessStartInfo(py,arguments){
+        p.StartInfo=new ProcessStartInfo(embedded?script:py,arguments){
           WorkingDirectory=Path.GetDirectoryName(script),
           RedirectStandardOutput=true,RedirectStandardError=true,
           CreateNoWindow=true,UseShellExecute=false
@@ -122,6 +125,8 @@ namespace SimTurboPC {
         "\r\nLos vídeos y el juego en tiempo real NO están incluidos.";
       try{
         Tuple<int,string> result=await Task.Run(()=>{
+          if(script.EndsWith(".exe",StringComparison.OrdinalIgnoreCase))
+            return RunScript(null,script,input,output);
           try{return RunScript("py",script,input,output);}
           catch(Win32Exception){return RunScript("python",script,input,output);}
         });
@@ -130,7 +135,7 @@ namespace SimTurboPC {
             "\r\n"+result.Item2+"\r\nAbre el PNG con tu visor de imágenes.";
         } else {
           status.Text="La IA no pudo completar el archivo. "+result.Item2+
-            "\r\nPulsa CÓMO INSTALAR OPENCV para corregir dependencias.";
+            "\r\nComprueba que el paquete V21 está instalado completamente.";
         }
       }catch(Exception ex){
         status.Text="Error ejecutando la IA: "+ex.Message+
