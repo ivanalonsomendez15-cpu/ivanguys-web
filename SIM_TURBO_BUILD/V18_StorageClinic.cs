@@ -56,7 +56,7 @@ namespace SimTurboPC {
         return "AVISO: menos del 20% libre. Evita llenar la unidad y comprueba el tamaño de tus juegos.";
       return "Espacio disponible razonable. El espacio libre no garantiza más FPS.";
     }
-    static string Size(long bytes) {
+    static string FormatSize(long bytes) {
       return (bytes/1073741824.0).ToString("0.0")+" GiB";
     }
     static string StartupNames(RegistryKey hive,string subkey) {
@@ -85,7 +85,7 @@ namespace SimTurboPC {
             if(!d.IsReady||d.DriveType!=DriveType.Fixed)continue;
             found++;
             long total=d.TotalSize,free=d.AvailableFreeSpace;
-            sb.AppendLine("Unidad "+d.Name+" · "+Size(free)+" libres / "+Size(total)+" totales");
+            sb.AppendLine("Unidad "+d.Name+" · "+FormatSize(free)+" libres / "+FormatSize(total)+" totales");
             sb.AppendLine("  "+SpaceAdvice(free,total));
           } catch(Exception ex) {
             sb.AppendLine("Unidad "+d.Name+": sin datos ("+ex.GetType().Name+")");
