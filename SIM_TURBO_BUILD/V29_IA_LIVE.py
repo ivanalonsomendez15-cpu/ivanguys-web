@@ -331,7 +331,7 @@ class Live:
         self.status=tk.StringVar(value="Sin captura. Todos los fotogramas se procesan localmente.")
         tk.Label(self.root,textvariable=self.status,justify="center",wraplength=630,
               bg="#0d2033",fg="#8cf2ce").pack(pady=8)
-        tk.Label(self.root,text="FPS = procesamiento de AETHER, NO FPS del juego. La IA puede aumentar la latencia.",
+        tk.Label(self.root,text="FPS = bucle de captura/procesamiento, NO FPS del juego. ECO puede saltar inferencias.",
               bg="#0d2033",fg="#d6d6df").pack(pady=3)
         self.overlay_requested=overlay
         if overlay and preset.startswith("FOCO"):
@@ -379,6 +379,7 @@ class Live:
             self.status.set("No se puede activar overlay: "+str(exc))
             return
         self.last_error=None
+        if self.eco is not None:self.eco=StaticFrameCache()
         self.frames=0
         self.dropped=0
         self.fps=0.0
@@ -470,10 +471,11 @@ class Live:
                         self.image=self.ImageTk.PhotoImage(obj)
                         self.preview.configure(image=self.image)
                     self.status.set(
-                      f"IA FSRCNN x2 · {self.fps:.1f} FPS de AETHER (NO del juego) · "
+                      f"IA FSRCNN x2 · {self.fps:.1f} FPS del bucle AETHER (NO del juego) · "
                       f"captura {self.capture_ms:.0f} ms · IA {self.infer_ms:.0f} ms · "
                       f"total {self.latency_ms:.0f} ms · descartados {self.dropped}\n"
                       f"Modo {self.preset} · captura {self.capture_size} · salida IA {frame.shape[1]}x{frame.shape[0]}\n"
+                      f"{'ECO: '+str(self.eco.inferred)+' inferencias reales / '+str(self.frames)+' capturas, '+str(self.eco.skipped)+' omitidas' if self.eco is not None else 'IA calculada por cada fotograma mostrado'}\n"
                       f"{'SOLO RECORTE CENTRAL, NO TODA LA PANTALLA' if self.preset.startswith('FOCO') else 'RESOLUCIÓN WINDOWS SIN CAMBIOS'}."
                     )
             if self.last_error is not None:
