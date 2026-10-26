@@ -605,7 +605,7 @@ def benchmark(preset):
 
 def main():
     p=argparse.ArgumentParser(description="AETHER IA V30 - mejora neural de fotogramas en directo, monitor 1080p intacto.")
-    p.add_argument("--mode",choices=["RAPIDO","IA_4K","FOCO","FOCO_RAPIDO","FOCO_TURBO","FOCO_AUTO","FOCO_CURSOR","FOCO_ECO"],default="RAPIDO")
+    p.add_argument("--mode",choices=["RAPIDO","IA_4K","FOCO","FOCO_RAPIDO","FOCO_TURBO","FOCO_AUTO","FOCO_CURSOR","FOCO_ECO","FOCO_MOVIMIENTO"],default="RAPIDO")
     p.add_argument("--overlay",action="store_true",help="Experimental: overlay fullscreen, sin modificar resolución")
     p.add_argument("--self-test",action="store_true",help="Test de inferencia CNN sin captura")
     p.add_argument("--benchmark",action="store_true",help="Benchmark CPU 1080p de un fotograma, NO FPS de juegos")
