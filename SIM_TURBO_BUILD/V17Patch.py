@@ -19,7 +19,7 @@ if pc.is_dir():
     replace(game,'if(!Local(endpoint.Address)||packet.Length>120)continue;',
             'if(!Local(endpoint.Address)||packet.Length>180)continue;',
             "packet length")
-    replace(game,'''          string msg=Encoding.ASCII.GetString(packet);
+    replace(game,r'''          string msg=Encoding.ASCII.GetString(packet);
           string[] p=msg.Split('|');
           if(p.Length!=5||p[0]!="STPC-CTRL"||p[1]!=code)continue;
           int sequence;
@@ -35,7 +35,7 @@ if pc.is_dir():
           else Release(p[3]);
           if(total%9==1)status.Text="Mando conectado · "+deviceIp+
               "\r\nBotón: "+p[3]+" · mensajes "+total+" · pulsa ESC del juego para salir";''',
-            '''          string sid,action,key;
+            r'''          string sid,action,key;
           int sequence;
           if(!AetherSecurePacketV17.TryParseController(
               Encoding.ASCII.GetString(packet),code,out sid,out action,out key,out sequence))continue;
@@ -109,12 +109,12 @@ if android.is_dir():
             '''String request="STPC-CAPS17|"+nonce+"|"+
             SecurePacketV17.sign(code,"CAPS17|"+nonce);''',
             "capabilities request")
-    replace(discovery,'''            String prefix="STPC-CAPS-OK|"+nonce+"|";
+    replace(discovery,r'''            String prefix="STPC-CAPS-OK|"+nonce+"|";
             if(!body.startsWith(prefix))throw new IOException("Respuesta de emparejamiento no válida");
             String[] fields=body.substring(prefix.length()).split("\\|",3);
             if(fields.length!=3)throw new IOException("Respuesta incompleta");
             return "CPU lógica: "+fields[0]+" · RAM: "+fields[1]+" · GPU: "+fields[2];''',
-            '''            String prefix="STPC-CAPS17-OK|"+nonce+"|";
+            r'''            String prefix="STPC-CAPS17-OK|"+nonce+"|";
             if(!body.startsWith(prefix))throw new IOException("Respuesta de emparejamiento no válida");
             String[] fields=body.substring(prefix.length()).split("\\|",4);
             if(fields.length!=4)throw new IOException("Respuesta incompleta");
