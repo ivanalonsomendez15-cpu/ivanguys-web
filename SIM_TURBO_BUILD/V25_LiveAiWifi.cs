@@ -147,7 +147,6 @@ namespace SimTurboPC {
       if(name.StartsWith("GATEWAY")&&failed>=3)localTrouble=true;
       if(name.StartsWith("GATEWAY")&&vals.Count==0)
         b.AppendLine("Verifica la conexión en el navegador antes de diagnosticar un corte.");
-      }
       b.AppendLine();
       return b.ToString();
     }
