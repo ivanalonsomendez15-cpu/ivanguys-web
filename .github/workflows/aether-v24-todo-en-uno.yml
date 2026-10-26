@@ -190,9 +190,9 @@ jobs:
             $entries=$zip.Entries | ForEach-Object { $_.FullName }
             if (-not ($entries -match 'PC/INSTALAR_AETHER_PC_V24_IA_DIRECTO_Y_WIFI.exe')) { throw 'ZIP sin PC V22' }
             if (-not ($entries -match 'ANDROID/AETHER_ANDROID_V22.apk')) { throw 'ZIP sin Android V22' }
-            if (-not ($entries -match 'PROYECTO_EDITABLE/CODIGO_FUENTE_V22.zip')) { throw 'ZIP sin fuentes V22' }
+            if (-not ($entries -match 'PROYECTO_EDITABLE/CODIGO_FUENTE_V24.zip')) { throw 'ZIP sin fuentes V24' }
           } finally { $zip.Dispose() }
-          Write-Host ('UN ZIP V22 VERIFICADO: '+(Get-Item 'SIM_TURBO_PC_ULTRA_V24_PC_Y_ANDROID_UN_SOLO_ZIP.zip').Length+' bytes')
+          Write-Host ('UN ZIP V24 VERIFICADO: '+(Get-Item 'SIM_TURBO_PC_ULTRA_V24_PC_Y_ANDROID_UN_SOLO_ZIP.zip').Length+' bytes')
       - uses: actions/upload-artifact@v4
         with:
           name: AETHER_V24_PC_ANDROID_IA_LIVE_Y_WIFI_UN_SOLO_ZIP
