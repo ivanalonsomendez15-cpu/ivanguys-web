@@ -40,6 +40,14 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
+      - name: Probar HMAC Android V17 con vectores cruzados
+        shell: bash
+        run: |
+          mkdir -p protocol_test/src/com/simturbopc/ultra protocol_test/classes
+          cp SIM_TURBO_BUILD/V17_SecurePacket.java protocol_test/src/com/simturbopc/ultra/SecurePacketV17.java
+          cp SIM_TURBO_BUILD/V17_ProtocolTest.java protocol_test/src/com/simturbopc/ultra/ProtocolTestV17.java
+          javac -d protocol_test/classes protocol_test/src/com/simturbopc/ultra/*.java
+          java -cp protocol_test/classes com.simturbopc.ultra.ProtocolTestV17
       - name: Usar SDK Android del entorno
         run: echo "$ANDROID_HOME/cmdline-tools/latest/bin" >> "$GITHUB_PATH"
       - name: Instalar SDK Android
@@ -122,6 +130,14 @@ jobs:
       - name: Integrar asesor gráfico y HMAC Windows V17
         shell: pwsh
         run: python SIM_TURBO_BUILD/V17Patch.py
+      - name: Probar HMAC Windows V17 con vectores cruzados
+        shell: pwsh
+        run: |
+          $csc="$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\csc.exe"
+          & $csc /nologo /target:exe /out:V17_ProtocolTest.exe SIM_TURBO_BUILD\V17_SecurePacket.cs SIM_TURBO_BUILD\V17_ProtocolTest.cs
+          if($LASTEXITCODE -ne 0) { throw 'Error compilando prueba C#' }
+          & .\V17_ProtocolTest.exe
+          if($LASTEXITCODE -ne 0) { throw 'Falló prueba de autenticación LAN V17' }
       - name: Compilar ejecutable real
         shell: pwsh
         run: |
