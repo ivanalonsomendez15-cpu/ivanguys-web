@@ -1,0 +1,133 @@
+name: AETHER UN SOLO ZIP PC V21 + Android V20 + IA 4K
+on:
+  push:
+    branches: [sim-turbo-build-v3-20261025]
+    paths:
+      - '.github/workflows/aether-todo-en-uno.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  paquete:
+    runs-on: windows-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Extraer fuentes V21 reales y completas
+        shell: pwsh
+        run: |
+          python SIM_TURBO_BUILD/source_project_export.py
+          if ($LASTEXITCODE -ne 0) { throw 'Fallo exportacion fuentes' }
+          Expand-Archive -Path 'EXPORTS/SIM_TURBO_PC_ULTRA_V21_PROYECTO_COMPLETO.zip' -DestinationPath 'fuentes' -Force
+          if (!(Test-Path 'fuentes/SIM_TURBO_PC_ULTRA_V21_PROYECTO_COMPLETO/PC_Windows/SIM_TURBO_PC_ULTRA.sln')) { throw 'Proyecto incompleto' }
+      - name: Compilar Windows V21 real con boton IA 4K
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $root='fuentes/SIM_TURBO_PC_ULTRA_V21_PROYECTO_COMPLETO'
+          $files=(Get-ChildItem "$root/PC_Windows/*.cs" | Sort-Object Name | ForEach-Object { $_.FullName })
+          $csc="$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\csc.exe"
+          & $csc /nologo /optimize+ /target:winexe /out:SIM_TURBO_PC_ULTRA_V21.exe /r:System.dll /r:System.Core.dll /r:System.Drawing.dll /r:System.Windows.Forms.dll /r:System.Management.dll $files
+          if ($LASTEXITCODE -ne 0 -or !(Test-Path 'SIM_TURBO_PC_ULTRA_V21.exe')) { throw 'No compila Windows V21' }
+      - name: Construir IA 4K autónoma para Windows sin instalar Python
+        shell: pwsh
+        run: |
+          python -m pip install --disable-pip-version-check --quiet 'opencv-contrib-python==4.11.0.86' 'pyinstaller==6.16.0'
+          if ($LASTEXITCODE -ne 0) { throw 'No se pudo preparar la IA' }
+          $src='fuentes/SIM_TURBO_PC_ULTRA_V21_PROYECTO_COMPLETO/IA_SUPERRESOLUCION'
+          python "$src/AETHER_IA_4K.py" --self-test
+          if ($LASTEXITCODE -ne 0) { throw 'Prueba fuente neuronal fallida' }
+          python -m PyInstaller --clean --noconfirm --onefile --console --name AETHER_IA_4K --add-data "$src/FSRCNN_x2.pb;." "$src/AETHER_IA_4K.py"
+          if ($LASTEXITCODE -ne 0 -or !(Test-Path 'dist/AETHER_IA_4K.exe')) { throw 'Fallo el empaquetado de IA' }
+          & 'dist/AETHER_IA_4K.exe' --self-test
+          if ($LASTEXITCODE -ne 0) { throw 'IA ejecutable no pasa test' }
+      - name: Crear instalador Windows que YA INCLUYE IA 4K
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $iss=@'
+          [Setup]
+          AppId={{6D9797F5-2438-49E6-B5E7-0C26FE91B88A}
+          AppName=SIM TURBO PC ULTRA
+          AppVersion=21.0
+          DefaultDirName={localappdata}\Programs\SIM TURBO PC ULTRA
+          PrivilegesRequired=lowest
+          OutputDir=release
+          OutputBaseFilename=INSTALAR_AETHER_PC_V21_IA_4K
+          Compression=lzma
+          SolidCompression=yes
+          WizardStyle=modern
+          UninstallDisplayIcon={app}\SIM_TURBO_PC_ULTRA_V21.exe
+          [Files]
+          Source: "SIM_TURBO_PC_ULTRA_V21.exe"; DestDir: "{app}"; Flags: ignoreversion
+          Source: "dist\AETHER_IA_4K.exe"; DestDir: "{app}\IA_SUPERRESOLUCION"; Flags: ignoreversion
+          Source: "fuentes\SIM_TURBO_PC_ULTRA_V21_PROYECTO_COMPLETO\IA_SUPERRESOLUCION\FSRCNN_x2.pb"; DestDir: "{app}\IA_SUPERRESOLUCION"; Flags: ignoreversion
+          Source: "fuentes\SIM_TURBO_PC_ULTRA_V21_PROYECTO_COMPLETO\IA_SUPERRESOLUCION\AETHER_IA_4K.py"; DestDir: "{app}\IA_SUPERRESOLUCION"; Flags: ignoreversion
+          Source: "fuentes\SIM_TURBO_PC_ULTRA_V21_PROYECTO_COMPLETO\IA_SUPERRESOLUCION\LICENSE_MODELO_APACHE_2.0.txt"; DestDir: "{app}\IA_SUPERRESOLUCION"; Flags: ignoreversion
+          [Icons]
+          Name: "{autoprograms}\SIM TURBO PC ULTRA"; Filename: "{app}\SIM_TURBO_PC_ULTRA_V21.exe"
+          Name: "{autodesktop}\SIM TURBO PC ULTRA"; Filename: "{app}\SIM_TURBO_PC_ULTRA_V21.exe"
+          [Run]
+          Filename: "{app}\SIM_TURBO_PC_ULTRA_V21.exe"; Description: "Abrir SIM TURBO PC ULTRA"; Flags: nowait postinstall skipifsilent
+          '@
+          Set-Content -Path 'installer-v21.iss' -Value $iss -Encoding UTF8
+          $compiler='C:\Program Files (x86)\Inno Setup 6\ISCC.exe'
+          if (!(Test-Path $compiler)) { choco install innosetup -y --no-progress }
+          if (!(Test-Path $compiler)) { throw 'Falta Inno Setup' }
+          & $compiler installer-v21.iss
+          if ($LASTEXITCODE -ne 0 -or !(Test-Path 'release/INSTALAR_AETHER_PC_V21_IA_4K.exe')) { throw 'Error instalador Windows' }
+      - name: Poner Windows y Android en un solo ZIP
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          New-Item -ItemType Directory -Force 'TODO_EN_UNO/PC','TODO_EN_UNO/ANDROID','TODO_EN_UNO/PROYECTO_EDITABLE' | Out-Null
+          Copy-Item 'release/INSTALAR_AETHER_PC_V21_IA_4K.exe' 'TODO_EN_UNO/PC/INSTALAR_AETHER_PC_V21_IA_4K.exe'
+          Copy-Item 'SIM_TURBO_BUILD/SIM_TURBO_PC_ULTRA_V20.apk' 'TODO_EN_UNO/ANDROID/INSTALAR_AETHER_ANDROID_V20.apk'
+          Copy-Item 'EXPORTS/SIM_TURBO_PC_ULTRA_V21_PROYECTO_COMPLETO.zip' 'TODO_EN_UNO/PROYECTO_EDITABLE/CODIGO_FUENTE_V21.zip'
+          $readme=@'
+          AETHER PC Y MOVIL — TODO EN UN SOLO ZIP
+          PC: Abre PC/INSTALAR_AETHER_PC_V21_IA_4K.exe y sigue los pasos.
+          Android: Copia ANDROID/INSTALAR_AETHER_ANDROID_V20.apk al movil e instalalo.
+          La IA neuronal para convertir FOTOS 1080p a PNG 4K esta dentro de la aplicacion de PC V21, en AETHER CLINIC -> IA 4K REAL V21. No requiere instalar Python.
+          PROYECTO_EDITABLE contiene todo el codigo fuente V21 para modificarlo.
+          La IA NO cambia los juegos en tiempo real ni convierte una pantalla 1080p fisica en panel 4K.
+          Solo instala las apps si confias en el proyecto. No necesitas tocar la carpeta de codigo para jugar.
+          '@
+          Set-Content 'TODO_EN_UNO/LEEME_PRIMERO.txt' -Value $readme -Encoding UTF8
+          Compress-Archive -Path 'TODO_EN_UNO/*' -DestinationPath 'SIM_TURBO_PC_ULTRA_V21_PC_Y_ANDROID_TODO_EN_UNO.zip' -CompressionLevel Optimal -Force
+          Add-Type -AssemblyName System.IO.Compression.FileSystem
+          $z=[IO.Compression.ZipFile]::OpenRead((Resolve-Path 'SIM_TURBO_PC_ULTRA_V21_PC_Y_ANDROID_TODO_EN_UNO.zip'))
+          try {
+            $names=$z.Entries | ForEach-Object { $_.FullName }
+            if (-not ($names -match 'PC/INSTALAR_AETHER_PC_V21_IA_4K.exe') -or -not ($names -match 'ANDROID/INSTALAR_AETHER_ANDROID_V20.apk') -or -not ($names -match 'PROYECTO_EDITABLE/CODIGO_FUENTE_V21.zip')) { throw 'ZIP incompleto' }
+          } finally { $z.Dispose() }
+          Write-Host ('PAQUETE FINAL OK: ' + (Get-Item 'SIM_TURBO_PC_ULTRA_V21_PC_Y_ANDROID_TODO_EN_UNO.zip').Length + ' bytes')
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AETHER_PC_V21_ANDROID_V20_UN_SOLO_ZIP
+          path: SIM_TURBO_PC_ULTRA_V21_PC_Y_ANDROID_TODO_EN_UNO.zip
+          if-no-files-found: error
+      - name: Publicar ZIP unico descargable en GitHub
+        shell: pwsh
+        run: |
+          $ErrorActionPreference='Stop'
+          $zip='SIM_TURBO_PC_ULTRA_V21_PC_Y_ANDROID_TODO_EN_UNO.zip'
+          New-Item -ItemType Directory -Force 'RELEASES' | Out-Null
+          Copy-Item $zip 'RELEASES/SIM_TURBO_PC_ULTRA_V21_PC_Y_ANDROID_TODO_EN_UNO.zip'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git config user.name 'github-actions[bot]'
+          for ($i=0; $i -lt 4; $i++) {
+            git fetch origin sim-turbo-build-v3-20261025
+            git reset --hard origin/sim-turbo-build-v3-20261025
+            New-Item -ItemType Directory -Force 'RELEASES' | Out-Null
+            Copy-Item $zip 'RELEASES/SIM_TURBO_PC_ULTRA_V21_PC_Y_ANDROID_TODO_EN_UNO.zip' -Force
+            git add 'RELEASES/SIM_TURBO_PC_ULTRA_V21_PC_Y_ANDROID_TODO_EN_UNO.zip'
+            if ((git diff --cached --quiet) -and ($LASTEXITCODE -eq 0)) { exit 0 }
+            git commit -m 'Entrega ZIP unico AETHER Windows V21 IA 4K y Android V20'
+            git push origin HEAD:sim-turbo-build-v3-20261025
+            if ($LASTEXITCODE -eq 0) { exit 0 }
+          }
+          throw 'No pudo publicarse ZIP combinado por cambios concurrentes'
