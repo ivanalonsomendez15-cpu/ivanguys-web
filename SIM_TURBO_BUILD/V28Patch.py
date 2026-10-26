@@ -10,6 +10,12 @@ def patch(path,old,new,label):
     if n!=1:raise SystemExit("V28 "+label+" anchor count="+str(n))
     path.write_text(s.replace(old,new),encoding="utf-8-sig")
 clinic=pc/"V11_SystemClinic.cs"
+# Preserve the legacy DSR code for backwards compatibility, but clearly warn
+# it changes Windows display resolution and is NOT the requested live neural AI.
+patch(clinic,'var live=Tab(tabs,"4K EN DIRECTO V23");',
+    'var live=Tab(tabs,"DSR LEGADO (CAMBIA RESOLUCION)");',"legacy DSR label")
+patch(clinic,'B(live,"ABRIR MODO 4K EN DIRECTO V23",',
+    'B(live,"DSR LEGADO: CAMBIA RESOLUCION WINDOWS",',"legacy DSR button")
 patch(clinic,'var liveAI=Tab(tabs,"IA REAL EN DIRECTO V27");',
     'var liveAI=Tab(tabs,"IA REAL EN DIRECTO V28");',"live tab")
 patch(clinic,'var wifi24=Tab(tabs,"WI-FI V27");',
