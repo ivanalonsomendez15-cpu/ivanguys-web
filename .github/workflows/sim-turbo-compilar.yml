@@ -38,6 +38,8 @@ jobs:
         run: python3 SIM_TURBO_BUILD/V17Patch.py
       - name: Integrar monitor Android de batería V18
         run: python3 SIM_TURBO_BUILD/V18Patch.py
+      - name: Integrar perfiles automáticos Android V19
+        run: python3 SIM_TURBO_BUILD/V19Patch.py
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -58,6 +60,14 @@ jobs:
           cp SIM_TURBO_BUILD/V18_MonitorCadenceTest.java cadence_test/src/com/simturbopc/ultra/MonitorCadenceTestV18.java
           javac -d cadence_test/classes cadence_test/src/com/simturbopc/ultra/*.java
           java -cp cadence_test/classes com.simturbopc.ultra.MonitorCadenceTestV18
+      - name: Probar detección de perfiles de juego Android V19
+        shell: bash
+        run: |
+          mkdir -p gameprofile_test/src/com/simturbopc/ultra gameprofile_test/classes
+          cp SIM_TURBO_BUILD/V19_GameAutoProfile.java gameprofile_test/src/com/simturbopc/ultra/GameAutoProfileV19.java
+          cp SIM_TURBO_BUILD/V19_GameAutoProfileTest.java gameprofile_test/src/com/simturbopc/ultra/GameAutoProfileTestV19.java
+          javac -d gameprofile_test/classes gameprofile_test/src/com/simturbopc/ultra/*.java
+          java -cp gameprofile_test/classes com.simturbopc.ultra.GameAutoProfileTestV19
       - name: Usar SDK Android del entorno
         run: echo "$ANDROID_HOME/cmdline-tools/latest/bin" >> "$GITHUB_PATH"
       - name: Instalar SDK Android
@@ -143,6 +153,9 @@ jobs:
       - name: Integrar clínica Windows de disco e inicio V18
         shell: pwsh
         run: python SIM_TURBO_BUILD/V18Patch.py
+      - name: Integrar analizador de proceso Windows V19
+        shell: pwsh
+        run: python SIM_TURBO_BUILD/V19Patch.py
       - name: Probar reglas de almacenamiento V18
         shell: pwsh
         run: |
@@ -151,6 +164,14 @@ jobs:
           if($LASTEXITCODE -ne 0) { throw 'Error compilando pruebas V18' }
           & .\V18_StorageClinicTest.exe
           if($LASTEXITCODE -ne 0) { throw 'Fallaron reglas de almacenamiento V18' }
+      - name: Probar asesor por proceso Windows V19
+        shell: pwsh
+        run: |
+          $csc="$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\csc.exe"
+          & $csc /nologo /target:exe /out:V19_GameProcessClinicTest.exe /r:System.dll /r:System.Core.dll /r:System.Drawing.dll /r:System.Windows.Forms.dll SIM_TURBO_BUILD\V19_GameProcessClinic.cs SIM_TURBO_BUILD\V19_GameProcessClinicTest.cs
+          if($LASTEXITCODE -ne 0) { throw 'Error compilando pruebas V19' }
+          & .\V19_GameProcessClinicTest.exe
+          if($LASTEXITCODE -ne 0) { throw 'Fallaron reglas de rendimiento V19' }
       - name: Probar HMAC Windows V17 con vectores cruzados
         shell: pwsh
         run: |
@@ -163,7 +184,7 @@ jobs:
         shell: pwsh
         run: |
           $csc="$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\csc.exe"
-          & $csc /nologo /optimize+ /target:winexe /out:SIM_TURBO_PC_ULTRA_V18.exe /r:System.dll /r:System.Core.dll /r:System.Drawing.dll /r:System.Windows.Forms.dll /r:System.Management.dll PC_Windows\SIM_TURBO_PC.cs PC_Windows\V4_BondedDownloader.cs PC_Windows\V5_PerformanceCenter.cs PC_Windows\V6_HyperAdaptive.cs PC_Windows\V7_PulseRoute.cs PC_Windows\V8_AetherDownloader.cs PC_Windows\V8_AetherAutopilot.cs PC_Windows\V9_Aether80Lab.cs PC_Windows\V9_Radar.cs PC_Windows\V9_ResearchLab.cs PC_Windows\V10_InnovationLab.cs PC_Windows\V10_IdeaEngine.cs PC_Windows\V11_SystemClinic.cs PC_Windows\V11_AndroidGamepad.cs PC_Windows\V12_LanDiscovery.cs PC_Windows\V12_SuperResolution.cs PC_Windows\V13_NetworkLab.cs PC_Windows\V14_LinkAudit.cs PC_Windows\V15_PerformanceProfiler.cs PC_Windows\V16_ExperimentLab.cs PC_Windows\V17_SecurePacket.cs PC_Windows\V17_GraphicsAdvisor.cs PC_Windows\V18_StorageClinic.cs
+          & $csc /nologo /optimize+ /target:winexe /out:SIM_TURBO_PC_ULTRA_V19.exe /r:System.dll /r:System.Core.dll /r:System.Drawing.dll /r:System.Windows.Forms.dll /r:System.Management.dll PC_Windows\SIM_TURBO_PC.cs PC_Windows\V4_BondedDownloader.cs PC_Windows\V5_PerformanceCenter.cs PC_Windows\V6_HyperAdaptive.cs PC_Windows\V7_PulseRoute.cs PC_Windows\V8_AetherDownloader.cs PC_Windows\V8_AetherAutopilot.cs PC_Windows\V9_Aether80Lab.cs PC_Windows\V9_Radar.cs PC_Windows\V9_ResearchLab.cs PC_Windows\V10_InnovationLab.cs PC_Windows\V10_IdeaEngine.cs PC_Windows\V11_SystemClinic.cs PC_Windows\V11_AndroidGamepad.cs PC_Windows\V12_LanDiscovery.cs PC_Windows\V12_SuperResolution.cs PC_Windows\V13_NetworkLab.cs PC_Windows\V14_LinkAudit.cs PC_Windows\V15_PerformanceProfiler.cs PC_Windows\V16_ExperimentLab.cs PC_Windows\V17_SecurePacket.cs PC_Windows\V17_GraphicsAdvisor.cs PC_Windows\V18_StorageClinic.cs PC_Windows\V19_GameProcessClinic.cs
           if($LASTEXITCODE -ne 0) { throw 'Error compilando C#' }
       - name: Crear instalador Inno Setup
         shell: pwsh
@@ -172,24 +193,24 @@ jobs:
           [Setup]
           AppId={{6D9797F5-2438-49E6-B5E7-0C26FE91B88A}
           AppName=SIM TURBO PC ULTRA
-          AppVersion=18.0
+          AppVersion=19.0
           DefaultDirName={localappdata}\Programs\SIM TURBO PC ULTRA
           PrivilegesRequired=lowest
           OutputDir=release
-          OutputBaseFilename=SIM_TURBO_PC_ULTRA_V18_SETUP
+          OutputBaseFilename=SIM_TURBO_PC_ULTRA_V19_SETUP
           Compression=lzma
           SolidCompression=yes
           WizardStyle=modern
-          UninstallDisplayIcon={app}\SIM_TURBO_PC_ULTRA_V18.exe
+          UninstallDisplayIcon={app}\SIM_TURBO_PC_ULTRA_V19.exe
           [Files]
-          Source: "SIM_TURBO_PC_ULTRA_V18.exe"; DestDir: "{app}"; Flags: ignoreversion
+          Source: "SIM_TURBO_PC_ULTRA_V19.exe"; DestDir: "{app}"; Flags: ignoreversion
           [Icons]
-          Name: "{autoprograms}\SIM TURBO PC ULTRA"; Filename: "{app}\SIM_TURBO_PC_ULTRA_V18.exe"
-          Name: "{autodesktop}\SIM TURBO PC ULTRA"; Filename: "{app}\SIM_TURBO_PC_ULTRA_V18.exe"; Tasks: desktopicon
+          Name: "{autoprograms}\SIM TURBO PC ULTRA"; Filename: "{app}\SIM_TURBO_PC_ULTRA_V19.exe"
+          Name: "{autodesktop}\SIM TURBO PC ULTRA"; Filename: "{app}\SIM_TURBO_PC_ULTRA_V19.exe"; Tasks: desktopicon
           [Tasks]
           Name: desktopicon; Description: "Crear acceso directo en el escritorio"; GroupDescription: "Accesos directos:"; Flags: unchecked
           [Run]
-          Filename: "{app}\SIM_TURBO_PC_ULTRA_V18.exe"; Description: "Abrir SIM TURBO PC ULTRA"; Flags: nowait postinstall skipifsilent
+          Filename: "{app}\SIM_TURBO_PC_ULTRA_V19.exe"; Description: "Abrir SIM TURBO PC ULTRA"; Flags: nowait postinstall skipifsilent
           '@
           Set-Content -Path 'installer.iss' -Value $iss -Encoding UTF8
           $compiler='C:\Program Files (x86)\Inno Setup 6\ISCC.exe'
@@ -201,8 +222,8 @@ jobs:
         with:
           name: exe
           path: |
-            release/SIM_TURBO_PC_ULTRA_V18_SETUP.exe
-            SIM_TURBO_PC_ULTRA_V18.exe
+            release/SIM_TURBO_PC_ULTRA_V19_SETUP.exe
+            SIM_TURBO_PC_ULTRA_V19.exe
           if-no-files-found: error
   publicar:
     runs-on: ubuntu-latest
@@ -218,14 +239,14 @@ jobs:
         with:
           name: exe
           path: resultados/exe
-      - name: Publicar compilaciones V18 sin conflictos concurrentes
+      - name: Publicar compilaciones V19 sin conflictos concurrentes
         shell: bash
         run: |
           set -euo pipefail
           branch=sim-turbo-build-v3-20261025
-          cp resultados/apk/app-debug.apk /tmp/AETHER_V18.apk
-          cp resultados/exe/release/SIM_TURBO_PC_ULTRA_V18_SETUP.exe /tmp/AETHER_V18_SETUP.exe
-          cp resultados/exe/SIM_TURBO_PC_ULTRA_V18.exe /tmp/AETHER_V18_PORTABLE.exe
+          cp resultados/apk/app-debug.apk /tmp/AETHER_V19.apk
+          cp resultados/exe/release/SIM_TURBO_PC_ULTRA_V19_SETUP.exe /tmp/AETHER_V19_SETUP.exe
+          cp resultados/exe/SIM_TURBO_PC_ULTRA_V19.exe /tmp/AETHER_V19_PORTABLE.exe
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git config user.name 'github-actions[bot]'
           for attempt in 1 2 3; do
@@ -236,15 +257,15 @@ jobs:
               exit 0
             fi
             git reset --hard "origin/$branch"
-            cp /tmp/AETHER_V18.apk SIM_TURBO_BUILD/SIM_TURBO_PC_ULTRA_V18.apk
-            cp /tmp/AETHER_V18_SETUP.exe SIM_TURBO_BUILD/SIM_TURBO_PC_ULTRA_V18_SETUP.exe
-            cp /tmp/AETHER_V18_PORTABLE.exe SIM_TURBO_BUILD/SIM_TURBO_PC_ULTRA_V18_PORTABLE.exe
-            git add SIM_TURBO_BUILD/SIM_TURBO_PC_ULTRA_V18.apk SIM_TURBO_BUILD/SIM_TURBO_PC_ULTRA_V18_SETUP.exe SIM_TURBO_BUILD/SIM_TURBO_PC_ULTRA_V18_PORTABLE.exe
+            cp /tmp/AETHER_V19.apk SIM_TURBO_BUILD/SIM_TURBO_PC_ULTRA_V19.apk
+            cp /tmp/AETHER_V19_SETUP.exe SIM_TURBO_BUILD/SIM_TURBO_PC_ULTRA_V19_SETUP.exe
+            cp /tmp/AETHER_V19_PORTABLE.exe SIM_TURBO_BUILD/SIM_TURBO_PC_ULTRA_V19_PORTABLE.exe
+            git add SIM_TURBO_BUILD/SIM_TURBO_PC_ULTRA_V19.apk SIM_TURBO_BUILD/SIM_TURBO_PC_ULTRA_V19_SETUP.exe SIM_TURBO_BUILD/SIM_TURBO_PC_ULTRA_V19_PORTABLE.exe
             if git diff --cached --quiet; then
               echo "Binarios ya publicados con el mismo contenido."
               exit 0
             fi
-            git commit -m 'Publicar compilaciones AETHER V18 Windows y Android'
+            git commit -m 'Publicar compilaciones AETHER V19 Windows y Android'
             if git push origin "HEAD:$branch"; then
               echo "Binarios V18 publicados."
               exit 0
