@@ -150,15 +150,25 @@ def self_test():
     full[:,:,0]=np.arange(1280,dtype=np.uint16)[None,:]%256
     full[:,:,1]=np.arange(720,dtype=np.uint16)[:,None]%256
     full[:,:,2]=128
-    for preset, shape in (("FOCO",(720,1280,3)),("FOCO_RAPIDO",(540,960,3)),
-                          ("FOCO_TURBO",(360,640,3)),("FOCO_AUTO",(720,1280,3))):
-        processed=process_pipeline(full,model,cv2,preset,np)
-        assert processed.shape==shape, (preset,processed.shape)
-        assert not np.array_equal(processed[:8,:8],full[:8,:8]), "CNN inactive"
-        region=capture_region({"left":-1920,"top":0,"width":1920,"height":1080},preset)
-        assert region["left"]>=-1920 and region["left"]+region["width"]<=0
-        assert region["width"]==(480 if preset=="FOCO_AUTO" else shape[1]//2)
-        print("FOCO",preset,"captura",region["width"],"x",region["height"],"-> salida",shape[1],"x",shape[0])
+    for preset, expected_size in (("FOCO",(640,360)),("FOCO_RAPIDO",(480,270)),
+                                  ("FOCO_TURBO",(320,180)),("FOCO_AUTO",(480,270))):
+        region=capture_region({"left":0,"top":0,"width":1280,"height":720},preset)
+        assert (region["width"],region["height"])==expected_size
+        cropped=full[region["top"]:region["top"]+region["height"],
+                     region["left"]:region["left"]+region["width"]].copy()
+        processed=process_pipeline(cropped,model,cv2,preset,np)
+        assert processed.shape==(expected_size[1]*2,expected_size[0]*2,3)
+        assert not np.array_equal(processed[:8,:8],cropped[:8,:8]), "CNN inactive"
+        negative=capture_region({"left":-1920,"top":0,"width":1920,"height":1080},preset)
+        assert negative["left"]>=-1920 and negative["left"]+negative["width"]<=0
+        print("FOCO",preset,"captura",region["width"],"x",region["height"],
+              "-> salida",processed.shape[1],"x",processed.shape[0])
+    for level,(width,height) in enumerate(FOCUS_LEVELS):
+        region=capture_region({"left":0,"top":0,"width":1280,"height":720},"FOCO_AUTO",level)
+        assert (region["width"],region["height"])==(width,height)
+        cropped=full[region["top"]:region["top"]+height,region["left"]:region["left"]+width].copy()
+        processed=process_pipeline(cropped,model,cv2,"FOCO_AUTO",np)
+        assert processed.shape==(height*2,width*2,3),("auto level",level)
     assert next_focus_level(2,140)==1
     assert next_focus_level(1,140)==0
     assert next_focus_level(0,140)==0
