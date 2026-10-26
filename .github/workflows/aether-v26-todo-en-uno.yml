@@ -89,7 +89,9 @@ jobs:
         run: |
           $ErrorActionPreference='Stop'
           $csc="$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\csc.exe"
-          & $csc /nologo /target:exe /out:V26_WifiRadioTest.exe /r:System.dll /r:System.Core.dll 'SIM_TURBO_BUILD/V26_WifiRadio.cs' 'SIM_TURBO_BUILD/V26_WifiRadioTest.cs'
+          $src=(Resolve-Path 'SIM_TURBO_BUILD/V26_WifiRadio.cs').Path
+          $test=(Resolve-Path 'SIM_TURBO_BUILD/V26_WifiRadioTest.cs').Path
+          & $csc /nologo /target:exe /out:V26_WifiRadioTest.exe /r:System.dll /r:System.Core.dll $src $test
           if ($LASTEXITCODE -ne 0) { throw 'Wi-Fi V26 no compila' }
           & './V26_WifiRadioTest.exe'
           if ($LASTEXITCODE -ne 0) { throw 'Wi-Fi V26: parseo o privacidad no valida' }
