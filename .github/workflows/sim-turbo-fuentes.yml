@@ -126,6 +126,28 @@ jobs:
                   (Path('/tmp/aether-v21-neural')/name).write_bytes(z.read(member))
           PY
           python3 /tmp/aether-v21-neural/AETHER_IA_4K.py --self-test
+          python3 - <<'PY'
+          from pathlib import Path
+          import cv2,numpy as np,subprocess,sys
+          tmp=Path('/tmp/aether-v21-neural')
+          h,w=1080,1920
+          yy,xx=np.mgrid[:h,:w]
+          im=np.zeros((h,w,3),dtype=np.uint8)
+          im[:,:,0]=(xx%256).astype(np.uint8)
+          im[:,:,1]=(yy%256).astype(np.uint8)
+          im[:,:,2]=(((xx//28+yy//28)%2)*255).astype(np.uint8)
+          src=tmp/'sample_FHD.png'
+          dst=tmp/'sample_IA_4K.png'
+          assert cv2.imwrite(str(src),im)
+          subprocess.run([sys.executable,str(tmp/'AETHER_IA_4K.py'),
+              '--input',str(src),'--output',str(dst),'--tile','192'],check=True,timeout=480)
+          result=cv2.imread(str(dst))
+          assert result is not None
+          assert result.shape == (2160,3840,3),result.shape
+          print('IA REAL CONVERSION FHD→UHD 1920x1080 -> 3840x2160 VALIDADA')
+          print('Bytes PNG:',dst.stat().st_size)
+          PY
+
       - name: Registrar hash SHA256 del ZIP V21
         run: sha256sum EXPORTS/SIM_TURBO_PC_ULTRA_V21_PROYECTO_COMPLETO.zip
       - uses: actions/upload-artifact@v4
