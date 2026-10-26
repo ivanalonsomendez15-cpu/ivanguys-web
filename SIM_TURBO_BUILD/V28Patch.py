@@ -12,7 +12,7 @@ def patch(path,old,new,label):
 clinic=pc/"V11_SystemClinic.cs"
 # Preserve the legacy DSR code for backwards compatibility, but clearly warn
 # it changes Windows display resolution and is NOT the requested live neural AI.
-patch(clinic,'var live=Tab(tabs,"4K EN DIRECTO V23");',
+patch(clinic,'var live=Tab(tabs,"DSR NVIDIA OPCIONAL");',
     'var live=Tab(tabs,"DSR LEGADO (CAMBIA RESOLUCION)");',"legacy DSR label")
 patch(clinic,'B(live,"ABRIR MODO 4K EN DIRECTO V23",',
     'B(live,"DSR LEGADO: CAMBIA RESOLUCION WINDOWS",',"legacy DSR button")
