@@ -205,7 +205,10 @@ class Live:
     def _worker(self):
         try:
             with self.mss.mss() as sct:
-                mon=sct.monitors[1]
+                # Select the monitor containing Windows desktop origin (primary).
+                mon=next((m for m in sct.monitors[1:]
+                    if m["left"]<=0<m["left"]+m["width"]
+                    and m["top"]<=0<m["top"]+m["height"]),sct.monitors[1])
                 w=mon["width"];h=mon["height"]
                 if w>4096 or h>2160:
                     raise RuntimeError("Monitor supera límites de captura V25.")
