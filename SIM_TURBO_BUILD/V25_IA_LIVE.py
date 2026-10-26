@@ -257,7 +257,7 @@ class Live:
                     self.status.set(
                       f"IA FSRCNN x2 · {self.fps:.1f} FPS de AETHER (NO del juego) · "
                       f"captura {self.capture_ms:.0f} ms · IA {self.infer_ms:.0f} ms · "
-                      f"total {self.latency_ms:.0f} ms · descartados {self.dropped}\\n"
+                      f"total {self.latency_ms:.0f} ms · descartados {self.dropped}\n"
                       f"Modo {self.preset} · resolución de Windows SIN CAMBIOS."
                     )
             if self.last_error is not None:
