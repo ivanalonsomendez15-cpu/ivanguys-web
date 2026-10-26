@@ -4,6 +4,8 @@ on:
     branches: [sim-turbo-build-v3-20261025]
     paths:
       - '.github/workflows/aether-todo-en-uno.yml'
+      - 'SIM_TURBO_BUILD/V21_IA_4K.py'
+      - 'SIM_TURBO_BUILD/V21_AiSuperResolution.cs'
   workflow_dispatch:
 permissions:
   contents: write
