@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""AETHER V30: real trained FSRCNN x2 on LIVE screen frames, never changes Windows resolution.
+"""AETHER V31: neural previews and native Full HD clarity mode, never changes Windows resolution.
 
 Modes:
   RAPIDO: capture 1080p => scale to 540p => neural x2 => native 1080p
@@ -339,7 +339,7 @@ def self_test():
     do,_=cache.should_process(changed,cv2,np,102.3)
     assert do, "ECO must refresh even when static"
     assert cache.inferred==2
-    print("AETHER V30: 9 rutas FSRCNN x2; ECO cache static frames, forced 2s refresh, changed frames infer.")
+    print("AETHER V31: CNN x2 preservada, modo claridad local NO IA verificado y modos FOCO intactos.")
     for mode,ms,delta in results:
         print("MODO",mode,ms,"ms en fotograma 128x72. Diferencia visual MAE",delta)
     print("No se prueba FPS en CS2/Valorant/Roblox ni overlay real en entorno sin pantalla.")
@@ -564,12 +564,12 @@ class Live:
                         self.image=self.ImageTk.PhotoImage(obj)
                         self.preview.configure(image=self.image)
                     self.status.set(
-                      f"IA FSRCNN x2 · {self.fps:.1f} FPS del bucle AETHER (NO del juego) · "
+                      f"{'BORDES MAS DEFINIDOS EN 1080P (NO IA)' if self.preset=='CLARIDAD_1080' else 'IA FSRCNN x2'} · {self.fps:.1f} FPS del bucle AETHER (NO del juego) · "
                       f"captura {self.capture_ms:.0f} ms · IA {self.infer_ms:.0f} ms · "
                       f"proceso {self.latency_ms:.0f} ms · p95 {percentile95_ms(self.pipeline_samples):.0f} ms · "
                       f"hasta UI {self.present_ms:.0f} ms · descartados {self.dropped}\n"
                       f"Modo {self.preset} · captura {self.capture_size} · salida IA {frame.shape[1]}x{frame.shape[0]}\n"
-                      f"{'ECO: '+str(self.eco.inferred)+' inferencias reales / '+str(self.frames)+' capturas, '+str(self.eco.skipped)+' omitidas' if self.eco is not None else 'IA calculada por cada fotograma mostrado'}\n"
+                      f"{'ECO: '+str(self.eco.inferred)+' inferencias reales / '+str(self.frames)+' capturas, '+str(self.eco.skipped)+' omitidas' if self.eco is not None else ('Nitidez de bordes NO IA' if self.preset=='CLARIDAD_1080' else 'IA calculada por cada fotograma mostrado')}\n"
                       f"{'SOLO REGIÓN DE VISTA PREVIA, NO TODA LA PANTALLA' if self.preset.startswith('FOCO') else 'RESOLUCIÓN WINDOWS SIN CAMBIOS'}."
                     )
             if self.last_error is not None:
@@ -617,7 +617,7 @@ def benchmark(preset):
         assert out.shape==(frame.shape[0]*2,frame.shape[1]*2,3)
     else:
         assert out.shape==frame.shape
-    print(f"AETHER V31: {preset}, captura {frame.shape[1]}x{frame.shape[0]}, salida {out.shape[1]}x{out.shape[0]}, "+("filtro de nitidez NO IA" if preset=="CLARIDAD_1080" else "FSRCNN")+" {ms:.1f} ms/frame, techo {1000/max(ms,1):.2f} FPS de procesamiento (NO de juego).")
+    print(f"AETHER V31: {preset}, captura {frame.shape[1]}x{frame.shape[0]}, salida {out.shape[1]}x{out.shape[0]}, "+("filtro de nitidez NO IA" if preset=="CLARIDAD_1080" else "FSRCNN")+f" {ms:.1f} ms/frame, techo {1000/max(ms,1):.2f} FPS de procesamiento (NO de juego).")
     print("Benchmark CPU sintetico: no mide captura, overlay, compositor, latencia de pantalla ni juegos.")
     if preset=="FOCO_MOVIMIENTO":
         print("AVISO: en uso real se captura el monitor completo para detectar movimiento; benchmark solo mide FSRCNN del recorte.")
@@ -639,5 +639,5 @@ def main():
 if __name__=="__main__":
     try:sys.exit(main())
     except Exception as exc:
-        print("AETHER V30 ERROR: "+str(exc),file=sys.stderr)
+        print("AETHER V31 ERROR: "+str(exc),file=sys.stderr)
         sys.exit(1)
