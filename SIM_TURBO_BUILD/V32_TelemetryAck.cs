@@ -8,6 +8,11 @@ namespace SimTurboPC {
   /// Never opens ports, adjusts firewall, starts services or discloses pairing code.
   /// The V32 reply is signed with the existing V17 HMAC routine.</summary>
   public static class AetherTelemetryAckV32 {
+    public static bool IsPrivate(System.Net.IPAddress address){
+      if(address==null||address.AddressFamily!=System.Net.Sockets.AddressFamily.InterNetwork)return false;
+      var a=address.GetAddressBytes();
+      return a[0]==10 || a[0]==192&&a[1]==168 || a[0]==172&&a[1]>=16&&a[1]<=31;
+    }
     public static bool TryAccept(string packet,string code,
       out int signal,out int frequency,out int rate,out string ack) {
       signal=0;frequency=0;rate=0;ack=null;
