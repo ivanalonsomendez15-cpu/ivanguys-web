@@ -1,0 +1,10 @@
+# AETHER V41 — 28 octubre 2026
+
+## Mejora Wi-Fi verificable: sondeo ICMP adaptativo
+V41 conserva los controles de ruta y adaptador antes y después de cada pareja LAN/WAN de V40. Añade una **salida anticipada conservadora**: si las primeras ocho muestras de todos los destinos ICMP elegibles carecen de respuesta, interrumpe el sondeo y lo marca **inconcluso**. Cuando la ruta WAN no pertenece al Wi-Fi, comprueba únicamente el gateway y se detiene después de ocho intentos sin respuesta. Si cualquier destino responde, continúa hasta las 16 parejas/muestras previstas. Así evita hasta 16 sondas ICMP adicionales cuando gateway y WAN no responden, o hasta ocho en modo solo LAN, sin confundir ausencia de respuesta ICMP con pérdida real de paquetes. No modifica DNS, router, controladores ni configuración de red.
+
+## Pruebas y condiciones de publicación
+La función pura ShouldStopForIcmpSilence se prueba con ocho y siete fallos, respuestas aisladas LAN/WAN, WAN omitida, datos nulos y series incompletas. La CI debe compilar Windows V41 y Android V32, ejecutar pruebas sintéticas de rutas y gráficos y generar un ZIP único antes de publicar una release. Una prueba sintética no demuestra ahorro de tiempo ni aumento de Mbps en el PC del usuario.
+
+## Gráficos y limitaciones
+El asesor para monitor físico 1920×1080 a 200 Hz se conserva sin activar captura/redibujado global lento ni modificar anticheat. El supermuestreo puede mejorar apariencia de ciertos contenidos, pero no convierte el panel en 4K nativo. No hay mediciones físicas de FPS, Mbps ni pruebas reales de ICMP en este equipo. Un router o destino puede bloquear ICMP; ocho fallos seguidos no demuestran caída del Wi-Fi. Si hay pérdidas transitorias y la respuesta llega después del octavo intento, la prueba temprana será inconclusa y conviene repetirla. Los cambios de ruta breves entre comprobaciones pueden no detectarse. La elección de ruta UDP es orientativa y puede diferir de ICMP o del tráfico de videojuegos. Android sigue en V32; no desinstalar automáticamente ni perder perfiles.
