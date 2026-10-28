@@ -1,9 +1,9 @@
-name: AETHER V35 WIFI PAREADO Y 200 HZ NATIVO + PC ANDROID ZIP
+name: AETHER V35 WIFI PAREADO Y PANTALLA 200 HZ + PC ANDROID ZIP
 on:
   push:
     branches: [sim-turbo-build-v3-20261025]
     paths:
-      - '.github/workflows/aether-v34-todo-en-uno.yml'
+      - '.github/workflows/aether-v35-todo-en-uno.yml'
       - 'SIM_TURBO_BUILD/V34Patch.py'
       - 'SIM_TURBO_BUILD/V35Patch.py'
       - 'SIM_TURBO_BUILD/V34_WifiBaseline.cs'
@@ -19,7 +19,7 @@ on:
       - 'SIM_TURBO_BUILD/V32_TelemetryProbe.java'
       - 'SIM_TURBO_BUILD/V32_TelemetryAckTest.cs'
       - 'SIM_TURBO_BUILD/CHANGELOG_V32.md'
-      - 'SIM_TURBO_BUILD/source_project_export_v34.py'
+      - 'SIM_TURBO_BUILD/source_project_export_v35.py'
       - 'SIM_TURBO_BUILD/V31_IA_LIVE.py'
       - 'SIM_TURBO_BUILD/V31_LiveAiWifi.cs'
       - 'SIM_TURBO_BUILD/V30_WifiBursts.cs'
@@ -33,7 +33,7 @@ on:
       - 'SIM_TURBO_BUILD/V22_Settings.cs'
       - 'SIM_TURBO_BUILD/V22_AndroidBackup.java'
       - 'SIM_TURBO_BUILD/V22Patch.py'
-      - 'SIM_TURBO_BUILD/source_project_export_v34.py'
+      - 'SIM_TURBO_BUILD/source_project_export_v35.py'
   workflow_dispatch:
 permissions:
   contents: write
@@ -49,7 +49,7 @@ jobs:
           java-version: '17'
       - name: Reconstruir proyecto completo Android V22
         run: |
-          python3 SIM_TURBO_BUILD/source_project_export_v34.py
+          python3 SIM_TURBO_BUILD/source_project_export_v35.py
           mkdir -p stage
           unzip -q EXPORTS/SIM_TURBO_PC_ULTRA_V35_PROYECTO_COMPLETO.zip -d stage
           test -f stage/SIM_TURBO_PC_ULTRA_V35_PROYECTO_COMPLETO/Android/app/src/main/java/com/simturbopc/ultra/AetherBackupV22.java
@@ -80,7 +80,7 @@ jobs:
       - name: Extraer fuentes AETHER V22
         shell: pwsh
         run: |
-          python SIM_TURBO_BUILD/source_project_export_v34.py
+          python SIM_TURBO_BUILD/source_project_export_v35.py
           if ($LASTEXITCODE -ne 0) { throw 'No se generó el proyecto fuente V22' }
           Expand-Archive -Path 'EXPORTS/SIM_TURBO_PC_ULTRA_V35_PROYECTO_COMPLETO.zip' -DestinationPath 'stage' -Force
       - name: Compilar PC V22 con guardado real
@@ -318,7 +318,7 @@ jobs:
         run: |
           $ErrorActionPreference='Stop'
           $file='SIM_TURBO_PC_ULTRA_V35_PC_Y_ANDROID_UN_SOLO_ZIP.zip'
-          $tag='aether-v34-20261028'
+          $tag='aether-v35-20261028'
           if (!(Test-Path $file)) { throw 'No existe ZIP V30' }
           $size=(Get-Item $file).Length
           if ($size -lt 1000000) { throw 'ZIP sospechosamente pequeno' }
