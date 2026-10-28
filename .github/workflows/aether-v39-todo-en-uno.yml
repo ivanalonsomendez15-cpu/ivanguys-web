@@ -1,0 +1,349 @@
+name: AETHER V39 WIFI ENLACE + GATEWAY ESTABLE + PC ANDROID ZIP
+on:
+  push:
+    branches: [sim-turbo-build-v3-20261025]
+    paths:
+      - '.github/workflows/aether-v39-todo-en-uno.yml'
+      - 'SIM_TURBO_BUILD/V34Patch.py'
+      - 'SIM_TURBO_BUILD/V35Patch.py'
+      - 'SIM_TURBO_BUILD/V39Patch.py'
+      - 'SIM_TURBO_BUILD/V34_WifiBaseline.cs'
+      - 'SIM_TURBO_BUILD/V35_InterleavedWifi.cs'
+      - 'SIM_TURBO_BUILD/V39_WifiRouteMonitor.cs'
+      - 'SIM_TURBO_BUILD/V39_WifiRouteMonitorTest.cs'
+      - 'SIM_TURBO_BUILD/V34_SmoothDisplay.cs'
+      - 'SIM_TURBO_BUILD/CHANGELOG_V34.md'
+      - 'SIM_TURBO_BUILD/CHANGELOG_V35.md'
+      - 'SIM_TURBO_BUILD/CHANGELOG_V39.md'
+      - 'SIM_TURBO_BUILD/V33OverlayFix.py'
+      - 'SIM_TURBO_BUILD/CHANGELOG_V33.md'
+      - 'SIM_TURBO_BUILD/V32Patch.py'
+      - 'SIM_TURBO_BUILD/V32_TelemetryAck.cs'
+      - 'SIM_TURBO_BUILD/V32_TelemetryProbe.java'
+      - 'SIM_TURBO_BUILD/V32_TelemetryAckTest.cs'
+      - 'SIM_TURBO_BUILD/CHANGELOG_V32.md'
+      - 'SIM_TURBO_BUILD/source_project_export_v39.py'
+      - 'SIM_TURBO_BUILD/V31_IA_LIVE.py'
+      - 'SIM_TURBO_BUILD/V31_LiveAiWifi.cs'
+      - 'SIM_TURBO_BUILD/V30_WifiBursts.cs'
+      - 'SIM_TURBO_BUILD/V30_WifiBurstsTest.cs'
+      - 'SIM_TURBO_BUILD/V29_WifiSurvey.cs'
+      - 'SIM_TURBO_BUILD/V29_WifiSurveyTest.cs'
+      - 'SIM_TURBO_BUILD/V31_IA_LIVE.py'
+      - 'SIM_TURBO_BUILD/V31Patch.py'
+      - 'SIM_TURBO_BUILD/CHANGELOG_V31.md'
+      - 'SIM_TURBO_BUILD/V22_SettingsTest.cs'
+      - 'SIM_TURBO_BUILD/V22_Settings.cs'
+      - 'SIM_TURBO_BUILD/V22_AndroidBackup.java'
+      - 'SIM_TURBO_BUILD/V22Patch.py'
+      - 'SIM_TURBO_BUILD/source_project_export_v39.py'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Reconstruir proyecto completo Android V22
+        run: |
+          python3 SIM_TURBO_BUILD/source_project_export_v39.py
+          mkdir -p stage
+          unzip -q EXPORTS/SIM_TURBO_PC_ULTRA_V39_PROYECTO_COMPLETO.zip -d stage
+          test -f stage/SIM_TURBO_PC_ULTRA_V39_PROYECTO_COMPLETO/Android/app/src/main/java/com/simturbopc/ultra/AetherBackupV22.java
+      - name: Configurar SDK Android
+        run: |
+          echo "$ANDROID_HOME/cmdline-tools/latest/bin" >> "$GITHUB_PATH"
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-35' 'build-tools;35.0.0'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+      - name: Compilar Android V22
+        working-directory: stage/SIM_TURBO_PC_ULTRA_V39_PROYECTO_COMPLETO/Android
+        run: gradle --no-daemon :app:assembleDebug
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AETHER_ANDROID_V32_APK
+          path: stage/SIM_TURBO_PC_ULTRA_V39_PROYECTO_COMPLETO/Android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+  paquete:
+    needs: [android]
+    runs-on: windows-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Extraer fuentes AETHER V22
+        shell: pwsh
+        run: |
+          python SIM_TURBO_BUILD/source_project_export_v39.py
+          if ($LASTEXITCODE -ne 0) { throw 'No se generó el proyecto fuente V22' }
+          Expand-Archive -Path 'EXPORTS/SIM_TURBO_PC_ULTRA_V39_PROYECTO_COMPLETO.zip' -DestinationPath 'stage' -Force
+      - name: Compilar PC V22 con guardado real
+        shell: pwsh
+        run: |
+          $ErrorActionPreference='Stop'
+          $pc='stage/SIM_TURBO_PC_ULTRA_V39_PROYECTO_COMPLETO/PC_Windows'
+          $sources=Get-ChildItem "$pc/*.cs" | Sort-Object Name | ForEach-Object { $_.FullName }
+          $csc="$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\csc.exe"
+          & $csc /nologo /optimize+ /target:winexe /out:SIM_TURBO_PC_ULTRA_V39.exe /r:System.dll /r:System.Core.dll /r:System.Drawing.dll /r:System.Windows.Forms.dll /r:System.Management.dll $sources
+          if ($LASTEXITCODE -ne 0 -or !(Test-Path 'SIM_TURBO_PC_ULTRA_V39.exe')) { throw 'Compilación PC V22 fallida' }
+      - name: Ejecutar pruebas guardado Windows
+        shell: pwsh
+        run: |
+          $csc="$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\csc.exe"
+          $settingsSource=(Resolve-Path 'SIM_TURBO_BUILD/V22_Settings.cs').Path
+          $settingsTest=(Resolve-Path 'SIM_TURBO_BUILD/V22_SettingsTest.cs').Path
+          & $csc /nologo /target:exe /out:V22_SettingsTest.exe /r:System.dll /r:System.Core.dll /r:System.Drawing.dll /r:System.Windows.Forms.dll $settingsSource $settingsTest
+          if ($LASTEXITCODE -ne 0) { throw 'Test guardado V22 no compila' }
+          & './V22_SettingsTest.exe'
+          if ($LASTEXITCODE -ne 0) { throw 'Guardado y recuperación de ajustes fallaron' }
+      - name: Probar protocolo de conexion V32 (ACK HMAC, errores, LAN)
+        shell: pwsh
+        run: |
+          $ErrorActionPreference='Stop'
+          $csc="$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\csc.exe"
+          $ack=(Resolve-Path 'SIM_TURBO_BUILD/V32_TelemetryAck.cs').Path
+          $secure=(Resolve-Path 'SIM_TURBO_BUILD/V17_SecurePacket.cs').Path
+          $test=(Resolve-Path 'SIM_TURBO_BUILD/V32_TelemetryAckTest.cs').Path
+          & $csc /nologo /target:exe /out:V32_ConnectionTest.exe /r:System.dll /r:System.Core.dll $ack $secure $test
+          if ($LASTEXITCODE -ne 0) { throw 'Fallo compilar prueba V32' }
+          & './V32_ConnectionTest.exe'
+          if ($LASTEXITCODE -ne 0) { throw 'Fallo autenticacion V32' }
+      - name: Probar diagnostico Wi-Fi radio V27 y canales V30
+        shell: pwsh
+        run: |
+          $ErrorActionPreference='Stop'
+          $csc="$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\csc.exe"
+          $radio=(Resolve-Path 'SIM_TURBO_BUILD/V27_WifiRadio.cs').Path
+          $testRadio=(Resolve-Path 'SIM_TURBO_BUILD/V27_WifiRadioTest.cs').Path
+          & $csc /nologo /target:exe /out:V27_WifiRadioTest.exe /r:System.dll /r:System.Core.dll $radio $testRadio
+          if ($LASTEXITCODE -ne 0) { throw 'Wi-Fi V27 radio no compila' }
+          & './V27_WifiRadioTest.exe'
+          if ($LASTEXITCODE -ne 0) { throw 'Wi-Fi V27 radio test fallo' }
+          $survey=(Resolve-Path 'SIM_TURBO_BUILD/V29_WifiSurvey.cs').Path
+          $testSurvey=(Resolve-Path 'SIM_TURBO_BUILD/V29_WifiSurveyTest.cs').Path
+          & $csc /nologo /target:exe /out:V29_WifiSurveyTest.exe /r:System.dll /r:System.Core.dll $radio $survey $testSurvey
+          if ($LASTEXITCODE -ne 0) { throw 'Wi-Fi V30 scan no compila' }
+          & './V29_WifiSurveyTest.exe'
+          if ($LASTEXITCODE -ne 0) { throw 'Wi-Fi V30: agregados o privacidad fallaron' }
+      - name: Probar rachas de pérdida Wi-Fi V30 con secuencias sintéticas
+        shell: pwsh
+        run: |
+          $ErrorActionPreference='Stop'
+          $csc="$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\csc.exe"
+          $src=(Resolve-Path 'SIM_TURBO_BUILD/V30_WifiBursts.cs').Path
+          $test=(Resolve-Path 'SIM_TURBO_BUILD/V30_WifiBurstsTest.cs').Path
+          & $csc /nologo /target:exe /out:V30_WifiBurstsTest.exe /r:System.dll /r:System.Core.dll $src $test
+          if ($LASTEXITCODE -ne 0) { throw 'V30 Wi-Fi burst test no compila' }
+          & './V30_WifiBurstsTest.exe'
+          if ($LASTEXITCODE -ne 0) { throw 'V30 Wi-Fi burst test falló' }
+      - name: Probar que solo se enumeran modos permitidos sin modificar Windows
+        shell: pwsh
+        run: |
+          $ErrorActionPreference='Stop'
+          $csc="$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\csc.exe"
+          $source=(Resolve-Path 'SIM_TURBO_BUILD/V23_LiveSupersampling.cs').Path
+          $test=(Resolve-Path 'SIM_TURBO_BUILD/V23_LiveSupersamplingTest.cs').Path
+          & $csc /nologo /target:exe /out:V23_DisplayTest.exe /r:System.dll /r:System.Core.dll /r:System.Drawing.dll /r:System.Windows.Forms.dll /r:System.Management.dll $source $test
+          if ($LASTEXITCODE -ne 0) { throw 'Error compilando prueba V23 de pantalla' }
+          & './V23_DisplayTest.exe'
+          if ($LASTEXITCODE -ne 0) { throw 'Modo de pantalla V23 no seguro' }
+      - name: Probar código neuronal V30 en CI con fotogramas sintéticos
+        shell: pwsh
+        run: |
+          $env:PYTHONIOENCODING='utf-8'
+          python -m pip install --quiet opencv-contrib-python==4.11.0.86
+          $ai='stage/SIM_TURBO_PC_ULTRA_V39_PROYECTO_COMPLETO/IA_SUPERRESOLUCION'
+          python -m py_compile "$ai/AETHER_IA_DIRECTO.py"
+          if ($LASTEXITCODE -ne 0) { throw 'Python V30 tiene error sintactico' }
+          python "$ai/AETHER_IA_DIRECTO.py" --self-test
+          if ($LASTEXITCODE -ne 0) { throw 'Red neuronal V30 no supera el test' }
+          python "$ai/AETHER_IA_DIRECTO.py" --benchmark --mode CLARIDAD_1080
+          if ($LASTEXITCODE -ne 0) { throw "Fallo claridad V31" }
+          python "$ai/AETHER_IA_DIRECTO.py" --benchmark --mode RAPIDO
+          if ($LASTEXITCODE -ne 0) { throw 'Benchmark RAPIDO V30 fallido' }
+          python "$ai/AETHER_IA_DIRECTO.py" --benchmark --mode FOCO
+          if ($LASTEXITCODE -ne 0) { throw 'Benchmark FOCO V30 fallido' }
+          python "$ai/AETHER_IA_DIRECTO.py" --benchmark --mode FOCO_RAPIDO
+          if ($LASTEXITCODE -ne 0) { throw 'Benchmark FOCO_RAPIDO V30 fallido' }
+          python "$ai/AETHER_IA_DIRECTO.py" --benchmark --mode FOCO_TURBO
+          if ($LASTEXITCODE -ne 0) { throw 'Benchmark FOCO_TURBO V30 fallido' }
+          python "$ai/AETHER_IA_DIRECTO.py" --benchmark --mode FOCO_AUTO
+          if ($LASTEXITCODE -ne 0) { throw 'Benchmark FOCO_AUTO V30 fallido' }
+          python "$ai/AETHER_IA_DIRECTO.py" --benchmark --mode FOCO_CURSOR
+          if ($LASTEXITCODE -ne 0) { throw 'Benchmark FOCO CURSOR V30 fallido' }
+          python "$ai/AETHER_IA_DIRECTO.py" --benchmark --mode FOCO_ECO
+          if ($LASTEXITCODE -ne 0) { throw 'Benchmark FOCO ECO V30 fallido' }
+          python "$ai/AETHER_IA_DIRECTO.py" --benchmark --mode FOCO_MOVIMIENTO
+          if ($LASTEXITCODE -ne 0) { throw 'Benchmark FOCO MOVIMIENTO V30 fallido' }
+          python "$ai/AETHER_IA_DIRECTO.py" --benchmark --mode IA_4K
+          if ($LASTEXITCODE -ne 0) { throw 'Benchmark 1080p V30 fallido' }
+          $src=(Get-Content "$ai/AETHER_IA_DIRECTO.py" -Raw)
+          if ($src -match 'ChangeDisplaySettings' -or $src -match 'SetDisplayConfig') {
+            throw 'IA V30 no debe modificar la resolución Windows'
+          }
+      - name: Comprobar que overlay no combina fullscreen con override-redirect
+        shell: pwsh
+        run: |
+          $ErrorActionPreference='Stop'
+          $p='stage/SIM_TURBO_PC_ULTRA_V39_PROYECTO_COMPLETO/IA_SUPERRESOLUCION/AETHER_IA_DIRECTO.py'
+          python -m py_compile $p
+          if ($LASTEXITCODE -ne 0) { throw 'Error sintaxis V33' }
+          python -c "import sys,pathlib,ast; s=pathlib.Path(sys.argv[1]).read_text(encoding='utf-8'); ast.parse(s); assert '-fullscreen' not in s; assert 'self.overlay.geometry(' in s; print('V33: overlay fullscreen conflict removed')" $p
+          if ($LASTEXITCODE -ne 0) { throw 'La configuracion conflictiva de pantalla sigue en el script' }
+      - name: Pruebas V39 de estabilidad Wi-Fi y clasificacion LAN-WAN
+        shell: pwsh
+        run: |
+          $ErrorActionPreference='Stop'
+          $csc="$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\csc.exe"
+          $base=(Resolve-Path 'SIM_TURBO_BUILD/V34_WifiBaseline.cs').Path
+          $lib=(Resolve-Path 'SIM_TURBO_BUILD/V39_WifiRouteMonitor.cs').Path
+          $test=(Resolve-Path 'SIM_TURBO_BUILD/V39_WifiRouteMonitorTest.cs').Path
+          & $csc /nologo /target:exe /out:V39_WifiTest.exe /r:System.dll /r:System.Core.dll /r:System.Drawing.dll /r:System.Windows.Forms.dll $base $lib $test
+          if ($LASTEXITCODE -ne 0) { throw 'Prueba Wi-Fi V39 no compila' }
+          & './V39_WifiTest.exe'
+          if ($LASTEXITCODE -ne 0) { throw 'Fallaron tests Wi-Fi V39' }
+      - name: Verificar botones V39, guard de rutas y retirada de overlay lento
+        shell: pwsh
+        run: |
+          $ErrorActionPreference='Stop'
+          $source='stage/SIM_TURBO_PC_ULTRA_V39_PROYECTO_COMPLETO/PC_Windows/V31_LiveAiWifi.cs'
+          $text=Get-Content -Raw $source
+          if ($text.Contains('Add("CLARIDAD GLOBAL FULL HD · ACTIVAR Y MINIMIZAR"')) { throw 'V39 aún expone overlay lento' }
+          if (-not $text.Contains('200 HZ SIN FILTRO LENTO')) { throw 'Falta botón 200 Hz V39' }
+          if (-not (Test-Path 'stage/SIM_TURBO_PC_ULTRA_V39_PROYECTO_COMPLETO/PC_Windows/V39_WifiRouteMonitor.cs')) { throw 'Falta Wi-Fi V39' }
+          $route=Get-Content 'stage/SIM_TURBO_PC_ULTRA_V39_PROYECTO_COMPLETO/PC_Windows/V39_WifiRouteMonitor.cs' -Raw
+          if (-not $route.Contains('if(canWan)sb.AppendLine') -or -not $route.Contains('if(!SourceMatchesAdapter(lanSource,wifiIps))')) { throw 'V39 no protege las rutas de las sondas' }
+          if (-not $route.Contains('AdapterLiveStable(adapter.Id,gateway.Address,wifiIps)') -or
+              -not $route.Contains('AdapterSnapshotStable(')) { throw 'V39 no comprueba estado Wi-Fi, gateway e IPv4 durante la prueba' }
+      - name: Empaquetar IA neuronal offline sin Python instalado
+        shell: pwsh
+        run: |
+          $env:PYTHONIOENCODING='utf-8'
+          $env:PYTHONUTF8='1'
+          python -m pip install --quiet 'opencv-contrib-python==4.11.0.86' 'pyinstaller==6.16.0' 'mss==10.2.0' 'pillow==11.3.0'
+          if ($LASTEXITCODE -ne 0) { throw 'Fallaron dependencias IA' }
+          $ai='stage/SIM_TURBO_PC_ULTRA_V39_PROYECTO_COMPLETO/IA_SUPERRESOLUCION'
+          python "$ai/AETHER_IA_4K.py" --self-test
+          if ($LASTEXITCODE -ne 0) { throw 'Falló el modelo de IA 4K' }
+          python -m PyInstaller --clean --noconfirm --onefile --console --name AETHER_IA_4K --add-data "$ai/FSRCNN_x2.pb;." "$ai/AETHER_IA_4K.py"
+          if ($LASTEXITCODE -ne 0 -or !(Test-Path 'dist/AETHER_IA_4K.exe')) { throw 'IA autónoma no compilada' }
+          & 'dist/AETHER_IA_4K.exe' --self-test
+          if ($LASTEXITCODE -ne 0) { throw 'IA empaquetada falla test' }
+          python -m PyInstaller --clean --noconfirm --onefile --console --name AETHER_IA_DIRECTO --add-data "$ai/FSRCNN_x2.pb;." "$ai/AETHER_IA_DIRECTO.py"
+          if ($LASTEXITCODE -ne 0 -or !(Test-Path 'dist/AETHER_IA_DIRECTO.exe')) { throw 'IA V30 de pantalla no se pudo empaquetar' }
+          & 'dist/AETHER_IA_DIRECTO.exe' --self-test
+          if ($LASTEXITCODE -ne 0) { throw 'Fallo modelo de IA de pantalla V30' }
+
+      - name: Crear instalador PC V22 con IA y preferencias
+        shell: pwsh
+        run: |
+          $ErrorActionPreference='Stop'
+          $iss=@'
+          [Setup]
+          AppId={{6D9797F5-2438-49E6-B5E7-0C26FE91B88A}
+          AppName=SIM TURBO PC ULTRA
+          AppVersion=38.0
+          DefaultDirName={localappdata}\Programs\SIM TURBO PC ULTRA
+          PrivilegesRequired=lowest
+          OutputDir=release
+          OutputBaseFilename=INSTALAR_AETHER_PC_V39_WIFI_FPS_NATIVO
+          Compression=lzma
+          SolidCompression=yes
+          WizardStyle=modern
+          UninstallDisplayIcon={app}\SIM_TURBO_PC_ULTRA_V39.exe
+          [Files]
+          Source: "SIM_TURBO_PC_ULTRA_V39.exe"; DestDir: "{app}"; Flags: ignoreversion
+          Source: "dist\AETHER_IA_4K.exe"; DestDir: "{app}\IA_SUPERRESOLUCION"; Flags: ignoreversion
+          Source: "dist\AETHER_IA_DIRECTO.exe"; DestDir: "{app}\IA_SUPERRESOLUCION"; Flags: ignoreversion
+          Source: "stage\SIM_TURBO_PC_ULTRA_V39_PROYECTO_COMPLETO\IA_SUPERRESOLUCION\AETHER_IA_DIRECTO.py"; DestDir: "{app}\IA_SUPERRESOLUCION"; Flags: ignoreversion
+          Source: "stage\SIM_TURBO_PC_ULTRA_V39_PROYECTO_COMPLETO\IA_SUPERRESOLUCION\FSRCNN_x2.pb"; DestDir: "{app}\IA_SUPERRESOLUCION"; Flags: ignoreversion
+          Source: "stage\SIM_TURBO_PC_ULTRA_V39_PROYECTO_COMPLETO\IA_SUPERRESOLUCION\LICENSE_MODELO_APACHE_2.0.txt"; DestDir: "{app}\IA_SUPERRESOLUCION"; Flags: ignoreversion
+          [Icons]
+          Name: "{autoprograms}\SIM TURBO PC ULTRA"; Filename: "{app}\SIM_TURBO_PC_ULTRA_V39.exe"
+          Name: "{autodesktop}\SIM TURBO PC ULTRA"; Filename: "{app}\SIM_TURBO_PC_ULTRA_V39.exe"
+          '@
+          Set-Content -Path 'installer-v22.iss' -Value $iss -Encoding UTF8
+          $compiler='C:\Program Files (x86)\Inno Setup 6\ISCC.exe'
+          if (!(Test-Path $compiler)) { choco install innosetup -y --no-progress }
+          if (!(Test-Path $compiler)) { throw 'No se encontró Inno Setup' }
+          & $compiler installer-v22.iss
+          if ($LASTEXITCODE -ne 0 -or !(Test-Path 'release/INSTALAR_AETHER_PC_V39_WIFI_FPS_NATIVO.exe')) { throw 'Error instalador PC' }
+      - uses: actions/download-artifact@v4
+        with:
+          name: AETHER_ANDROID_V32_APK
+          path: apk_compilada
+      - name: Crear UN ZIP con PC, Android y código
+        shell: pwsh
+        run: |
+          $ErrorActionPreference='Stop'
+          New-Item -ItemType Directory -Force 'TODO_EN_UNO/PC','TODO_EN_UNO/ANDROID','TODO_EN_UNO/PROYECTO_EDITABLE' | Out-Null
+          Copy-Item 'release/INSTALAR_AETHER_PC_V39_WIFI_FPS_NATIVO.exe' 'TODO_EN_UNO/PC/INSTALAR_AETHER_PC_V39_WIFI_FPS_NATIVO.exe'
+          $apk=Get-ChildItem 'apk_compilada' -Recurse -Filter '*.apk' | Select-Object -First 1
+          if ($null -eq $apk) { throw 'APK V22 no encontrado' }
+          Copy-Item $apk.FullName 'TODO_EN_UNO/ANDROID/AETHER_ANDROID_V32.apk'
+          Copy-Item 'EXPORTS/SIM_TURBO_PC_ULTRA_V39_PROYECTO_COMPLETO.zip' 'TODO_EN_UNO/PROYECTO_EDITABLE/CODIGO_FUENTE_V39.zip'
+          $note=@'
+          SIM TURBO PC ULTRA V39 · PC Y ANDROID EN UN ZIP
+          V39: comprueba rutas IPv4, enlace Wi-Fi, gateway e IPv4 asignadas antes, durante (cada 4 muestras) y después de los pings. Si cambian, detiene la prueba y descarta conclusiones LAN/WAN. También comprueba ruta IPv4 hacia gateway y WAN sin enviar datagramas UDP. Si el gateway usa otra interfaz, omite todas las sondas; si WAN usa Ethernet/VPN o es desconocida, solo mide gateway (16 sondas) y evita 16 sondas WAN y conclusiones falsas. Si ambas rutas corresponden a Wi-Fi, conserva 16 parejas alternadas. ICMP bloqueado es inconcluso; no inventa Mbps/FPS.
+          PC: Instala el EXE dentro de PC/. CONECTAR Y MEDIR V32 requiere que AETHER V32 de PC este abierto; no muestra conectado hasta recibir respuesta del PC. AETHER CLINIC incluye asesor de monitor de 200 Hz sin filtro lento. El filtro antiguo de nitidez 1080p es experimental y NO es 4K ni IA; no se activa automaticamente. Modos IA FSRCNN anteriores incluidos. WI-FI V31 permite 16 muestras.
+          Android: instala el APK de ANDROID/. CONECTAR Y MEDIR verifica la respuesta autentica del PC. Si el PC no responde, revisa firewall PRIVADO UDP 45721, misma LAN, IP y codigo actual. Los perfiles pueden exportarse/importarse.
+          AVISO: el APK Android V32 se firma con clave DEBUG VARIABLE y puede no instalarse sobre V31/V22. IMPORTANTE: exporta las copias de tus perfiles desde la app antigua ANTES de desinstalarla. Una desinstalacion elimina ajustes locales. No desinstales si no quieres perderlos.
+          IA neuronal: PC incluye IA 4K para imágenes. No necesitas Python para usar el instalador.
+          En la nube NO hay copia real todavía; el Worker Cloudflare actual no tiene base de datos autenticada.
+          El guardado local persiste tras cerrar navegador, apps o reiniciar dispositivos. La conexion de telemetria V32 usa UDP 45721 y se detiene cuando Android pasa a segundo plano. El procesamiento IA V30 NO usa DSR y NO cambia resolucion Windows. El filtro global es experimental, puede fallar en juegos con anti-cheat o fullscreen exclusivo, y puede bajar FPS. 1080p fisico no se vuelve 4K nativo. Encender piloto/monitor requiere consentimiento otra vez.
+          PROYECTO_EDITABLE incluye Windows V39, Android V32, Cloudflare, IA de fotogramas y todo el codigo editable. Las rutas UDP son orientativas; se omiten sondas WAN no atribuibles, ICMP puede seguir otra ruta.
+          '@
+          Set-Content 'TODO_EN_UNO/LEEME_PRIMERO.txt' -Value $note -Encoding UTF8
+          Compress-Archive -Path 'TODO_EN_UNO/*' -DestinationPath 'SIM_TURBO_PC_ULTRA_V39_PC_Y_ANDROID_UN_SOLO_ZIP.zip' -CompressionLevel Optimal -Force
+          Add-Type -AssemblyName System.IO.Compression.FileSystem
+          $zip=[IO.Compression.ZipFile]::OpenRead((Resolve-Path 'SIM_TURBO_PC_ULTRA_V39_PC_Y_ANDROID_UN_SOLO_ZIP.zip'))
+          try {
+            $entries=$zip.Entries | ForEach-Object { $_.FullName }
+            if (-not ($entries -match 'PC/INSTALAR_AETHER_PC_V39_WIFI_FPS_NATIVO.exe')) { throw 'ZIP sin PC V22' }
+            if (-not ($entries -match 'ANDROID/AETHER_ANDROID_V32.apk')) { throw 'ZIP sin Android V22' }
+            if (-not ($entries -match 'PROYECTO_EDITABLE/CODIGO_FUENTE_V39.zip')) { throw 'ZIP sin fuentes V30' }
+          } finally { $zip.Dispose() }
+          Write-Host ('UN ZIP V39 VERIFICADO: '+(Get-Item 'SIM_TURBO_PC_ULTRA_V39_PC_Y_ANDROID_UN_SOLO_ZIP.zip').Length+' bytes')
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AETHER_V39_PC_ANDROID_WIFI_FPS_UN_SOLO_ZIP
+          path: SIM_TURBO_PC_ULTRA_V39_PC_Y_ANDROID_UN_SOLO_ZIP.zip
+          if-no-files-found: error
+      - name: Publicar ZIP único como GitHub Release (sin límite de 100 MB de Git)
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $ErrorActionPreference='Stop'
+          $file='SIM_TURBO_PC_ULTRA_V39_PC_Y_ANDROID_UN_SOLO_ZIP.zip'
+          $tag='aether-v39-20261028'
+          if (!(Test-Path $file)) { throw 'No existe ZIP V30' }
+          $size=(Get-Item $file).Length
+          if ($size -lt 1000000) { throw 'ZIP sospechosamente pequeno' }
+          $notes=@'
+          AETHER V39: enlace estable: antes y durante el diagnóstico Wi-Fi comprueba por UDP conectado (sin enviar datos) la IPv4 de origen al gateway y WAN. Si la ruta gateway no pertenece al Wi-Fi analizado, omite sondas. Si la ruta WAN es ajena, desconocida o hay tunel VPN/PPP, mide solo gateway y NO compara LAN/WAN, ahorrando 16 sondas WAN por medicion. Cuando ambas rutas son atribuibles, conserva 16 parejas LAN/WAN alternadas. La seleccion UDP es orientativa, ICMP y juegos pueden seguir otras rutas. No cambia configuracion. Android V32 sin cambios, asesor 200 Hz sin overlay lento. Un panel 1080p no se convierte en 4K nativo.
+          V30 muestra FPS del procesamiento, captura/inferencia en ms, p95 del proceso y tiempo hasta UI; descarta frames viejos.
+          Wi-Fi V31: 16 pings por destino, rachas consecutivas de fallos ICMP al gateway e Internet, además de canales 1/6/11, p95, jitter, DNS y PHY. No aumenta Mbps ni cambia router.
+          V39 detecta cambios de ruta, enlace Wi-Fi, gateway o IPv4 durante el muestreo, detiene las sondas y evita conclusiones LAN/WAN engañosas; pruebas sintéticas en CI, sin verificar rutas físicas, Mbps ni FPS. Se conserva asesor 200 Hz sin overlay de pantalla completa; no hay 4K nativo ni mejora garantizada de FPS.
+          Android V32 incluido con ACK autentico para CONECTAR Y MEDIR; para actualizar, exporta perfiles antiguos antes de desinstalar por posible diferencia de firma debug.
+          FOCO CURSOR sigue el ratón, el resto FOCO captura el centro (320x180 a 640x360); todos son previews y NO son 4K de toda la pantalla.
+          La compilacion CI no verifica FPS de juegos ni pantalla del usuario.
+          '@
+          Set-Content -Path 'release_notes_v30.txt' -Value $notes -Encoding UTF8
+          gh release view $tag --repo "$env:GITHUB_REPOSITORY" *> $null
+          if ($LASTEXITCODE -eq 0) {
+            gh release upload $tag $file --clobber --repo "$env:GITHUB_REPOSITORY"
+          } else {
+            gh release create $tag $file --repo "$env:GITHUB_REPOSITORY" --target 'sim-turbo-build-v3-20261025' --title 'AETHER V39 · WI-FI ENLACE Y GATEWAY + 200 HZ + ANDROID V32' --notes-file 'release_notes_v30.txt' --latest=false
+          }
+          if ($LASTEXITCODE -ne 0) { throw 'Falló publicar ZIP V30 como Release' }
+          Write-Host "Release V31 publicado: $size bytes"
