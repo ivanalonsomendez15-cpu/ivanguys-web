@@ -9,8 +9,8 @@ on:
       - 'SIM_TURBO_BUILD/V38Patch.py'
       - 'SIM_TURBO_BUILD/V34_WifiBaseline.cs'
       - 'SIM_TURBO_BUILD/V35_InterleavedWifi.cs'
-      - 'SIM_TURBO_BUILD/V38_WifiRouteGuard.cs'
-      - 'SIM_TURBO_BUILD/V38_WifiRouteGuardTest.cs'
+      - 'SIM_TURBO_BUILD/V38_WifiRouteMonitor.cs'
+      - 'SIM_TURBO_BUILD/V38_WifiRouteMonitorTest.cs'
       - 'SIM_TURBO_BUILD/V34_SmoothDisplay.cs'
       - 'SIM_TURBO_BUILD/CHANGELOG_V34.md'
       - 'SIM_TURBO_BUILD/CHANGELOG_V35.md'
@@ -205,8 +205,8 @@ jobs:
           $ErrorActionPreference='Stop'
           $csc="$env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\csc.exe"
           $base=(Resolve-Path 'SIM_TURBO_BUILD/V34_WifiBaseline.cs').Path
-          $lib=(Resolve-Path 'SIM_TURBO_BUILD/V38_WifiRouteGuard.cs').Path
-          $test=(Resolve-Path 'SIM_TURBO_BUILD/V38_WifiRouteGuardTest.cs').Path
+          $lib=(Resolve-Path 'SIM_TURBO_BUILD/V38_WifiRouteMonitor.cs').Path
+          $test=(Resolve-Path 'SIM_TURBO_BUILD/V38_WifiRouteMonitorTest.cs').Path
           & $csc /nologo /target:exe /out:V38_WifiTest.exe /r:System.dll /r:System.Core.dll /r:System.Drawing.dll /r:System.Windows.Forms.dll $base $lib $test
           if ($LASTEXITCODE -ne 0) { throw 'Prueba Wi-Fi V38 no compila' }
           & './V38_WifiTest.exe'
@@ -219,8 +219,8 @@ jobs:
           $text=Get-Content -Raw $source
           if ($text.Contains('Add("CLARIDAD GLOBAL FULL HD · ACTIVAR Y MINIMIZAR"')) { throw 'V38 aún expone overlay lento' }
           if (-not $text.Contains('200 HZ SIN FILTRO LENTO')) { throw 'Falta botón 200 Hz V38' }
-          if (-not (Test-Path 'stage/SIM_TURBO_PC_ULTRA_V38_PROYECTO_COMPLETO/PC_Windows/V38_WifiRouteGuard.cs')) { throw 'Falta Wi-Fi V38' }
-          $route=Get-Content 'stage/SIM_TURBO_PC_ULTRA_V38_PROYECTO_COMPLETO/PC_Windows/V38_WifiRouteGuard.cs' -Raw
+          if (-not (Test-Path 'stage/SIM_TURBO_PC_ULTRA_V38_PROYECTO_COMPLETO/PC_Windows/V38_WifiRouteMonitor.cs')) { throw 'Falta Wi-Fi V38' }
+          $route=Get-Content 'stage/SIM_TURBO_PC_ULTRA_V38_PROYECTO_COMPLETO/PC_Windows/V38_WifiRouteMonitor.cs' -Raw
           if (-not $route.Contains('if(canWan)sb.AppendLine') -or -not $route.Contains('if(!SourceMatchesAdapter(lanSource,wifiIps))')) { throw 'V38 no protege las rutas de las sondas' }
       - name: Empaquetar IA neuronal offline sin Python instalado
         shell: pwsh
