@@ -37,8 +37,7 @@ namespace SimTurboPC {
         Location=new Point(20,18),Size=new Size(855,49),ForeColor=Color.Aquamarine,
         Font=new Font("Segoe UI",18,FontStyle.Bold)});
       Controls.Add(new Label{Text=
-        "NO usa la captura de pantalla ni el filtro lento de V33. No cambia la resolución ni la frecuencia.
-"+
+        "NO usa la captura de pantalla ni el filtro lento de V33. No cambia la resolución ni la frecuencia.\r\n"+
         "DSR/DLDSR y DLSS solo funcionan según driver y juego. Un panel 1080p no puede mostrar exactamente píxeles 4K.",
         Location=new Point(23,76),Size=new Size(846,71),ForeColor=Color.Gainsboro});
       Add("VERIFICAR RESOLUCIÓN Y HZ REALES",20,167,858,55,()=>RefreshInfo());
