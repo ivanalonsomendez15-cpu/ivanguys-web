@@ -101,8 +101,7 @@ namespace SimTurboPC {
       Controls.Add(new Label{Text="AETHER V34 · DIAGNÓSTICO WI-FI MEJORADO",
         Location=new Point(22,15),Size=new Size(830,48),ForeColor=Color.Aquamarine,
         Font=new Font("Segoe UI",18,FontStyle.Bold)});
-      Controls.Add(new Label{Text="Mide por separado 24 muestras hacia el router y 24 a Internet. Compara p95, rachas de pérdidas y jitter.
-NO aumenta por arte de magia los Mb/s ni cambia ajustes de red. Un fallo ICMP puede significar filtrado.",
+      Controls.Add(new Label{Text="Mide por separado 24 muestras hacia el router y 24 a Internet. Compara p95, rachas de pérdidas y jitter.\r\nNO aumenta por arte de magia los Mb/s ni cambia ajustes de red. Un fallo ICMP puede significar filtrado.",
         Location=new Point(24,69),Size=new Size(823,74)});
       measure.Text="MEDIR ESTABILIDAD WIFI V34";measure.Location=new Point(23,154);
       measure.Size=new Size(833,53);measure.BackColor=Color.FromArgb(15,115,116);
