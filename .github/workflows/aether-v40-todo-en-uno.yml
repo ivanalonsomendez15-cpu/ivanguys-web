@@ -223,8 +223,10 @@ jobs:
           if (-not (Test-Path 'stage/SIM_TURBO_PC_ULTRA_V40_PROYECTO_COMPLETO/PC_Windows/V40_WifiRouteMonitor.cs')) { throw 'Falta Wi-Fi V40' }
           $route=Get-Content 'stage/SIM_TURBO_PC_ULTRA_V40_PROYECTO_COMPLETO/PC_Windows/V40_WifiRouteMonitor.cs' -Raw
           if (-not $route.Contains('if(canWan)sb.AppendLine') -or -not $route.Contains('if(!SourceMatchesAdapter(lanSource,wifiIps))')) { throw 'V40 no protege las rutas de las sondas' }
-          if (-not $route.Contains('AdapterLiveStable(adapter.Id,gateway.Address,wifiIps)') -or
-              -not $route.Contains('AdapterSnapshotStable(')) { throw 'V40 no comprueba estado Wi-Fi, gateway e IPv4 durante la prueba' }
+          if (-not $route.Contains('LiveSampleStable(adapter.Id,gateway.Address,wifiIps,lanSource,selectedSource,tunnelActive)') -or
+              -not $route.Contains('SampleSnapshotStable(') -or
+              -not $route.Contains('AdapterSnapshotStable(')) { throw 'V40 no comprueba estado Wi-Fi, gateway e IPv4 antes y despues de cada pareja' }
+          if (($route.Split('LiveSampleStable(adapter.Id,gateway.Address,wifiIps,lanSource,selectedSource,tunnelActive)').Count - 1) -lt 2) { throw 'V40 necesita chequeos antes y despues de cada pareja' }
       - name: Empaquetar IA neuronal offline sin Python instalado
         shell: pwsh
         run: |
