@@ -141,7 +141,8 @@ namespace SimTurboPC {
           var m=Blank();if(!EnumMode(null,i,ref m))break;
           if(m.dmPelsWidth!=d[0]||m.dmPelsHeight!=d[1] ||
              !AetherVisualGoalV46.EligibleMode((int)m.dmPelsWidth,(int)m.dmPelsHeight,
-               (int)m.dmDisplayFrequency,(int)current.dmDisplayFrequency))continue;
+               (int)m.dmDisplayFrequency,(int)current.dmDisplayFrequency) ||
+               m.dmDisplayFrequency!=current.dmDisplayFrequency)continue;
           if(SetMode(ref m,TEST)!=SUCCESS)continue;
           candidate=m;found=true;break;
         }
