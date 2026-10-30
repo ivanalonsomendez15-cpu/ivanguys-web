@@ -1,10 +1,18 @@
 {
   "status": "ok",
-  "lastUpdated": "2026-10-29T20:32:48.917323+00:00",
+  "lastUpdated": "2026-10-30T13:29:35.689416+00:00",
   "channelTitle": "ivanguys",
   "subscribers": 675,
-  "videoCount": 177,
+  "videoCount": 178,
   "videos": [
+    {
+      "id": "tjpny3afltc",
+      "title": "🗡️ ¡SOLO 6 DÍAS! 🔥 ZELDA: OCARINA OF TIME REGRESA 💚 #Shorts",
+      "url": "https://www.youtube.com/watch?v=tjpny3afltc",
+      "thumbnail": "https://i1.ytimg.com/vi/tjpny3afltc/hqdefault.jpg",
+      "published": "2026-10-30T09:00:19+00:00",
+      "type": "short"
+    },
     {
       "id": "1UGfnb1Dq7o",
       "title": "SOLO FALTAN 10 DÍAS. 💀🗡️ | ZELDA OCARINA OF TIME REMAKE",
@@ -115,14 +123,6 @@
       "url": "https://www.youtube.com/watch?v=PqZZYlZcwbM",
       "thumbnail": "https://i1.ytimg.com/vi/PqZZYlZcwbM/hqdefault.jpg",
       "published": "2026-10-07T15:30:04+00:00",
-      "type": "video"
-    },
-    {
-      "id": "CNYMHTKSoP0",
-      "title": "yo soy un unicornio👀 #meme #cancion #humor",
-      "url": "https://www.youtube.com/watch?v=CNYMHTKSoP0",
-      "thumbnail": "https://i4.ytimg.com/vi/CNYMHTKSoP0/hqdefault.jpg",
-      "published": "2026-10-07T14:00:32+00:00",
       "type": "video"
     }
   ]
