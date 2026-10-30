@@ -224,7 +224,7 @@ jobs:
           $source='stage/SIM_TURBO_PC_ULTRA_V46_PROYECTO_COMPLETO/PC_Windows/V31_LiveAiWifi.cs'
           $text=Get-Content -Raw $source
           if ($text.Contains('Add("CLARIDAD GLOBAL FULL HD · ACTIVAR Y MINIMIZAR"')) { throw 'V45 aún expone overlay lento' }
-          if (-not $text.Contains('200 HZ SIN FILTRO LENTO')) { throw 'Falta botón 200 Hz V45' }
+          if (-not $text.Contains('4K VISUAL / OBJETIVO 300 FPS V46')) { throw 'Falta el botón de prueba GPU V46' }
           if (-not (Test-Path 'stage/SIM_TURBO_PC_ULTRA_V46_PROYECTO_COMPLETO/PC_Windows/V45_WifiRouteMonitor.cs')) { throw 'Falta Wi-Fi V45' }
           $route=Get-Content 'stage/SIM_TURBO_PC_ULTRA_V46_PROYECTO_COMPLETO/PC_Windows/V45_WifiRouteMonitor.cs' -Raw
           if (-not $route.Contains('if(canWan)sb.AppendLine') -or -not $route.Contains('if(!SourceMatchesAdapter(lanSource,wifiIps))')) { throw 'V45 no protege las rutas de las sondas' }
