@@ -1,10 +1,18 @@
 {
   "status": "ok",
-  "lastUpdated": "2026-10-30T22:56:26.992071+00:00",
+  "lastUpdated": "2026-10-31T02:16:43.175900+00:00",
   "channelTitle": "ivanguys",
   "subscribers": 675,
   "videoCount": 178,
   "videos": [
+    {
+      "id": "-iUHGmL7Tyo",
+      "title": "5 DÍAS. ESTO YA ESTÁ AQUÍ. 💀💚 | ZELDA OCARINA OF TIME",
+      "url": "https://www.youtube.com/watch?v=-iUHGmL7Tyo",
+      "thumbnail": "https://i2.ytimg.com/vi/-iUHGmL7Tyo/hqdefault.jpg",
+      "published": "2026-10-30T23:00:09+00:00",
+      "type": "video"
+    },
     {
       "id": "tjpny3afltc",
       "title": "🗡️ ¡SOLO 6 DÍAS! 🔥 ZELDA: OCARINA OF TIME REGRESA 💚 #Shorts",
@@ -115,14 +123,6 @@
       "url": "https://www.youtube.com/watch?v=Fbw6lBpgstQ",
       "thumbnail": "https://i3.ytimg.com/vi/Fbw6lBpgstQ/hqdefault.jpg",
       "published": "2026-10-08T14:00:01+00:00",
-      "type": "video"
-    },
-    {
-      "id": "PqZZYlZcwbM",
-      "title": "SIN EDITAR | 3 Mongolos Conducen una AUTOCARAVANA  | Ivanguys",
-      "url": "https://www.youtube.com/watch?v=PqZZYlZcwbM",
-      "thumbnail": "https://i1.ytimg.com/vi/PqZZYlZcwbM/hqdefault.jpg",
-      "published": "2026-10-07T15:30:04+00:00",
       "type": "video"
     }
   ]
