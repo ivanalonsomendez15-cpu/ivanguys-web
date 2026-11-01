@@ -1,10 +1,18 @@
 {
   "status": "ok",
-  "lastUpdated": "2026-10-31T22:47:28.040409+00:00",
+  "lastUpdated": "2026-11-01T09:07:59.716669+00:00",
   "channelTitle": "ivanguys",
   "subscribers": 675,
-  "videoCount": 179,
+  "videoCount": 180,
   "videos": [
+    {
+      "id": "zY4A1BamLMU",
+      "title": "QUEDAN 4 DÍAS. 💀🗡️ | OCARINA OF TIME REMAKE",
+      "url": "https://www.youtube.com/watch?v=zY4A1BamLMU",
+      "thumbnail": "https://i3.ytimg.com/vi/zY4A1BamLMU/hqdefault.jpg",
+      "published": "2026-10-31T23:00:14+00:00",
+      "type": "video"
+    },
     {
       "id": "-iUHGmL7Tyo",
       "title": "5 DÍAS. ESTO YA ESTÁ AQUÍ. 💀💚 | ZELDA OCARINA OF TIME",
@@ -115,14 +123,6 @@
       "url": "https://www.youtube.com/watch?v=x3dPyN6fq3Y",
       "thumbnail": "https://i1.ytimg.com/vi/x3dPyN6fq3Y/hqdefault.jpg",
       "published": "2026-10-09T14:00:33+00:00",
-      "type": "video"
-    },
-    {
-      "id": "Fbw6lBpgstQ",
-      "title": "#baile #meme #cumpleaños",
-      "url": "https://www.youtube.com/watch?v=Fbw6lBpgstQ",
-      "thumbnail": "https://i3.ytimg.com/vi/Fbw6lBpgstQ/hqdefault.jpg",
-      "published": "2026-10-08T14:00:01+00:00",
       "type": "video"
     }
   ]
