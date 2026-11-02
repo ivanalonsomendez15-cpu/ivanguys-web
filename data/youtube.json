@@ -1,10 +1,18 @@
 {
   "status": "ok",
-  "lastUpdated": "2026-11-02T15:38:55.061021+00:00",
+  "lastUpdated": "2026-11-02T23:12:37.778719+00:00",
   "channelTitle": "ivanguys",
   "subscribers": 675,
-  "videoCount": 181,
+  "videoCount": 182,
   "videos": [
+    {
+      "id": "VwjgQiOsvY8",
+      "title": "SOLO QUEDAN 2 DÍAS. 🚨🗡️ | OCARINA OF TIME REMAKE",
+      "url": "https://www.youtube.com/watch?v=VwjgQiOsvY8",
+      "thumbnail": "https://i3.ytimg.com/vi/VwjgQiOsvY8/hqdefault.jpg",
+      "published": "2026-11-02T23:00:22+00:00",
+      "type": "video"
+    },
     {
       "id": "oECZRs_cd7c",
       "title": "3 DÍAS. 💀💀💀 | ZELDA OCARINA OF TIME REMAKE",
@@ -116,14 +124,6 @@
       "thumbnail": "https://i2.ytimg.com/vi/unftsBNN0dM/hqdefault.jpg",
       "published": "2026-10-11T14:00:01+00:00",
       "type": "short"
-    },
-    {
-      "id": "LmX_68DpwR0",
-      "title": "ganador de mil batallas 🗣🔥 #humor  #parati #flop #meme",
-      "url": "https://www.youtube.com/watch?v=LmX_68DpwR0",
-      "thumbnail": "https://i1.ytimg.com/vi/LmX_68DpwR0/hqdefault.jpg",
-      "published": "2026-10-10T14:00:32+00:00",
-      "type": "video"
     }
   ]
 }
