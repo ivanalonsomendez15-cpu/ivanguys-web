@@ -1,0 +1,31 @@
+name: COASTLINE source archive and QA
+on:
+  push:
+    branches:
+      - coastline-gt-oviedo-v36
+  workflow_dispatch:
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify packed data and labels
+        run: |
+          python3 - <<'PY'
+          import re,json
+          p='COASTLINE_GT_OVIEDO_V36_10501_JUGABLE.html'
+          source=open(p,encoding='utf8').read()
+          js=re.search(r'<script id="v29PackedData" type="application/json">(.*?)</script>',source,re.S)
+          assert js, 'embedded data missing'
+          d=json.loads(js.group(1))
+          assert len(d["ways"])==10501, len(d["ways"])
+          print("Verified embedded historical ways:",len(d["ways"]))
+          PY
+      - name: Upload standalone game
+        uses: actions/upload-artifact@v4
+        with:
+          name: coastline-gt-v36-game
+          path: |
+            COASTLINE_GT_OVIEDO_V36_10501_JUGABLE.html
+            COASTLINE_GT_OVIEDO_V36_10501_COMPLETO.zip
+          if-no-files-found: error
