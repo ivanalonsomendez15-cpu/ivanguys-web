@@ -1,10 +1,18 @@
 {
   "status": "ok",
-  "lastUpdated": "2026-11-04T20:54:38.010735+00:00",
+  "lastUpdated": "2026-11-05T08:28:46.780044+00:00",
   "channelTitle": "ivanguys",
   "subscribers": 675,
-  "videoCount": 183,
+  "videoCount": 184,
   "videos": [
+    {
+      "id": "x-GVftDgwaI",
+      "title": "ES HOY. 🗡️💚 | ZELDA OCARINA OF TIME REMAKE",
+      "url": "https://www.youtube.com/watch?v=x-GVftDgwaI",
+      "thumbnail": "https://i1.ytimg.com/vi/x-GVftDgwaI/hqdefault.jpg",
+      "published": "2026-11-04T23:00:03+00:00",
+      "type": "video"
+    },
     {
       "id": "oXFzs_y944c",
       "title": "MAÑANA. 💚🗡️",
@@ -115,14 +123,6 @@
       "url": "https://www.youtube.com/watch?v=QUiKsW2derU",
       "thumbnail": "https://i2.ytimg.com/vi/QUiKsW2derU/hqdefault.jpg",
       "published": "2026-10-13T14:00:24+00:00",
-      "type": "video"
-    },
-    {
-      "id": "Xg16MZ_GnA8",
-      "title": "ChatGPT se va preparando 🤑🔥#roblox #viral #humor",
-      "url": "https://www.youtube.com/watch?v=Xg16MZ_GnA8",
-      "thumbnail": "https://i1.ytimg.com/vi/Xg16MZ_GnA8/hqdefault.jpg",
-      "published": "2026-10-12T14:00:14+00:00",
       "type": "video"
     }
   ]
