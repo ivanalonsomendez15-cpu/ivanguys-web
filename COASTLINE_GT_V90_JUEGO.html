@@ -1986,4 +1986,7 @@ window.CG85RingClosed=function(r){return Array.isArray(r)&&r.length>=4&&r.every(
 <script data-coastline-version="V86">/* V86 incremental extension */
 window.CG86PolygonValid=function(rings){return Array.isArray(rings)&&rings.length>0&&rings.every(window.CG85RingClosed);};
 </script>
+<script data-coastline-version="V87">/* V87 incremental extension */
+window.CG87Height=function(p){let n=Number(p&&p.height);return Number.isFinite(n)&&n>0&&n<=400?{meters:n,source:"explicit"}:{meters:null,source:"unverified"};};
+</script>
 </body></html>
