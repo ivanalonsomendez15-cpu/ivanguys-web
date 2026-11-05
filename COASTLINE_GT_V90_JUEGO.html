@@ -1992,4 +1992,7 @@ window.CG87Height=function(p){let n=Number(p&&p.height);return Number.isFinite(n
 <script data-coastline-version="V88">/* V88 incremental extension */
 window.CG88BuildingSummary=function(features){let a={total:0,valid:0,rejected:0,knownHeight:0};for(const f of features||[]){a.total++;let ok=f&&f.geometry&&f.geometry.type==="Polygon"&&window.CG86PolygonValid(f.geometry.coordinates);if(ok){a.valid++;if(window.CG87Height(f.properties).meters!==null)a.knownHeight++;}else a.rejected++;}return a;};
 </script>
+<script data-coastline-version="V89">/* V89 incremental extension */
+window.CG89ExportAudit=function(features){let a=window.CG88BuildingSummary(features);return JSON.stringify({schema:"CG-building-audit-1",source:"imported features",...a,disclaimer:"Does not certify real-world building geometry"},null,2);};
+</script>
 </body></html>
