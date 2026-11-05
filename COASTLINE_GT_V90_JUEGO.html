@@ -1977,4 +1977,7 @@ window.CG82ValidateName=function(s){return typeof s==="string"&&s.trim().length>
 <script data-coastline-version="V83">/* V83 incremental extension */
 window.CG83SafeText=function(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));};
 </script>
+<script data-coastline-version="V84">/* V84 incremental extension */
+window.CG84IsLonLat=function(p){return Array.isArray(p)&&p.length>=2&&Number.isFinite(p[0])&&Number.isFinite(p[1])&&p[0]>=-180&&p[0]<=180&&p[1]>=-90&&p[1]<=90;};
+</script>
 </body></html>
