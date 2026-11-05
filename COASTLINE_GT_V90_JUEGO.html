@@ -1995,4 +1995,7 @@ window.CG88BuildingSummary=function(features){let a={total:0,valid:0,rejected:0,
 <script data-coastline-version="V89">/* V89 incremental extension */
 window.CG89ExportAudit=function(features){let a=window.CG88BuildingSummary(features);return JSON.stringify({schema:"CG-building-audit-1",source:"imported features",...a,disclaimer:"Does not certify real-world building geometry"},null,2);};
 </script>
+<script data-coastline-version="V90">/* V90 incremental extension */
+window.CG90SelfTest=function(){const ring=[[-5.9,43.3],[-5.899,43.3],[-5.899,43.301],[-5.9,43.3]];const f=[{geometry:{type:"Polygon",coordinates:[ring]},properties:{height:12}}];return {roads:JSON.parse(document.getElementById("v29PackedData").textContent).ways.length,validPolygon:window.CG86PolygonValid([ring]),invalidPolygon:!window.CG86PolygonValid([ring.slice(0,3)]),audit:window.CG88BuildingSummary(f)};};
+</script>
 </body></html>
