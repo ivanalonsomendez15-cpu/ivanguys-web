@@ -1974,4 +1974,7 @@ window.CG81=Object.freeze({version:81,origin:"V80",roads:10501,buildingDataPolic
 <script data-coastline-version="V82">/* V82 incremental extension */
 window.CG82ValidateName=function(s){return typeof s==="string"&&s.trim().length>0&&s.trim().length<=180;};
 </script>
+<script data-coastline-version="V83">/* V83 incremental extension */
+window.CG83SafeText=function(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));};
+</script>
 </body></html>
