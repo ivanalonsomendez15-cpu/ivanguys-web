@@ -1980,4 +1980,7 @@ window.CG83SafeText=function(s){return String(s??"").replace(/[&<>"']/g,c=>({"&"
 <script data-coastline-version="V84">/* V84 incremental extension */
 window.CG84IsLonLat=function(p){return Array.isArray(p)&&p.length>=2&&Number.isFinite(p[0])&&Number.isFinite(p[1])&&p[0]>=-180&&p[0]<=180&&p[1]>=-90&&p[1]<=90;};
 </script>
+<script data-coastline-version="V85">/* V85 incremental extension */
+window.CG85RingClosed=function(r){return Array.isArray(r)&&r.length>=4&&r.every(window.CG84IsLonLat)&&r[0][0]===r[r.length-1][0]&&r[0][1]===r[r.length-1][1];};
+</script>
 </body></html>
