@@ -1989,4 +1989,7 @@ window.CG86PolygonValid=function(rings){return Array.isArray(rings)&&rings.lengt
 <script data-coastline-version="V87">/* V87 incremental extension */
 window.CG87Height=function(p){let n=Number(p&&p.height);return Number.isFinite(n)&&n>0&&n<=400?{meters:n,source:"explicit"}:{meters:null,source:"unverified"};};
 </script>
+<script data-coastline-version="V88">/* V88 incremental extension */
+window.CG88BuildingSummary=function(features){let a={total:0,valid:0,rejected:0,knownHeight:0};for(const f of features||[]){a.total++;let ok=f&&f.geometry&&f.geometry.type==="Polygon"&&window.CG86PolygonValid(f.geometry.coordinates);if(ok){a.valid++;if(window.CG87Height(f.properties).meters!==null)a.knownHeight++;}else a.rejected++;}return a;};
+</script>
 </body></html>
