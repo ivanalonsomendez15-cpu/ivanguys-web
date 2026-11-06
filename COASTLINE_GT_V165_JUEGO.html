@@ -428,16 +428,16 @@ function v165Tree(xx,zz,r,h,seed){
   const a=j*2.39996+seed*3.1;
   const px=xx+Math.sin(a)*r*.53,pz=zz+Math.cos(a)*r*.53;
   const y=h*(.69+(j%3)*.065);
-  b.sphere(px,y,pz,r*.70,r*.55,r*.68,greens[j%3],6);
+  b.sphere(px,y,pz,r*.70,r*.55,r*.68,greens[j%3],5);
  }
- b.sphere(xx,h*.93,zz,r*.83,r*.77,r*.84,greens[2],7);
- b.sphere(xx,h*.70,zz,r*.96,r*.57,r*.90,greens[0],7);
+ b.sphere(xx,h*.93,zz,r*.83,r*.77,r*.84,greens[2],5);
+ b.sphere(xx,h*.70,zz,r*.96,r*.57,r*.90,greens[0],5);
  // Leaf shadow: an independent muted disk on the grass.
  b.cyl(xx,.055,zz,r*.68,.018,[.17,.24,.14],12);
 }
 function v165Shrub(xx,zz,r,seed){
  const green=seed>.5?[.19,.36,.16]:[.17,.31,.16];
- parkWorld.sphere(xx,.35+r*.25,zz,r*.9,.35+r*.25,r,green,7);
+ parkWorld.sphere(xx,.35+r*.25,zz,r*.9,.35+r*.25,r,green,5);
  V165_PARK_GROVE.shrubCount++;
 }
 for(let iz=0;iz<20;iz++)for(let ix=0;ix<17;ix++){
@@ -477,7 +477,7 @@ for(let k=0;k<26;k++){
   const z0=zz+(v165Seed(k,n,12)-.5)*rd*1.7;
   const colors=[[.78,.36,.29],[.85,.73,.31],[.66,.41,.63],[.89,.85,.68]];
   parkWorld.cyl(x0,.40,z0,.038,.38,[.19,.34,.16],5);
-  parkWorld.sphere(x0,.63,z0,.17,.14,.17,colors[n%4],5);
+  parkWorld.sphere(x0,.63,z0,.17,.14,.17,colors[n%4],4);
  }
  V165_PARK_GROVE.flowerBeds++;
 }
