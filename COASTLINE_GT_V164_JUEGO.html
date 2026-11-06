@@ -290,7 +290,7 @@ function v164ParkKiosk(b,cx,cz){
   const rr=r+2.4-level*.67,y=.16+level*.27,top=y+.28;
   for(let i=0;i<N;i++){
    const a=pt(i,rr,y),c=pt(i+1,rr,y),at=pt(i,rr,top),ct=pt(i+1,rr,top);
-   b.quad(a,c,ct,at,stone);b.quad([cx,top,cz],at,ct,stone);
+   b.quad(a,c,ct,at,stone);b.tri([cx,top,cz],at,ct,stone);
   }
  }
  // Continuous decorative perimeter railing, leaving a front entrance gap.
@@ -351,7 +351,7 @@ function v164PondGarden(b,cx,cz){
  const pt=(i,scale,y)=>{const a=i*2*Math.PI/N;return[cx+Math.sin(a)*rx*scale,y,cz+Math.cos(a)*rz*scale]};
  for(let i=0;i<N;i++){
   const a=pt(i,1,.24),c=pt(i+1,1,.24),b0=pt(i,1.06,.35),b1=pt(i+1,1.06,.35);
-  b.quad([cx,.21,cz],a,c,i%3===0?water2:water);
+  b.tri([cx,.21,cz],a,c,i%3===0?water2:water);
   b.quad(a,b0,b1,c,rim);
   b.quad(pt(i,1.06,.35),pt(i+1,1.06,.35),pt(i+1,1.06,.56),pt(i,1.06,.56),rim);
  }
