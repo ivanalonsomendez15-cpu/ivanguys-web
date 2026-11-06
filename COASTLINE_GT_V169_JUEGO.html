@@ -3267,7 +3267,7 @@ const TILE_LAT=.0045, TILE_LON=.0065; // geographical grid only: approximately 5
 const IDB_NAME='coastline-osm-building-footprints', STORE='tiles', MAX_BYTES=2500000;
 const MAX_TILES=48, TICK_MS=3200, MIN_REQUEST_INTERVAL=10500;
 const TILE_TIMEOUT=60000;
-const URLS=['https://overpass-api.de/api/interpreter','https://overpass.kumi.systems/api/interpreter'];
+const URLS=['https://overpass.private.coffee/api/interpreter','https://overpass-api.de/api/interpreter'];
 const tiles=new Map(), pending=new Set(), failures=new Map();
 let dbPromise=null,lastFetch=0,inFlight=false, lastCenter='',lastRebuild=0,feedCompleted=0,failedCount=0;
 let manualRecords=BUILD.records.slice(),liveStatus='Sin edificios de OSM descargados';
