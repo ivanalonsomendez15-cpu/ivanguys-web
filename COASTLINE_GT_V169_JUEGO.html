@@ -3084,6 +3084,22 @@ window.__COASTLINE_STADIUM__={
 };
 v161InstallStadiumAccess();
 
+
+/* CITY BUILDING GEO-BRIDGE: city coordinates from the live engine, never guessed.
+   This function lives inside the game IIFE; the independent source-loader consumes
+   this read-only explicit public API. No OSM road data is altered. */
+window.__COASTLINE_CITY_POSITION__ = function () {
+  if (!v29Mode || !v29Data || !v29Data.origin || !v30Bridge) return null;
+  const wx = onBus ? cityBusPos.x : (onFoot ? footX : x);
+  const wz = onBus ? cityBusPos.z : (onFoot ? footZ : z);
+  if (!Number.isFinite(wx) || !Number.isFinite(wz)) return null;
+  const map = v30ToMap(wx, wz);
+  const lat = v29Data.origin[0] + map.z / 111320;
+  const lon = v29Data.origin[1] + map.x / (111320 * Math.cos(v29Data.origin[0] * Math.PI / 180));
+  if (!Number.isFinite(lat) || !Number.isFinite(lon)
+      || lat < 43.20 || lat > 43.48 || lon < -6.05 || lon > -5.65) return null;
+  return { lat, lon, wx, wz, activeStreetMode: v29Mode };
+};
 window.__COASTLINE_V25__=()=>({version:34,paused,overviewOpen,speed,simClock,onBus,onFoot,busInterior,seat:busSeatIndex,busSeats:busSeats.length,buses:busFleet.map(b=>({id:b.id,s:b.s,dwell:b.dwell,passengers:b.passengers,atStop:b.atStop?.name||null})),mapZoom,mapPanX,mapPanY,cityRoads:cityRoads.length,geographicDataImported});
 })();
 </script><!-- V31 includes historical 10,501 OSM lines offline; locations, turn restrictions and park perimeter are not certified. © OpenStreetMap contributors (ODbL). -->
@@ -3294,16 +3310,11 @@ async function writeCache(key,entries){const d=await db();if(!d)return false;ret
  try{const req=d.transaction(STORE,'readwrite').objectStore(STORE).put({records:entries,at:Date.now()},key);
  req.onsuccess=()=>resolve(true);req.onerror=()=>resolve(false)}catch(_){resolve(false)}
 });}
-function locationWorld(){
- try{
-  if(typeof v29Mode==='undefined'||!v29Mode||!v29Data?.origin||!v30Bridge)return null;
-  const xx=typeof onBus!=='undefined'&&onBus?cityBusPos.x:typeof onFoot!=='undefined'&&onFoot?footX:x;
-  const zz=typeof onBus!=='undefined'&&onBus?cityBusPos.z:typeof onFoot!=='undefined'&&onFoot?footZ:z;
-  const xy=v30ToMap(xx,zz),lat=v29Data.origin[0]+xy.z/111320,
-    lon=v29Data.origin[1]+xy.x/(111320*Math.cos(v29Data.origin[0]*Math.PI/180));
-  if(!(lat>=43.20&&lat<=43.48&&lon>=-6.05&&lon<=-5.65))return null;
-  return {lat,lon,wx:xx,wz:zz};
- }catch(_){return null}
+function locationWorld() {
+  // The world state belongs to the main game closure: never access private
+  // v29Mode, x, z or v30Bridge lexically from this independent script.
+  const getPosition = window.__COASTLINE_CITY_POSITION__;
+  return typeof getPosition === 'function' ? getPosition() : null;
 }
 function keyOf(lat,lon){return [Math.floor(lat/TILE_LAT),Math.floor(lon/TILE_LON)];}
 function keyString(i,j){return `${i}:${j}`;}
@@ -3369,9 +3380,9 @@ function updateActive(){const pos=locationWorld();if(!pos)return false;
  if(records.size>BUILD.MAX)return false;
  const last=BUILD.records, next=[...records.values()];
  if(last.length===next.length && next.every((r,k)=>last[k]===r))return false;
- BUILD.records=next;BUILD.source='OpenStreetMap Overpass (caché local) + importaciones manuales';
+ BUILD.records=next;BUILD.source='OSM Overpass + SITPA Asturias (huellas oficiales) + importaciones locales';
  BUILD.stats={accepted:next.length,source:BUILD.source,networkCoverageIncomplete:true,
-  surveyedFacades:false,officialSourceVerified:false,strictlyKnownHeight:true};
+  surveyedFacades:false,officialFootprintsPossible:true,strictlyKnownHeight:true};
  state.liveRecords=next.length;
  try{const a=window.__COASTLINE_BUILDINGS_3D__.rebuild();state.visibleWithHeight=a.rendered;
  state.visibleFootprintsOnly=a.footprintsOnly;
@@ -3379,6 +3390,86 @@ function updateActive(){const pos=locationWorld();if(!pos)return false;
  }catch(e){status('Edificios recibidos; error de malla: '+String(e.message).slice(0,80));}
  lastRebuild=Date.now();return true;
 }
+
+/* Official Asturias building geometry for ALL streets — CC BY 4.0.
+ * Source: Principado de Asturias SITPA, CartografiaBase MapServer layer 47,
+ * Edificios polygon footprints (PNOA 2020), NOT surveyed roof/facade heights.
+ * Official footprints are used when the OSM Overpass network is unavailable.
+ * Unsupported heights remain NULL: an outline, not a fabricated 3D volume.
+ * Dataset: https://datos.gob.es/es/catalogo/a03002951-edificios-asturias
+ */
+const ASTURIAS_BUILDINGS_API =
+  'https://sig.asturias.es/servicios/rest/services/Visor/CartografiaBase/MapServer/47/query';
+async function fetchAsturiasBuildings(i, j) {
+  const b = keyBounds(i, j);
+  const opts = new URLSearchParams({
+    f: 'geojson',
+    where: '1=1',
+    geometry: [b.west, b.south, b.east, b.north].map(x => x.toFixed(7)).join(','),
+    geometryType: 'esriGeometryEnvelope',
+    spatialRel: 'esriSpatialRelIntersects',
+    inSR: '4326',
+    outSR: '4326',
+    outFields: 'objectid,nombre,uso,objeto',
+    returnGeometry: 'true',
+    resultRecordCount: '2000'
+  });
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 18000);
+  let payload;
+  try {
+    const res = await fetch(ASTURIAS_BUILDINGS_API + '?' + opts.toString(), {
+      method: 'GET', mode: 'cors', cache: 'no-store',
+      credentials: 'omit', signal: controller.signal
+    });
+    if (!res.ok) throw Error('SITPA HTTP ' + res.status);
+    const text = await res.text();
+    if (text.length > MAX_BYTES) throw Error('SITPA: respuesta excede limite');
+    payload = JSON.parse(text);
+  } finally { clearTimeout(timer); }
+  if (payload.error) throw Error('SITPA: ' + String(payload.error.message));
+  if (payload.exceededTransferLimit) throw Error('SITPA: datos truncados');
+  if (!Array.isArray(payload.features)) throw Error('SITPA: GeoJSON invalido');
+  const records = [], seen = new Set();
+  for (let fi=0; fi<payload.features.length; fi++) {
+    const feature = payload.features[fi];
+    const geometry = feature && feature.geometry;
+    if (!geometry || !['Polygon','MultiPolygon'].includes(geometry.type)) continue;
+    const parts = geometry.type === 'Polygon'
+      ? [geometry.coordinates] : geometry.coordinates;
+    for (let j0=0; j0<parts.length; j0++) {
+      const raw = parts[j0] && parts[j0][0];
+      if (!Array.isArray(raw)) continue;
+      const ring = [];
+      for (const pt of raw) {
+        if (!Array.isArray(pt) || !Number.isFinite(pt[0]) || !Number.isFinite(pt[1])) {
+          ring.length = 0; break;
+        }
+        const xy = [Math.round(pt[0]*1e7)/1e7, Math.round(pt[1]*1e7)/1e7];
+        if (!ring.length || ring[ring.length-1][0] !== xy[0]
+            || ring[ring.length-1][1] !== xy[1]) ring.push(xy);
+      }
+      if (ring.length >= 3 && (ring[0][0] !== ring[ring.length-1][0]
+          || ring[0][1] !== ring[ring.length-1][1])) ring.push(ring[0].slice());
+      if (!isR(ring)) continue;
+      const properties = feature.properties || {};
+      const area = BUILD.footprintArea(ring);
+      const id = 'sitpa47-' + String(properties.objectid ?? feature.id ?? fi) + '-' + j0;
+      if (seen.has(id)) continue;
+      seen.add(id);
+      records.push({
+        id, ring, area, height: null,
+        kind: String(properties.objeto || 'edificio').slice(0,60),
+        source: 'SITPA / Gobierno del Principado de Asturias (PNOA 2020; CC BY 4.0)',
+        name: String(properties.nombre || '').slice(0,254),
+        officialUse: String(properties.uso || '').slice(0,60),
+        heightStatus: 'SIN ALTURA DOCUMENTADA: solo huella cartografica'
+      });
+    }
+  }
+  return records;
+}
+
 async function loadTile(key,cacheOnly=false){if(pending.has(key)||tiles.has(key))return;
  pending.add(key);const [i,j]=key.split(':').map(Number);
  try{
@@ -3387,11 +3478,24 @@ async function loadTile(key,cacheOnly=false){if(pending.has(key)||tiles.has(key)
     feedCompleted++;updateActive();return;}
   if(cacheOnly||!navigator.onLine)return;
   if(Date.now()-(failures.get(key)||0)<600000)return;
-  state.requests++;let data=null,lastErr=null;
-  for(const api of URLS){try{data=await timedFetch(api,queryTile(i,j));break;}catch(e){lastErr=e;}}
-  if(!data)throw lastErr||Error('Overpass no disponible');
-  const records=elementsToRecords(data);
-  tiles.set(key,{records,origin:'Overpass'});
+  state.requests++;
+  let records = null, origin = '', lastErr = null;
+  for (const api of URLS) {
+    try {
+      const osm = await timedFetch(api, queryTile(i,j));
+      const found = elementsToRecords(osm);
+      if (found.length) { records=found; origin='Overpass OSM'; break; }
+    } catch(e) { lastErr=e; }
+  }
+  if (!records) {
+    try {
+      records = await fetchAsturiasBuildings(i,j);
+      origin = 'SITPA Asturias — edificios oficiales';
+    } catch(e) {
+      throw Error('Overpass y SITPA no disponibles: ' + e.message);
+    }
+  }
+  tiles.set(key,{records,origin});
   while(tiles.size>MAX_TILES){const oldest=tiles.keys().next().value;if(oldest===key)break;tiles.delete(oldest)}
   state.successfulTiles++;await writeCache(key,records);
   updateActive();
