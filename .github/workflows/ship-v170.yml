@@ -1,0 +1,76 @@
+name: Publicar V170 real citywide offline (solo rama, sin tocar V169)
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - coastline-gt-oviedo-v170
+    paths:
+      - .github/workflows/ship-v170.yml
+
+permissions:
+  contents: write
+
+jobs:
+  pack-v170:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Empaquetar versión de 29.554 huellas auténticas y 10.501 trazados intactos
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib, json, re, zipfile
+          original=Path('COASTLINE_GT_OVIEDO_EDIFICIOS_OFICIALES_QA.html')
+          assert original.is_file()
+          source=original.read_text('utf-8')
+          roads=json.loads(re.search(r'<script id="v29PackedData" type="application/json">(.*?)</script>', source, re.S).group(1))
+          stats=json.loads(Path('COASTLINE_GEOMETRIA_REAL_ESTADISTICAS.json').read_text())
+          assert len(roads['ways'])==10501
+          assert stats['buildings']==29554 and stats['tiles']==1279
+          assert source.count('id="coastline-all-city-buildings"')==1
+          html=Path('COASTLINE_GT_V170_CIUDAD_REAL_JUEGO.html')
+          source=source.replace('<title>COASTLINE GT OVIEDO V169 |', '<title>COASTLINE GT OVIEDO V170 |',1)
+          source=source.replace('<span style="color:#afdde1">V169</span>', '<span style="color:#afdde1">V170</span>',1)
+          source=source.replace('const state={version:169,','const state={version:170,',1)
+          source=source.replace(" status('V169: '+", " status('V170: '+",1)
+          html.write_text(source,'utf-8')
+          finalroad=json.loads(re.search(r'<script id="v29PackedData" type="application/json">(.*?)</script>',source,re.S).group(1))
+          assert finalroad['ways']==roads['ways']
+          archive=Path('COASTLINE_GT_V170_CIUDAD_REAL_DESCARGA.zip')
+          with zipfile.ZipFile(archive,'w',compression=zipfile.ZIP_DEFLATED,compresslevel=9) as zipf:zipf.write(html,arcname=html.name)
+          with zipfile.ZipFile(archive) as zipf:
+              assert zipf.testzip() is None and zipf.read(html.name)==html.read_bytes()
+          print('V170',len(source),'bytes',html.stat().st_size,'zip',archive.stat().st_size,
+                'sha256',hashlib.sha256(html.read_bytes()).hexdigest())
+          PY
+      - name: Confirmar sintaxis 74 scripts y 10.501 vías
+        run: |
+          node - <<'NODE'
+          const fs=require('node:fs'),s=fs.readFileSync('COASTLINE_GT_V170_CIUDAD_REAL_JUEGO.html','utf8');
+          const ways=JSON.parse(s.match(/<script id="v29PackedData" type="application\/json">([\s\S]*?)<\/script>/)[1]).ways;
+          if(ways.length!==10501)throw Error('V170 corrupt: OSM ways');
+          let n=0;
+          for(const a of s.matchAll(/<script([^>]*)>([\s\S]*?)<\/script>/gi)){
+            if(/type=["']?(application\/json|application\/octet-stream)/i.test(a[1]))continue;
+            new Function(a[2]);n++;
+          }
+          if(n<74)throw Error('missing scripts: '+n);
+          console.log('V170 syntax verified, executable scripts:',n,'OSM ways:',ways.length);
+          NODE
+      - name: Guardar entrega íntegra solo en rama V170
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git add COASTLINE_GT_V170_CIUDAD_REAL_JUEGO.html COASTLINE_GT_V170_CIUDAD_REAL_DESCARGA.zip
+          git diff --cached --check
+          git commit -m 'V170: 29554 factual OSM buildings offline citywide; 10501 historical streets preserved'
+          git push origin HEAD:coastline-gt-oviedo-v170
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: COASTLINE-GT-V170-HTML-ZIP
+          path: |
+            COASTLINE_GT_V170_CIUDAD_REAL_JUEGO.html
+            COASTLINE_GT_V170_CIUDAD_REAL_DESCARGA.zip
+          compression-level: 6
