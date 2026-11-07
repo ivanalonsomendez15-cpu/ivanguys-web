@@ -1,0 +1,25 @@
+{
+  "source": "Geofabrik Asturias extract, © OpenStreetMap contributors (ODbL)",
+  "source_url": "https://download.geofabrik.de/europe/spain/asturias-latest.osm.pbf",
+  "exported_utc": "2026-11-07T13:08:53.105077+00:00",
+  "road_count_preserved": 10501,
+  "bounds_from_original_roads": {
+    "west": -6.028610987402796,
+    "east": -5.704217553931544,
+    "south": 43.21742005030543,
+    "north": 43.4544035213798
+  },
+  "buildings": 29554,
+  "explicit_heights": 436,
+  "levels_estimated": 3567,
+  "unknown_heights": 25551,
+  "invalid_skipped": 95,
+  "tiles": 1279,
+  "building_parts": 1108,
+  "raw_json_bytes": 4793123,
+  "gzip_base64_bytes": 2123336,
+  "pbf_bytes": 36703880,
+  "final_html_bytes": 3043490,
+  "final_zip_bytes": 1983291,
+  "sha256_html": "230c4f99bd3525dc5cacf0ab1c7568a7bef3da399e5e7013db7f4ac09cbd1983"
+}
