@@ -17,6 +17,7 @@ const browser = await chromium.launch({
 });
 const page = await browser.newPage({viewport: {width: 1280, height: 720}});
 const serviceTest = {};
+const citywide = { expectedRoads: 10501, expectedBuildings: 29554 };
 try {
   const url = new URL('https://sig.asturias.es/servicios/rest/services/Visor/CartografiaBase/MapServer/47/query');
   url.search = new URLSearchParams({
@@ -47,7 +48,7 @@ const initial = await page.evaluate(() => ({
   realBuildingsRuntime: typeof window.COASTLINE_REAL_BUILDINGS?.probe === 'function'
 }));
 await page.evaluate(() => document.getElementById('cityBtn')?.click());
-await page.waitForTimeout(17000);
+await page.waitForTimeout(11000);
 const city = await page.evaluate(() => ({
   position: window.__COASTLINE_CITY_POSITION__?.() ?? null,
   buildings: window.COASTLINE_REAL_BUILDINGS?.probe?.() ?? null,
@@ -56,10 +57,40 @@ const city = await page.evaluate(() => ({
   buildingStatus: document.getElementById('cg169-status')?.textContent ?? ''
 }));
 await page.screenshot({path:'artifacts/02-real-browser-city.png'});
-writeFileSync('artifacts/qa.json',JSON.stringify({initial,city,errors,badRequests,serviceTest},null,2));
+const areaResults = [];
+for (const areaName of ['Plaza Puerta de Europa', 'La Corredoria', 'Accesos al HUCA']) {
+  await page.evaluate((area) => {
+    const search = document.getElementById('search');
+    search.classList.add('show');
+    document.getElementById('street').value = area;
+    document.getElementById('findBtn').click();
+  }, areaName);
+  await page.waitForTimeout(4200);
+  const area = await page.evaluate(() => ({
+    coords: window.__COASTLINE_CITY_POSITION__?.() ?? null,
+    state: window.COASTLINE_REAL_BUILDINGS?.probe?.() ?? null,
+    status: document.getElementById('cg169-status')?.textContent ?? '',
+    fps: document.getElementById('fps')?.textContent ?? ''
+  }));
+  areaResults.push({name: areaName, ...area});
+  await page.screenshot({path:'artifacts/city-' + areaName.normalize('NFD').replace(/[^\w ]/g,'').replace(/ +/g,'-').toLowerCase() + '.png'});
+}
+
+writeFileSync('artifacts/qa.json',JSON.stringify({initial,city,areaResults,errors,badRequests,serviceTest},null,2));
 console.log(JSON.stringify({initial,city,errors},null,2));
 if (initial.originalOSM !== 10501) process.exitCode=1;
 if (!initial.bridge || !initial.realBuildingsRuntime) process.exitCode=1;
 if (!city.position) process.exitCode=1;
+if (city.buildings?.offlineCityBuildingCount !== citywide.expectedBuildings) {
+  throw Error('Missing offline city buildings: '+JSON.stringify(city.buildings));
+}
+if ((city.buildings?.offlineCityTileCount ?? 0) < 1000) {
+  throw Error('City dataset does not cover broad areas');
+}
+for (const area of areaResults) {
+  if (!area.coords || (area.state?.liveRecords ?? 0) < 1) {
+    throw Error('No original geometry rendered near '+area.name);
+  }
+}
 await browser.close();
 server.close();
