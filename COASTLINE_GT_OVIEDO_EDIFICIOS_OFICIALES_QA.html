@@ -3282,7 +3282,7 @@ if(!BUILD||!window.__COASTLINE_BUILDINGS_3D__)return;
 const TILE_LAT=.0045, TILE_LON=.0065; // geographical grid only: approximately 500 m, not a road-grid replacement
 const IDB_NAME='coastline-osm-building-footprints', STORE='tiles', MAX_BYTES=2500000;
 const MAX_TILES=48, TICK_MS=3200, MIN_REQUEST_INTERVAL=10500;
-const TILE_TIMEOUT=60000;
+const TILE_TIMEOUT=18000;
 const URLS=['https://overpass.private.coffee/api/interpreter','https://overpass-api.de/api/interpreter'];
 const tiles=new Map(), pending=new Set(), failures=new Map();
 let dbPromise=null,lastFetch=0,inFlight=false, lastCenter='',lastRebuild=0,feedCompleted=0,failedCount=0;
@@ -3479,23 +3479,31 @@ async function loadTile(key,cacheOnly=false){if(pending.has(key)||tiles.has(key)
   if(cacheOnly||!navigator.onLine)return;
   if(Date.now()-(failures.get(key)||0)<600000)return;
   state.requests++;
-  let records = null, origin = '', lastErr = null;
-  for (const api of URLS) {
-    try {
-      const osm = await timedFetch(api, queryTile(i,j));
-      const found = elementsToRecords(osm);
-      if (found.length) { records=found; origin='Overpass OSM'; break; }
-    } catch(e) { lastErr=e; }
-  }
-  if (!records) {
-    try {
-      records = await fetchAsturiasBuildings(i,j);
-      origin = 'SITPA Asturias — edificios oficiales';
-    } catch(e) {
-      throw Error('Overpass y SITPA no disponibles: ' + e.message);
-    }
-  }
+  // Parallel providers: do not wait for two Overpass timeouts before requesting
+  // the official Asturias dataset. This matters when visiting ANY street.
+  const osmReady = Promise.any(URLS.map(api =>
+    timedFetch(api, queryTile(i,j)).then(elementsToRecords).then(records => {
+      if (!records.length) throw Error('Overpass sin edificios');
+      return {records, origin:'Overpass OSM'};
+    })
+  ));
+  const officialReady = fetchAsturiasBuildings(i,j).then(records => {
+    if (!records.length) throw Error('SITPA sin edificios en la tesela');
+    return {records, origin:'SITPA Asturias — edificios oficiales'};
+  });
+  const first = await Promise.any([officialReady, osmReady]);
+  const {records, origin} = first;
   tiles.set(key,{records,origin});
+  // When SITPA wins first, OSM tagged heights can later upgrade the same tile.
+  // Never overwrite authentic OSM heights with an unknown-height footprint.
+  if (origin.startsWith('SITPA')) {
+    void osmReady.then(async better => {
+      if (tiles.get(key)?.origin !== origin) return;
+      tiles.set(key, better);
+      await writeCache(key, better.records);
+      updateActive();
+    }).catch(() => {});
+  }
   while(tiles.size>MAX_TILES){const oldest=tiles.keys().next().value;if(oldest===key)break;tiles.delete(oldest)}
   state.successfulTiles++;await writeCache(key,records);
   updateActive();
