@@ -24,3 +24,12 @@ jobs:
         with:
           name: coastline-browser-authentic-screenshots
           path: artifacts/
+
+      - name: Archive exact complete HTML and ZIP
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coastline-qa-complete-html-zip
+          path: |
+            COASTLINE_GT_OVIEDO_EDIFICIOS_OFICIALES_QA.html
+            COASTLINE_GT_OVIEDO_EDIFICIOS_OFICIALES_QA.zip
