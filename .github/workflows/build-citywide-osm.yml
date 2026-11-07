@@ -1,0 +1,70 @@
+name: Construir edificios OSM reales de todas las calles de Oviedo
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - coastline-gt-oviedo-todas-calles-geometria-real
+    paths:
+      - .github/workflows/build-citywide-osm.yml
+
+permissions:
+  contents: write
+
+jobs:
+  city-buildings:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 19
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Instalar lector PBF de OpenStreetMap
+        run: python -m pip install osmium==4.1.1
+      - name: Descargar extracto REAL OSM de Asturias (Geofabrik)
+        run: |
+          curl --fail --location --silent --show-error \
+            --retry 3 --retry-delay 8 --connect-timeout 20 --max-time 270 \
+            -o /tmp/asturias-latest.osm.pbf \
+            https://download.geofabrik.de/europe/spain/asturias-latest.osm.pbf
+          test "$(stat -c%s /tmp/asturias-latest.osm.pbf)" -gt 20000000
+          sha256sum /tmp/asturias-latest.osm.pbf
+      - name: Crear huellas reales de edificios para TODOS los sectores y empaquetar HTML+ZIP
+        run: python tools/build_oviedo_all_streets.py /tmp/asturias-latest.osm.pbf
+      - name: Verificar la sintaxis JS y conservar EXACTAMENTE 10.501 vías originales
+        run: |
+          node - <<'NODE'
+          const fs=require('node:fs');
+          const html=fs.readFileSync('COASTLINE_GT_OVIEDO_EDIFICIOS_OFICIALES_QA.html','utf8');
+          const packed=JSON.parse(html.match(/<script id="v29PackedData" type="application\/json">([\s\S]*?)<\/script>/)[1]);
+          const roadtags=JSON.parse(html.match(/<script id="v34RoadTags" type="application\/json">([\s\S]*?)<\/script>/)[1]);
+          if(packed.ways.length!==10501||roadtags.total!==10501)throw Error('FALTAN VÍAS OSM');
+          let n=0;for (const match of html.matchAll(/<script([^>]*)>([\s\S]*?)<\/script>/gi)){
+            if(/type=["']?(?:application\/json|application\/octet-stream)/i.test(match[1]))continue;
+            new Function(match[2]);n++;
+          }
+          if(n<74)throw Error('Se han perdido scripts previos: '+n);
+          if(!html.includes("unpackCityBuildings")||!html.includes("allCityBuildingTiles"))throw Error('No hay edificios en toda la ciudad');
+          console.log('JS sintaxis OK',n,'OSM vías',packed.ways.length,'HTML',Buffer.byteLength(html));
+          NODE
+      - name: Publicar SOLO en rama aislada verificada, sin reemplazar V169 ni AppDeploy
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add COASTLINE_GT_OVIEDO_EDIFICIOS_OFICIALES_QA.html COASTLINE_GT_OVIEDO_EDIFICIOS_OFICIALES_QA.zip COASTLINE_GEOMETRIA_REAL_ESTADISTICAS.json
+          git diff --cached --check
+          git commit -m "Embed real OSM building footprints offline for all 10,501 street ways" || exit 1
+          git push origin HEAD:coastline-gt-oviedo-todas-calles-geometria-real
+      - name: Entregar HTML+ZIP íntegros y estadísticas
+        uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: COASTLINE-OVIEDO-CIUDAD-REAL-HTML-ZIP
+          path: |
+            COASTLINE_GT_OVIEDO_EDIFICIOS_OFICIALES_QA.html
+            COASTLINE_GT_OVIEDO_EDIFICIOS_OFICIALES_QA.zip
+            COASTLINE_GEOMETRIA_REAL_ESTADISTICAS.json
+          compression-level: 6
