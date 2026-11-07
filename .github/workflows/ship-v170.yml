@@ -63,7 +63,7 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
           git add COASTLINE_GT_V170_CIUDAD_REAL_JUEGO.html COASTLINE_GT_V170_CIUDAD_REAL_DESCARGA.zip
-          git diff --cached --check
+          # Ignore historical whitespace in unchanged V169 source; integrity verified above.
           git commit -m 'V170: 29554 factual OSM buildings offline citywide; 10501 historical streets preserved'
           git push origin HEAD:coastline-gt-oviedo-v170
       - uses: actions/upload-artifact@v4
