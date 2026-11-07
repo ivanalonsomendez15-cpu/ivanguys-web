@@ -2,7 +2,7 @@ name: COASTLINE GT browser WebGL audit
 on:
   push:
     branches:
-      - coastline-gt-oviedo-ciudad-edificios-oficiales-qa
+      - coastline-gt-oviedo-todas-calles-geometria-real
   workflow_dispatch:
 permissions:
   contents: write
@@ -15,16 +15,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Repair corrupted binary GitHub ZIP (without changing V169)
-        run: |
-          python3 tools/repair-qa-zip.py
-          if ! git diff --quiet -- COASTLINE_GT_OVIEDO_EDIFICIOS_OFICIALES_QA.zip; then
-            git config user.email "github-actions[bot]@users.noreply.github.com"
-            git config user.name "github-actions[bot]"
-            git add COASTLINE_GT_OVIEDO_EDIFICIOS_OFICIALES_QA.zip
-            git commit -m "Repair QA ZIP bytes and CRC; HTML preserved"
-            git push origin HEAD:coastline-gt-oviedo-ciudad-edificios-oficiales-qa
-          fi
       - name: Install browser
         run: |
           npm install --no-save playwright@1.56.1
