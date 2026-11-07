@@ -16,7 +16,26 @@ const browser = await chromium.launch({
   args: ['--enable-webgl', '--use-gl=angle', '--use-angle=swiftshader', '--no-sandbox']
 });
 const page = await browser.newPage({viewport: {width: 1280, height: 720}});
+const serviceTest = {};
+try {
+  const url = new URL('https://sig.asturias.es/servicios/rest/services/Visor/CartografiaBase/MapServer/47/query');
+  url.search = new URLSearchParams({
+    f:'geojson', where:'1=1',
+    geometry:'-5.853,43.354,-5.848,43.359',
+    geometryType:'esriGeometryEnvelope', inSR:'4326', outSR:'4326',
+    spatialRel:'esriSpatialRelIntersects',
+    outFields:'objectid,nombre,uso,objeto',
+    returnGeometry:'true', resultRecordCount:'2000'
+  }).toString();
+  const res=await fetch(url,{signal:AbortSignal.timeout(10000)});
+  const body=await res.text();
+  Object.assign(serviceTest,{status:res.status,bytes:body.length,head:body.slice(0,240)});
+  try {serviceTest.features=JSON.parse(body).features?.length ?? null;} catch {}
+} catch(e) {serviceTest.error=String(e);}
+console.log('OFFICIAL_ASTURIAS_NODE',JSON.stringify(serviceTest));
 const errors = [];
+const badRequests = [];
+page.on('requestfailed', request => { if (badRequests.length < 12) badRequests.push({url:request.url(),error:request.failure()?.errorText}); });
 page.on('pageerror', error => errors.push(String(error)));
 await page.goto('http://127.0.0.1:4179/', {waitUntil: 'load', timeout: 30000});
 await page.waitForTimeout(5000);
@@ -33,10 +52,11 @@ const city = await page.evaluate(() => ({
   position: window.__COASTLINE_CITY_POSITION__?.() ?? null,
   buildings: window.COASTLINE_REAL_BUILDINGS?.probe?.() ?? null,
   webglCanvas: !!document.querySelector('#gl'),
-  fpsText: document.getElementById('fps')?.textContent ?? ''
+  fpsText: document.getElementById('fps')?.textContent ?? '',
+  buildingStatus: document.getElementById('cg169-status')?.textContent ?? ''
 }));
 await page.screenshot({path:'artifacts/02-real-browser-city.png'});
-writeFileSync('artifacts/qa.json',JSON.stringify({initial,city,errors},null,2));
+writeFileSync('artifacts/qa.json',JSON.stringify({initial,city,errors,badRequests,serviceTest},null,2));
 console.log(JSON.stringify({initial,city,errors},null,2));
 if (initial.originalOSM !== 10501) process.exitCode=1;
 if (!initial.bridge || !initial.realBuildingsRuntime) process.exitCode=1;
