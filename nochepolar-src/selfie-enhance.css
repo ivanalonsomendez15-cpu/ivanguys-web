@@ -47,3 +47,27 @@
  #np-selfie-hub .np-selfie-emoji{width:49px;height:49px;font-size:25px}
  #np-selfie-hub .np-selfie-open{padding:9px 14px;font-size:13px}
 }
+
+/* Original tool-shelf placement for Selfie+: matches Santa Tracker's toy styling. */
+#module-santaselfie .np-selfie-shelf-tool{
+ position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;
+ min-width:88px;min-height:98px;margin:12px 7px 17px;padding:10px;
+ background:linear-gradient(#fff9c1,#fbd977);color:#865024;border:6px solid #fff;
+ border-radius:22px;box-shadow:6px 7px 0 #78518b42;cursor:pointer;touch-action:manipulation;
+}
+#module-santaselfie .np-selfie-shelf-tool span{
+ font-size:50px;line-height:1.1;filter:drop-shadow(0 3px 2px #5c5c6330)
+}
+#module-santaselfie .np-selfie-shelf-tool b{font:900 13px "Google Sans",Arial,sans-serif;letter-spacing:.06em}
+#module-santaselfie .np-selfie-shelf-tool:hover{transform:translateY(-4px);background:#ffeaa0}
+#np-selfie-hub .np-selfie-panel{
+ border:6px solid white;border-radius:20px;
+ background:linear-gradient(135deg,#f3fcf8,#f3fff7);
+ box-shadow:0 9px 0 #75a7b780,0 15px 30px #24576a66
+}
+#np-selfie-hub .np-selfie-emoji{box-shadow:0 4px 0 #95c8c7}
+@media(max-width:640px){
+ #module-santaselfie .np-selfie-shelf-tool{min-width:66px;min-height:82px;padding:6px}
+ #module-santaselfie .np-selfie-shelf-tool span{font-size:33px}
+ #module-santaselfie .np-selfie-shelf-tool b{font-size:10px}
+}
