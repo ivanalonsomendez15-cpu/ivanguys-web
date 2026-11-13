@@ -47,3 +47,30 @@
  #np-screen .npg-stats{font-size:12px;padding:7px}
  #np-screen .npg-button{font-size:12px;padding:9px 12px}
 }
+
+/* Native, illustrated machinery. Source and target are still interactive tiles. */
+#np-screen .npg-pipe svg {
+ width:100%;height:100%;max-width:100%;display:block;overflow:visible;
+ filter:drop-shadow(0 2px 1px rgba(10,85,116,.26));
+ transition:transform .16s ease
+}
+#np-screen .npg-pipe:hover svg{transform:scale(1.08)}
+#np-screen .npg-pipe.npg-lit svg{filter:drop-shadow(0 0 9px #77f4c999)}
+#np-screen .npg-pipe.npg-source{
+ background:linear-gradient(145deg,#ffeaa2,#ffd364)!important;
+ font-size:clamp(25px,4vw,52px)!important;
+}
+#np-screen.np-native-mode.np-gameplay .npg-circuit{
+ background:
+  radial-gradient(circle at 22% 17%,#ffffff44,transparent 18%),
+  linear-gradient(125deg,#218cb3,#5dcbd5 52%,#3f9dc4);
+}
+#np-screen.np-native-mode.np-gameplay .npg-game:has(.npg-circuit){
+ background:
+  radial-gradient(circle at 50% 115%,#d1f6b9 0 31%,transparent 31%),
+  linear-gradient(180deg,#55cdee 0%,#a5ebfb 42%,#dbfbf8 100%);
+}
+#np-screen.np-native-mode.np-gameplay .npg-game:has(.npg-circuit)::before{
+ content:'❄   ✦   ❄   ✦   ❄';position:absolute;top:10%;left:0;right:0;
+ color:#fff9;font-size:35px;letter-spacing:40px;pointer-events:none;
+}
