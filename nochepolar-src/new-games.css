@@ -1,0 +1,49 @@
+/* NOCHEPOLAR original arcade additions inside the Google village styling. */
+#np-screen .npg-game {
+ font-family:'Google Sans',Roboto,Arial,sans-serif;
+ border:4px solid #fff;border-radius:25px;padding:16px;
+ background:linear-gradient(145deg,#e7faff,#e3f5eb 65%,#fff5cc);
+ box-shadow:0 8px 24px rgba(15,98,110,.11);color:#155d62;
+}
+#np-screen .npg-game h2{
+ color:#106d66;font-weight:900;font-size:clamp(23px,4vw,33px);margin:5px 0 13px;
+}
+#np-screen .npg-caption{font-size:15px;color:#376a64;line-height:1.55;margin:12px 0}
+#np-screen .npg-stats{background:#fff9da;border:3px solid white;border-radius:14px;
+ font-size:14px;font-weight:900;color:#7c5716;padding:12px;margin:12px 0;word-spacing:3px}
+#np-screen .npg-flight-canvas{width:100%;height:auto;display:block;border-radius:18px;border:4px solid white;
+ box-shadow:0 4px 14px rgba(11,84,101,.2);touch-action:manipulation}
+#np-screen .npg-controls,#np-screen .npg-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:14px auto}
+#np-screen .npg-button,#np-screen .npg-button-big{background:#fff;border:3px solid #fff;
+ padding:13px 17px;border-radius:15px;color:#12644f;box-shadow:0 4px 0 #a2d5b8;
+ font:900 15px 'Google Sans',Arial,sans-serif;cursor:pointer}
+#np-screen .npg-button:hover{background:#fff5bd}
+#np-screen .npg-button-big{background:#df4a5e;color:#fff;box-shadow:0 4px 0 #ac2a40}
+#np-screen .npg-banner{text-align:center;min-height:30px;color:#ed4e5c;font-weight:900}
+#np-screen .npg-celebrate{text-align:center;font-size:26px;color:#1aa35c;font-weight:900;padding:13px}
+#np-screen .npg-hint{font-size:15px;color:#246b63;font-weight:800;margin:9px 0;padding:10px;
+ border-radius:12px;background:#e2f8ed}
+#np-screen .npg-circuit{
+ display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:7px;
+ padding:14px;border-radius:20px;background:linear-gradient(#2a80b9,#38a9c2);
+ border:4px solid white;max-width:560px;margin:15px auto
+}
+#np-screen .npg-pipe{
+ display:grid;place-items:center;aspect-ratio:1;
+ background:#ddf7ff;border:3px solid #fff;border-radius:13px;
+ font:900 clamp(18px,4vw,40px)/1 Arial,sans-serif;
+ color:#437d99;cursor:pointer;transition:transform .13s,background .13s;
+ box-shadow:inset 0 2px 3px #8fd7e5,0 3px 0 #1c6699
+}
+#np-screen .npg-pipe:hover{background:#fff6c3;transform:scale(1.045)}
+#np-screen .npg-pipe.npg-source{font-size:clamp(15px,4vw,35px);background:#ffe18a}
+#np-screen .npg-pipe.npg-lit{background:#a0f5ce;color:#00784e;box-shadow:0 0 15px #fff6,inset 0 0 0 2px #40d48a}
+#np-screen .npg-pipe.npg-hinted{outline:5px solid #fbd55f;animation:npg-pulse 1s infinite}
+@keyframes npg-pulse{50%{outline-color:#f49036;transform:scale(1.05)}}
+@media(max-width:600px){
+ #np-screen .npg-game{padding:9px;border-width:2px}
+ #np-screen .npg-circuit{gap:3px;padding:5px}
+ #np-screen .npg-pipe{border-radius:7px;border-width:2px;font-size:clamp(16px,4.7vw,29px)}
+ #np-screen .npg-stats{font-size:12px;padding:7px}
+ #np-screen .npg-button{font-size:12px;padding:9px 12px}
+}
