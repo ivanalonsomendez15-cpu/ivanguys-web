@@ -159,6 +159,7 @@
   function factoryCircuit(host,onExit){
     host.replaceChildren();
     let level=0,moves=0,grid=[],path=[],width=7,height=5,finished=false,disposed=false;
+    let nextButton=null, repeatButton=null;
     const board=node('div','','npg-circuit');
     const status=node('div','','npg-stats');
     const tip=node('p','Gira las piezas tocándolas. Cuando una tubería lleva energía azul desde el generador hasta el regalo, se enciende.','npg-caption');
@@ -172,6 +173,9 @@
     header.append(controls);host.append(header);
     function build(){
       if(disposed)return;
+      if(nextButton){nextButton.remove();nextButton=null;}
+      if(repeatButton){repeatButton.remove();repeatButton=null;}
+      message.textContent='';
       finished=false;moves=0;
       const offset=(level%2)?1:-1;
       const bendLeft=2+(level%2),bendRight=4+(level%2);
@@ -224,17 +228,25 @@
       }
       return seen;
     }
+    function solved(){
+      return path.every(([x,y])=>{
+        const tile=grid[y][x], rotated=actual(tile);
+        return rotated.length===tile.dirs.length &&
+          tile.dirs.every(direction=>rotated.includes(direction));
+      });
+    }
     function done(){
       if(finished)return;
       finished=true;saveBest('circuit',level+1);
       if(level===7){
         status.textContent='🏆 LOS OCHO CIRCUITOS ESTÁN ENCENDIDOS';
         message.textContent='¡Toda la aldea tiene luz! Has resuelto los 8 niveles.';
-        const again=button('🎄 ¡Repetir los ocho niveles!',()=>{level=0;build()},'npg-button-big');
-        header.append(again);
+        repeatButton=button('🎄 ¡Repetir los ocho niveles!',()=>{level=0;build()},'npg-button-big');
+        header.append(repeatButton);
       }else{
         message.textContent='🌟 ¡Circuito completo! Has reparado la instalación.';
-        controls.prepend(button('⚡ SIGUIENTE NIVEL →',()=>{level++;build()},'npg-button-big'));
+        nextButton=button('⚡ SIGUIENTE NIVEL →',()=>{level++;build()},'npg-button-big');
+        controls.prepend(nextButton);
       }
     }
     function drawBoard(){
@@ -247,7 +259,7 @@
           const b=button(tile.endpoint||glyph(actual(tile)),()=>{
             if(finished||tile.endpoint)return;
             tile.angle=(tile.angle+1)%4;moves++;drawBoard();
-            if(connected().has('6,2'))done();
+            if(solved())done();
           },'npg-pipe');
           if(tile.endpoint)b.classList.add('npg-source');
           if(lit.has(tile.x+','+tile.y))b.classList.add('npg-lit');
