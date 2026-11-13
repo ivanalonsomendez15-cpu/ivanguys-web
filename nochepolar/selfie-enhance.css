@@ -1,0 +1,49 @@
+/* Selfie+ — new accessories on top of the original Google Santa Selfie. */
+#module-santaselfie .np-selfie-layer {position:absolute;inset:0;z-index:30;pointer-events:none}
+#module-santaselfie .np-selfie-prop {position:absolute;pointer-events:none;font-family:"Apple Color Emoji","Segoe UI Emoji",sans-serif;line-height:1;text-shadow:0 3px 3px #0002;user-select:none}
+#module-santaselfie .np-selfie-hat {left:50%;top:-27%;transform:translateX(-50%) rotate(-5deg);font-size:200em}
+#module-santaselfie .np-selfie-glasses {left:50%;top:23%;transform:translateX(-50%);font-size:155em}
+#module-santaselfie .np-selfie-badge {right:4%;top:76%;font-size:100em}
+#module-santaselfie .np-selfie-stickers {position:absolute;inset:0;pointer-events:none}
+#module-santaselfie .np-selfie-sticker{position:absolute;font:68em "Apple Color Emoji","Segoe UI Emoji",sans-serif;transform:translate(-50%,-50%);text-shadow:0 2px 4px #0003}
+#np-selfie-hub{position:fixed;z-index:200010;right:15px;bottom:14px;font-family:"Google Sans",Roboto,Arial,sans-serif;font-size:15px;color:#155643;touch-action:auto;line-height:1.35}
+#np-selfie-hub *{box-sizing:border-box}
+#np-selfie-hub button{font:inherit;cursor:pointer}
+#np-selfie-hub .np-selfie-open{display:block;margin-left:auto;font-size:17px;font-weight:900;
+ border:3px solid white;border-radius:60px;background:#d9465d;color:white;
+ box-shadow:0 5px 0 #a02d43,0 6px 15px #12412a33;padding:12px 19px}
+#np-selfie-hub .np-selfie-panel[hidden]{display:none!important}
+#np-selfie-hub .np-selfie-panel{width:min(480px,calc(100vw - 24px));max-height:min(75dvh,650px);
+ background:#fffef6;border:4px solid white;border-radius:20px;box-shadow:0 12px 35px #07354d77;
+ overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:11px;touch-action:pan-y;margin-bottom:11px}
+#np-selfie-hub .np-selfie-toolbar{display:flex;justify-content:space-between;align-items:center;
+ background:#43b980;color:#fff;border-radius:13px;padding:12px;font-size:20px}
+#np-selfie-hub .np-selfie-toolbar strong{font-weight:900}
+#np-selfie-hub .np-selfie-dismiss{font-size:18px;border:0;background:white;color:#cf3949;border-radius:40px;width:34px;height:34px}
+#np-selfie-hub .np-selfie-tabs{display:flex;flex-wrap:wrap;gap:5px}
+#np-selfie-hub .np-selfie-tab{border:1px solid #c9e7d2;background:#e3f7e7;color:#167b57;
+ padding:8px 10px;border-radius:12px;font-weight:850;font-size:13px}
+#np-selfie-hub .np-selfie-tab.active{background:#087e60;color:#fff}
+#np-selfie-hub .np-selfie-options{display:flex;flex-wrap:wrap;gap:7px;align-items:center;min-height:75px}
+#np-selfie-hub .np-selfie-emoji{border:2px solid white;border-radius:16px;background:#d4f0e7;
+ width:63px;height:63px;font-size:31px;box-shadow:0 2px 0 #b2d9cd}
+#np-selfie-hub .np-selfie-emoji.active,#np-selfie-hub .np-selfie-name.active,
+#np-selfie-hub .np-selfie-swatch.active{outline:3px solid #edbf33}
+#np-selfie-hub .np-selfie-name{background:#dff2ed;border:2px solid white;padding:11px;
+ border-radius:10px;font-size:13px}
+#np-selfie-hub .np-selfie-swatch{width:90px;min-height:45px;border:3px solid white;border-radius:12px;
+ color:#173c39;font-weight:900;font-size:12px;text-shadow:0 1px white}
+#np-selfie-hub .np-selfie-msg{font-size:13px;line-height:1.3;color:#4b7868;margin:5px 0}
+#np-selfie-hub .np-selfie-actions{border-top:2px dashed #c6e5d5;padding-top:9px;display:flex;flex-wrap:wrap;gap:8px}
+#np-selfie-hub .np-selfie-small{background:#f9e5b1;border:2px solid white;color:#6a5111;
+ border-radius:10px;font-weight:800;font-size:12px;padding:8px 10px}
+#np-selfie-hub .np-selfie-slot{width:100%;display:flex;align-items:center;justify-content:space-between;
+ border-bottom:1px solid #c7e4d5;padding:6px 0;font-weight:700}
+@media(max-width:600px){
+ #np-selfie-hub{right:6px;bottom:6px;font-size:13px}
+ #np-selfie-hub .np-selfie-panel{max-height:63dvh;width:min(390px,calc(100vw - 14px));padding:6px}
+ #np-selfie-hub .np-selfie-tabs{gap:3px}
+ #np-selfie-hub .np-selfie-tab{padding:6px;font-size:11px}
+ #np-selfie-hub .np-selfie-emoji{width:49px;height:49px;font-size:25px}
+ #np-selfie-hub .np-selfie-open{padding:9px 14px;font-size:13px}
+}

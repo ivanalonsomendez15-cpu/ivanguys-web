@@ -1,0 +1,118 @@
+/* NOCHEPOLAR EXPEDICIONES — estética de aldea (Google Santa Tracker adaptation) */
+#np-screen .npq-cover,#np-screen .npq-shell,#np-screen .npq-interlude {
+ --npq-hue:135;
+ padding:20px 20px 25px;
+ border-radius:22px;
+ background:linear-gradient(155deg,#e2f7ee 3%,#ebf9ff 52%,#fcf9df 100%);
+ border:3px solid #fff;
+ box-shadow:0 8px 22px rgba(14,105,74,.09);
+ color:#275d4b;
+}
+#np-screen .npq-cover{text-align:center}
+#np-screen .npq-cover-art{
+ display:grid;place-items:center;min-height:160px;border-radius:18px;
+ font-size:clamp(55px,9vw,95px);
+ background:radial-gradient(circle at 40% 10%,#fff8 3%,transparent 40%),linear-gradient(135deg,#75d6ef,#74d6b8);
+ border:4px solid white;letter-spacing:12px;text-shadow:0 7px 4px #126a7840;
+}
+#np-screen .npq-cover h2{font-size:clamp(25px,5vw,39px);margin:14px 0;color:#145941}
+#np-screen .npq-cover p{max-width:590px;margin:8px auto}
+#np-screen .npq-facts{font-size:13px!important;color:#6b7c66;font-weight:700;letter-spacing:.5px;margin:16px auto!important}
+#np-screen .npq-special{
+ border-radius:14px;padding:12px;background:#ffe3a9;color:#824c04;font-weight:800;
+}
+#np-screen .npq-kicker{font-size:12px!important;font-weight:900;letter-spacing:2px;color:#168464!important}
+#np-screen .npq-progress{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:6px;margin:13px 0 17px}
+#np-screen .npq-step{display:block;height:10px;background:#cfe4de;border-radius:20px;box-shadow:inset 0 2px #b7d0c6}
+#np-screen .npq-step.done{background:#39bf70}
+#np-screen .npq-step.active{background:#ffc943;box-shadow:0 0 0 2px #ffce66}
+#np-screen .npq-shell h2{font-size:clamp(23px,4vw,34px);margin:8px 0;color:#147354}
+#np-screen .npq-description{max-width:680px;line-height:1.55;font-size:16px;color:#30584e}
+#np-screen .npq-counter{font-weight:900;color:#146d50;margin:14px 0 0}
+#np-screen .npq-hint{min-height:25px;color:#bc573f;font-weight:700}
+#np-screen .npq-btn,#np-screen .npq-button-big{
+ background:#fff;border:3px solid #d6e9de;border-radius:15px;color:#12684b;
+ padding:14px 19px;font-size:15px;font-weight:850;cursor:pointer;
+ box-shadow:0 5px 0 #aed5be;transition:transform .12s,background .12s;
+}
+#np-screen .npq-btn:active,#np-screen .npq-button-big:active{transform:translateY(3px);box-shadow:none}
+#np-screen .npq-button-big{
+ background:linear-gradient(140deg,#f75863,#d9394d);
+ border:3px solid #fff;box-shadow:0 6px 0 #b33844;color:#fff;font-size:17px;margin:20px auto 10px;
+ padding:15px 30px;display:block;
+}
+#np-screen .npq-interlude{text-align:center;padding:35px 15px}
+#np-screen .npq-star{font-size:75px;animation:npq-pop .65s ease-in-out}
+@keyframes npq-pop{from{transform:scale(.25) rotate(-30deg);opacity:0}to{transform:scale(1);opacity:1}}
+#np-screen .npq-find-field{
+ display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:7px; padding:13px;
+ border-radius:22px;min-height:265px;
+ background:
+  radial-gradient(circle at 17% 18%,#fff8,transparent 15%),
+  radial-gradient(circle at 70% 62%,#fff8,transparent 25%),
+  linear-gradient(148deg,#87cbd2,#b0e6b3 58%,#67b7c5);
+}
+#np-screen .npq-find-icon{
+ border:2px solid #fff7;border-radius:14px;background:#ffffff9c;
+ box-shadow:0 5px 6px #18594d26;font-size:clamp(23px,4.5vw,42px);
+ transform:rotate(var(--angle,0deg));min-height:64px;cursor:pointer;
+}
+#np-screen .npq-find-icon.npq-picked{background:#3ab977;color:#fff;transform:scale(.88)}
+#np-screen .npq-find-icon.npq-wrong{animation:npq-shake .3s}
+@keyframes npq-shake{0%,100%{translate:0}30%{translate:-5px}70%{translate:5px}}
+#np-screen .npq-maze{
+ --cell:34px;display:grid;grid-template-columns:repeat(11,minmax(0,var(--cell)));
+ gap:2px;justify-content:center;margin:18px auto;padding:8px;
+ background:#7abae0;border:5px solid white;border-radius:16px;width:fit-content;max-width:100%;
+}
+#np-screen .npq-maze-cell{aspect-ratio:1;display:grid;place-items:center;font-size:21px;background:#edfcff;border-radius:4px}
+#np-screen .npq-maze-cell.wall{background:linear-gradient(155deg,#3293bf,#276da4);box-shadow:inset 0 2px #6bcaf2}
+#np-screen .npq-maze-cell.hero{background:#ffde8e}
+#np-screen .npq-dpad{display:grid;grid-template-columns:repeat(3,61px);grid-template-areas:'. up .' 'left down right';justify-content:center;gap:7px}
+#np-screen .npq-dpad button{background:#fff;font-size:28px;font-weight:900;color:#166a91;border:0;border-radius:15px;padding:10px;box-shadow:0 3px 0 #a9d3d8;touch-action:manipulation}
+#np-screen .npq-dpad button:nth-child(1){grid-area:up}
+#np-screen .npq-dpad button:nth-child(2){grid-area:left}
+#np-screen .npq-dpad button:nth-child(3){grid-area:down}
+#np-screen .npq-dpad button:nth-child(4){grid-area:right}
+#np-screen .npq-memory{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));max-width:460px;gap:9px;margin:12px auto}
+#np-screen .npq-memory-tile{aspect-ratio:1;border:4px solid #fff;background:#1e8eae;color:white;border-radius:16px;
+ font-size:38px;font-weight:900;box-shadow:0 4px 0 #166784;cursor:pointer}
+#np-screen .npq-memory-tile.revealed{background:#ffe6a9}
+#np-screen .npq-memory-tile.matched{background:#4fc28b;opacity:.75}
+#np-screen .npq-machine{background:#ffd66e;border:5px solid #fff;border-radius:19px;min-height:125px;
+ display:grid;place-items:center;font-size:70px;margin:16px auto;max-width:550px;letter-spacing:7px}
+#np-screen .npq-order{font-weight:850;color:#1d7155}
+#np-screen .npq-workshop-choices{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+#np-screen .npq-workshop-item{border:4px solid #fff;border-radius:20px;min-width:91px;min-height:91px;font-size:49px;background:#95dfea}
+#np-screen .npq-product{font-size:39px;letter-spacing:10px;margin:15px auto;min-height:65px;border-bottom:3px dashed #92cdb1}
+#np-screen .npq-sort-gift{font-size:80px;min-height:150px;margin:15px;display:grid;place-items:center;
+ background:linear-gradient(#c8f3ff,#8fd5f1);border-radius:25px;border:4px solid white}
+#np-screen .npq-sort-bins,#np-screen .npq-route-options{display:flex;gap:11px;flex-wrap:wrap;justify-content:center}
+#np-screen .npq-bin,#np-screen .npq-destination{background:#fff;border:3px solid #d7e9da;border-radius:17px;
+ padding:13px 20px;color:#156b56;font-weight:900;font-size:16px;box-shadow:0 4px 0 #bcd5c8}
+#np-screen .npq-bin:hover,#np-screen .npq-destination:hover{background:#ffe7a9}
+#np-screen .npq-sky{position:relative;overflow:hidden;min-height:260px;border:5px solid white;border-radius:21px;
+ background:radial-gradient(ellipse at 15% 25%,#ffffff90,transparent 19%),linear-gradient(160deg,#0087af,#3e84c9 55%,#b2e8ee 100%)}
+#np-screen .npq-flying-light{position:absolute;top:10px;left:10px;font-size:42px;min-width:60px;min-height:60px;
+ border:3px solid white;border-radius:50%;background:#ffffffdd;cursor:pointer;touch-action:manipulation;box-shadow:0 5px 14px #18497566}
+#np-screen .npq-rhythm-display{font-size:35px;letter-spacing:6px;background:#fef4d2;border:4px solid white;
+ border-radius:18px;text-align:center;padding:22px 5px;margin:13px auto;min-height:80px}
+#np-screen .npq-rhythm-keys{display:flex;gap:9px;justify-content:center;flex-wrap:wrap}
+#np-screen .npq-rhythm-key{width:70px;height:70px;border:4px solid white;border-radius:19px;
+ font-size:36px;background:#80c9e2;cursor:pointer;box-shadow:0 5px 0 #4599ac}
+#np-screen .npq-route{background:linear-gradient(140deg,#47a6cf,#60d2c7);border-radius:22px;color:white;
+ padding:20px;min-height:95px;font-size:26px;letter-spacing:5px;display:grid;place-items:center;line-height:1.8}
+#np-screen .npq-route-current{font-size:32px;color:#0e755a;font-weight:900;text-align:center;margin:18px auto}
+@media(max-width:600px){
+ #np-screen .npq-cover,#np-screen .npq-shell,#np-screen .npq-interlude{padding:12px}
+ #np-screen .npq-cover-art{min-height:105px;letter-spacing:2px}
+ #np-screen .npq-find-field{gap:4px;padding:6px}
+ #np-screen .npq-find-icon{min-height:45px;font-size:24px;border-radius:7px}
+ #np-screen .npq-maze{--cell:min(6.7vw,30px);gap:1px;padding:4px;border-width:2px}
+ #np-screen .npq-maze-cell{font-size:14px}
+ #np-screen .npq-memory-tile{font-size:28px}
+ #np-screen .npq-sort-gift{font-size:58px;min-height:100px}
+ #np-screen .npq-workshop-item{min-width:65px;min-height:65px;font-size:35px}
+ #np-screen .npq-sky{min-height:210px}
+ #np-screen .npq-route{font-size:20px}
+}

@@ -83,3 +83,21 @@
  #np-screen .np-game {padding:12px}
  #np-screen .np-route {font-size:21px}
 }
+
+/* Extra screens: original Santa Tracker video theater and arcade */
+#np-screen .np-hub-nav{display:flex;flex-wrap:wrap;gap:7px;padding:9px 0 16px}
+#np-screen .np-hub-link{border:3px solid white;border-radius:17px;background:#d9f3e7;
+ color:#155c48;font-size:13px;font-weight:900;padding:10px 13px;
+ box-shadow:0 3px 0 #b3dcc9;cursor:pointer}
+#np-screen .np-hub-link:hover{background:#ffebad}
+#np-screen .np-hub-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(205px,1fr));gap:12px;margin:19px 0}
+#np-screen .np-hub-card,#np-screen .np-hub-medal{display:flex;align-items:center;justify-content:flex-start;text-align:left;
+ min-height:74px;padding:16px;border:3px solid #fff;border-radius:17px;font-size:17px;font-weight:900;color:#135c4b;
+ background:linear-gradient(125deg,#d5f5ec,#d1eeff);box-shadow:0 5px 0 #b6d9d7;cursor:pointer}
+#np-screen .np-hub-card:hover{transform:translateY(-2px);background:#fff2c2}
+#np-screen .np-hub-medal{background:linear-gradient(130deg,#fff1c0,#e9f1bc);font-size:14px;cursor:auto;min-height:64px}
+@media(max-width:600px){
+ #np-screen .np-hub-cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ #np-screen .np-hub-card{font-size:13px;padding:9px;min-height:72px}
+ #np-screen .np-hub-link{font-size:11px;padding:7px 8px}
+}
