@@ -116,3 +116,13 @@
  #np-screen .npq-sky{min-height:210px}
  #np-screen .npq-route{font-size:20px}
 }
+
+/* Special November 13 snowflake laboratory */
+#np-screen .npq-experiment-screen{margin:17px auto;padding:5px;border:4px solid white;border-radius:24px;
+ background:radial-gradient(circle at 50% 35%,#f6ffff,#c5eeff 50%,#5ca9c7 100%);min-height:220px}
+#np-screen .npq-lab-control{display:grid;grid-template-columns:minmax(110px,1fr) minmax(140px,3fr) 30px;
+ align-items:center;gap:10px;margin:12px 0;padding:12px;border-radius:14px;background:#ffffffc8;color:#147452;font-weight:900}
+#np-screen .npq-lab-control input{width:100%;accent-color:#228fbe;cursor:pointer}
+#np-screen .npq-lab-control b{color:#147452}
+#np-screen .npq-order{font-size:22px;color:#165d6a}
+@media(max-width:600px){#np-screen .npq-lab-control{grid-template-columns:80px minmax(80px,1fr) 22px;font-size:12px;padding:7px;gap:5px}}
