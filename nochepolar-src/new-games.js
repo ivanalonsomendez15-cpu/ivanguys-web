@@ -249,6 +249,36 @@
         controls.prepend(nextButton);
       }
     }
+    function pieceSVG(directions,isLit){
+      const ns='http://www.w3.org/2000/svg';
+      const svg=document.createElementNS(ns,'svg');
+      svg.setAttribute('viewBox','0 0 100 100');
+      svg.setAttribute('aria-hidden','true');
+      const el=(tag,attrs)=>{
+        const n=document.createElementNS(ns,tag);
+        Object.entries(attrs).forEach(([k,v])=>n.setAttribute(k,String(v)));
+        return n;
+      };
+      // Each pipe is an actual illustrated tube rather than a line-font symbol.
+      const points=[[50,0],[100,50],[50,100],[0,50]];
+      const tone=isLit?'#5ad6b1':'#277fab';
+      for(const direction of directions){
+        const [x,y]=points[direction];
+        svg.append(el('line',{x1:50,y1:50,x2:x,y2:y,stroke:'#165f83',
+          'stroke-width':34,'stroke-linecap':'butt'}));
+        svg.append(el('line',{x1:50,y1:50,x2:x,y2:y,stroke:tone,
+          'stroke-width':25,'stroke-linecap':'butt'}));
+        svg.append(el('line',{x1:50,y1:50,x2:x,y2:y,stroke:'#ddffff',
+          'stroke-width':7,'stroke-linecap':'butt',opacity:'.78'}));
+      }
+      svg.append(el('circle',{cx:50,cy:50,r:18,fill:'#155e80'}));
+      svg.append(el('circle',{cx:50,cy:50,r:13,fill:isLit?'#86ffd8':'#77cce7'}));
+      svg.append(el('circle',{cx:45,cy:45,r:4,fill:'#fff',opacity:'.75'}));
+      if(isLit){
+        svg.append(el('circle',{cx:50,cy:50,r:4,fill:'#fffacd'}));
+      }
+      return svg;
+    }
     function drawBoard(){
       board.replaceChildren();
       status.textContent='CIRCUITO '+(level+1)+'/8 · Giros '+moves+
@@ -256,13 +286,19 @@
       const lit=connected();
       for(const row of grid){
         for(const tile of row){
-          const b=button(tile.endpoint||glyph(actual(tile)),()=>{
+          const b=button('',()=>{
             if(finished||tile.endpoint)return;
             tile.angle=(tile.angle+1)%4;moves++;drawBoard();
             if(solved())done();
           },'npg-pipe');
-          if(tile.endpoint)b.classList.add('npg-source');
-          if(lit.has(tile.x+','+tile.y))b.classList.add('npg-lit');
+          const active=lit.has(tile.x+','+tile.y);
+          if(tile.endpoint){
+            b.classList.add('npg-source');
+            b.textContent=tile.endpoint;
+          } else {
+            b.append(pieceSVG(actual(tile),active));
+          }
+          if(active)b.classList.add('npg-lit');
           b.title='Girar pieza de tubería '+(tile.x+1)+','+(tile.y+1);
           board.append(b);
         }
