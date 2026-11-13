@@ -79,7 +79,7 @@
     const plan = day === 12
       ? ['experimento','laberinto','buscar','memoria','taller','clasificar','atrapar','ritmo','final']
       : plans[day%plans.length];
-    const memoryKey='np:expedition:v3:'+date;
+    const memoryKey='np:expedition:v'+(day===12?'4':'3')+':'+date;
     let index=Math.max(0,Math.min(plan.length,Number(localStorage.getItem(memoryKey)||0)));
     let cleanup=()=>{};
     let open=true;
@@ -454,8 +454,34 @@
         ['Polo Norte','🏠']
       ]:[[area[0],area[2]],['Cueva brillante','💎'],['Bosque de luces','🌟'],
          [destination[0],destination[2]],['Plaza de la aldea','🎁'],['El gran árbol','🎄']];
+      const clues=[
+        'Empieza en el extremo norte del planeta.',
+        'Aquí se encuentra una famosa Ópera junto al puerto de Australia.',
+        'La capital japonesa es el siguiente destino.',
+        'Capital de Corea del Sur, cerca de la península coreana.',
+        'Capital de Tailandia, al sureste de Asia.',
+        'Una de las grandes ciudades del norte de la India.',
+        'Una gran ciudad de Emiratos Árabes Unidos con rascacielos.',
+        'Ciudad egipcia cercana a las pirámides de Guiza.',
+        'Capital de Grecia, donde está la Acrópolis.',
+        'Capital italiana junto al Coliseo.',
+        'Capital española: prepara los regalos de la Península Ibérica.',
+        'Capital del Reino Unido, junto al Támesis.',
+        'Capital de Islandia, con auroras y paisajes geotérmicos.',
+        'La ciudad estadounidense donde está la Estatua de la Libertad.',
+        'Capital mexicana, situada en una gran altiplanicie.',
+        'Capital peruana frente al océano Pacífico.',
+        'Capital chilena al pie de los Andes.',
+        'Capital argentina, junto al Río de la Plata.',
+        'Regresamos a nuestro hogar del extremo norte.'
+      ];
+      const coords=[
+        [0,86],[151,-34],[139,36],[127,37],[100,13],[77,28],[55,25],
+        [31,30],[23,38],[12,42],[-3,40],[0,51],[-22,64],
+        [-74,41],[-99,19],[-77,-12],[-70,-33],[-58,-34],[0,86]
+      ];
       shell.append(h('p',isBig?
-        '¡Especial de Nochebuena! Completa 19 etapas de una vuelta al mundo imaginaria. El seguimiento original de Santa Tracker sigue disponible en su mapa.':
+        '🎅 EL GRAN EVENTO DEL 24: tras superar los capítulos de preparación, pilotarás el recorrido ilustrado por 19 paradas del mundo, recogerás sellos y desbloquearás el gran final. Es una simulación festiva, no seguimiento GPS real.':
         'Ya tienes todos los materiales. Sigue las seis paradas de la ruta final para terminar '+title.toLowerCase()+'.',
         'npq-description'));
       const route=h('div','','npq-route');
@@ -463,23 +489,110 @@
       const question=h('p','','npq-counter');
       const options=h('div','','npq-route-options');
       const note=h('p','','npq-hint');
-      let step=0;
+      const gifts=h('p','🎁 Regalos virtuales: 0 · Sellos del viaje: 0','npq-counter');
+      let step=0,animating=false,flightFrame=0;
+      let map=null,trail=null,sleigh=null,stopDots=[];
+      const svgNS='http://www.w3.org/2000/svg';
+      const mapPoint=([longitude,latitude])=>[
+        Math.round((longitude+180)/360*900),
+        Math.round((83-latitude)/166*410)
+      ];
+      function svg(tag,attrs={}){
+        const el=document.createElementNS(svgNS,tag);
+        for(const [name,value] of Object.entries(attrs))el.setAttribute(name,String(value));
+        return el;
+      }
+      if(isBig){
+        map=h('div','','npq-world');
+        const surface=svg('svg',{viewBox:'0 0 900 410',role:'img','aria-label':'Mapa ilustrado del viaje de Nochebuena con paradas y trineo'});
+        surface.append(svg('rect',{x:0,y:0,width:900,height:410,fill:'#098dbb',rx:18}));
+        for(let k=1;k<6;k++)surface.append(svg('line',{
+          x1:0,y1:k*68,x2:900,y2:k*68,stroke:'#ffffff',opacity:'.14','stroke-width':1
+        }));
+        for(let k=1;k<9;k++)surface.append(svg('line',{
+          x1:k*100,y1:0,x2:k*100,y2:410,stroke:'#ffffff',opacity:'.11','stroke-width':1
+        }));
+        // A stylized cartographic background; not intended to represent exact borders.
+        [
+          'M80 90L132 42 200 53 227 89 187 120 177 179 132 188 101 151Z',
+          'M192 193L241 222 259 278 237 345 213 366 190 313 171 247Z',
+          'M390 90L419 57 465 67 499 97 488 143 457 158 440 208 402 176Z',
+          'M490 74L535 50 595 55 646 82 712 92 740 116 700 152 637 149 618 203 563 211 520 163Z',
+          'M677 258L737 243 791 281 802 328 761 351 697 334Z',
+          'M423 213L485 221 522 267 499 315 457 325 426 281Z'
+        ].forEach(d=>surface.append(svg('path',{d,fill:'#a8d6b1',stroke:'#d8efc1','stroke-width':3,opacity:'.87'})));
+        trail=svg('polyline',{points:'',fill:'none',stroke:'#ffe96d','stroke-width':4,
+          'stroke-linecap':'round','stroke-linejoin':'round','stroke-dasharray':'8 5'});
+        surface.append(trail);
+        stops.forEach((stop,i)=>{
+          const [x,y]=mapPoint(coords[i]);
+          const dot=svg('circle',{cx:x,cy:y,r:5,fill:'#fff9a7',stroke:'#ffffff','stroke-width':2,opacity:'.5'});
+          surface.append(dot);stopDots.push(dot);
+        });
+        sleigh=svg('text',{x:450,y:15,'font-size':34,'text-anchor':'middle'});
+        sleigh.textContent='🛷';surface.append(sleigh);
+        map.append(surface);
+        shell.append(map);
+      }
+      function updateMap(){
+        if(!map)return;
+        const reached=coords.slice(0,Math.min(step+1,coords.length));
+        trail.setAttribute('points',reached.map(p=>mapPoint(p).join(',')).join(' '));
+        stopDots.forEach((dot,i)=>{
+          dot.setAttribute('opacity',i<=step?'1':'.35');
+          dot.setAttribute('r',i===step?'8':'5');
+        });
+        const pos=mapPoint(coords[Math.min(step,coords.length-1)]);
+        sleigh.setAttribute('x',pos[0]);sleigh.setAttribute('y',pos[1]-14);
+        gifts.textContent='🎁 Regalos virtuales: '+(step*20)+' · Sellos del viaje: '+step+'/19';
+      }
+      function finishMove(){
+        animating=false;
+        step++;
+        note.textContent='✅ ¡Sello desbloqueado! Has llegado a '+stops[step-1][0]+'.';
+        if(step===stops.length){completeTask();return;}
+        show();
+      }
+      function fly(){
+        if(!map){finishMove();return;}
+        const from=mapPoint(coords[Math.min(step,coords.length-1)]);
+        const to=mapPoint(coords[Math.min(step+1,coords.length-1)]);
+        const start=performance.now();
+        animating=true;
+        const animate=t=>{
+          if(!map?.isConnected||!open)return;
+          const progress=Math.min(1,(t-start)/950);
+          const smooth=progress*progress*(3-2*progress);
+          const x=from[0]+(to[0]-from[0])*smooth;
+          const y=from[1]+(to[1]-from[1])*smooth-25*Math.sin(progress*Math.PI);
+          sleigh.setAttribute('x',String(x));sleigh.setAttribute('y',String(y-14));
+          if(progress<1)flightFrame=requestAnimationFrame(animate);
+          else finishMove();
+        };
+        flightFrame=requestAnimationFrame(animate);
+        cleanup=()=>cancelAnimationFrame(flightFrame);
+      }
       function show(){
+        if(!nextIfLive())return;
         const goal=stops[step];
-        city.textContent=goal[1]+' '+goal[0];
-        question.textContent='Destino '+(step+1)+' de '+stops.length+' · Selecciona el lugar indicado';
+        city.textContent=isBig ? '🌍 Parada '+(step+1)+': '+clues[step] : goal[1]+' '+goal[0];
+        question.textContent='Destino '+(step+1)+' de '+stops.length+' · Selecciona el lugar correcto';
         route.textContent=stops.slice(0,step).map(x=>x[1]).join(' — ')+' 🛷';
+        updateMap();
         options.replaceChildren();
         const wrong1=stops[(step+3)%stops.length][0],wrong2=stops[(step+6)%stops.length][0];
         const labels=[...new Set([goal[0],wrong1,wrong2])];
         while(labels.length<3)labels.push('Estación '+labels.length);
         shuffle(labels,rng).forEach(label=>options.append(button(label,()=>{
-          if(label!==goal[0]){note.textContent='Esa no es la parada que aparece en el mapa.';return;}
-          step++;note.textContent='¡Parada desbloqueada!';
-          if(step===stops.length)completeTask();else show();
+          if(animating||!nextIfLive())return;
+          if(label!==goal[0]){
+            note.textContent='💡 La pista está en la descripción de la parada. Intenta localizar el país o el monumento.';return;
+          }
+          fly();
         },'npq-destination')));
       }
       show();shell.append(route,city,question,options,note);
+      if(isBig)shell.append(gifts);
     }
     const handlers={experimento:experiment, buscar:search,laberinto:maze,memoria:memory,clasificar:sorting,
       taller:workshop,atrapar:catching,ritmo:rhythm,final};

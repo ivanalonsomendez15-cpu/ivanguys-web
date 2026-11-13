@@ -126,3 +126,19 @@
 #np-screen .npq-lab-control b{color:#147452}
 #np-screen .npq-order{font-size:22px;color:#165d6a}
 @media(max-width:600px){#np-screen .npq-lab-control{grid-template-columns:80px minmax(80px,1fr) 22px;font-size:12px;padding:7px;gap:5px}}
+
+
+/* December 24: illustrated sleigh flight across a stylized world map. */
+#np-screen .npq-world{
+ padding:7px;border:5px solid #fff;border-radius:24px;
+ background:linear-gradient(150deg,#0687b9,#7cd0df);
+ box-shadow:0 8px 24px #186d7c30;margin:15px auto;
+ overflow:hidden;max-width:780px;
+}
+#np-screen .npq-world svg{width:100%;height:auto;display:block;filter:drop-shadow(0 3px 4px #08364b20)}
+#np-screen .npq-world circle{transition:opacity .3s}
+#np-screen .npq-route-current{line-height:1.4;font-size:clamp(17px,3vw,24px);max-width:690px}
+#np-screen .npq-destination:active{transform:translateY(2px)}
+@media(max-width:600px){
+ #np-screen .npq-world{border-width:2px;padding:2px;border-radius:12px}
+}
