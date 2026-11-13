@@ -79,7 +79,7 @@
     const plan = day === 12
       ? ['experimento','laberinto','buscar','memoria','taller','clasificar','atrapar','ritmo','final']
       : plans[day%plans.length];
-    const memoryKey='np:expedition:v3:'+date;
+    const memoryKey='np:expedition:v'+(day===12?'4':'3')+':'+date;
     let index=Math.max(0,Math.min(plan.length,Number(localStorage.getItem(memoryKey)||0)));
     let cleanup=()=>{};
     let open=true;
