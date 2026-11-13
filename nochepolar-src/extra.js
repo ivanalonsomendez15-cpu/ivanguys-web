@@ -106,6 +106,8 @@
   const clearExpedition = () => {
     if (window.NochepolarActive?.dispose) window.NochepolarActive.dispose();
     window.NochepolarActive = null;
+    if (window.NochepolarPlayingGame?.dispose) window.NochepolarPlayingGame.dispose();
+    window.NochepolarPlayingGame = null;
   };
   function openOriginal(route) {
     clearExpedition();
@@ -122,7 +124,7 @@
     group.append(
       btn('🗓️ Calendario',showCalendar,'np-hub-link'),
       btn('🎬 Cine original',()=>showCollection('cine'),'np-hub-link'),
-      btn('🎮 Arcade clásico',()=>showCollection('arcade'),'np-hub-link'),
+      btn('🎮 Juegos nuevos + clásicos',()=>showCollection('arcade'),'np-hub-link'),
       btn('🏅 Pasaporte',showPassport,'np-hub-link')
     );
     return group;
@@ -133,10 +135,16 @@
     content.append(h('h1',kind==='cine'?'🎬 Cine de la aldea':'🎮 Arcade del Polo Norte'));
     content.append(h('p',kind==='cine'?
       'Clips y escenas animadas del Santa Tracker original. Pulsa para ver cada uno dentro del juego auténtico.':
-      'Todos estos juegos proceden del Santa Tracker original. No hemos sustituido sus controles ni sus puntuaciones.',
+      'Dos juegos originales añadidos por NOCHEPOLAR, junto con los juegos auténticos de Santa Tracker. No sustituimos ninguno de los originales.',
       'np-intro'));
     const items = kind==='cine'?cinema:originals;
     const cards = h('div','','np-hub-cards');
+    if(kind!=='cine'){
+      cards.append(
+        btn('🦌 Reno Express · Nuevo',()=>showNewGame('reno'),'np-hub-card np-hub-feature'),
+        btn('💡 Circuitos del Polo · Nuevo',()=>showNewGame('circuito'),'np-hub-card np-hub-feature')
+      );
+    }
     for(const [emoji,name,route] of items){
       const card = btn(emoji+'  '+name+'  ›',()=>openOriginal(route),'np-hub-card');
       cards.append(card);
@@ -156,6 +164,71 @@
     content.append(gallery);
     content.append(btn('Volver al calendario',showCalendar,'np-back'));
   }
+
+  function showNewGame(which) {
+    clearExpedition();
+    screen.hidden = false;
+    content.replaceChildren(toolbar());
+    if (!window.NochepolarArcade || !window.NochepolarArcade[which]) {
+      content.append(h('p','El juego nuevo no se ha cargado. Actualiza la página e inténtalo de nuevo.','np-intro'));
+      return;
+    }
+    const stage = h('section','','np-new-game-stage');
+    content.append(stage);
+    window.NochepolarPlayingGame = window.NochepolarArcade[which](stage,()=>showCollection('arcade'));
+  }
+  function launchSelfiePlus(){
+    clearExpedition();
+    screen.hidden=true;
+    // Directly navigate to Google's existing selfie, not a replacement canvas.
+    try{
+      if(window.santaApp&&typeof window.santaApp.go==='function')
+        window.santaApp.go('santaselfie');
+      else {window.location.href='/ivanguys-web/nochepolar/intl/es/santaselfie.html';return;}
+    }catch(e){window.location.href='/ivanguys-web/nochepolar/intl/es/santaselfie.html';return;}
+    let attempts=0;
+    const openInFrame=()=>{
+      if(attempts++>=24)return;
+      try {
+        const players=Array.from(document.querySelectorAll('santa-gameloader'));
+        const frames=players.flatMap(player=>Array.from(player.shadowRoot?.querySelectorAll('iframe')||[]));
+        const target=frames.find(frame=>(frame.src||'').includes('/santaselfie/'));
+        if(target?.contentWindow){
+          const child=target.contentWindow;
+          if(child.NochepolarSelfie&&typeof child.NochepolarSelfie.open==='function'){
+            child.NochepolarSelfie.open();return;
+          }
+          child.postMessage({type:'np:selfie:open'},location.origin);
+          // Recover from an extension script that failed to load in the original iframe.
+          try {
+            const childDoc=target.contentDocument;
+            if(childDoc?.querySelector('#module-santaselfie .scene')&&
+               !childDoc.getElementById('np-selfie-hub')&&!childDoc.getElementById('np-selfie-injected')){
+              const css=childDoc.createElement('link');
+              css.rel='stylesheet';css.href='/ivanguys-web/nochepolar/selfie-enhance.css';
+              childDoc.head.append(css);
+              const tag=childDoc.createElement('script');
+              tag.id='np-selfie-injected';
+              tag.src='/ivanguys-web/nochepolar/selfie-enhance.js';
+              childDoc.head.append(tag);
+            }
+          }catch(e){}
+        }
+      }catch(e){}
+      setTimeout(openInFrame,520);
+    };
+    setTimeout(openInFrame,700);
+  }
+  // Always-visible shortcuts: show exactly where the movies and additional games are.
+  const shortcuts = h('nav','','np-shortcuts');
+  shortcuts.setAttribute('aria-label','Accesos de NOCHEPOLAR');
+  shortcuts.append(
+    btn('🎬 CINE',()=>{screen.hidden=false;showCollection('cine')},'np-shortcut'),
+    btn('🎮 JUEGOS',()=>{screen.hidden=false;showCollection('arcade')},'np-shortcut'),
+    btn('🏅 PASAPORTE',()=>{screen.hidden=false;showPassport()},'np-shortcut'),
+    btn('🎅 SELFIE+',launchSelfiePlus,'np-shortcut np-shortcut-selfie')
+  );
+  host.append(shortcuts);
   function showCalendar() {
     clearExpedition();
     content.replaceChildren(toolbar());
@@ -169,7 +242,7 @@
         const day = i < 30 ? i + 1 : i - 29;
         const item = btn(String(day) + ' ' + (icons[i % icons.length]) + (i === 53 ? ' 🎅' : ''),
           () => showDay(i), 'np-date');
-        if (i === indexNow) item.classList.add('np-today');
+        if (i === titles.findIndex((_,j)=>isoFor(j)===localDay())) item.classList.add('np-today');
         if (won(i)) item.classList.add('np-done');
         if (i === 53) item.classList.add('np-grand');
         item.title = status(i);
@@ -184,7 +257,7 @@
     content.append(h('div', icons[i % icons.length], 'np-big-icon'));
     content.append(h('h1', titles[i]));
     content.append(h('p', isoFor(i) + ' · ' + status(i), 'np-day-status'));
-    if (i !== indexNow || won(i)) {
+    if (i !== titles.findIndex((_,j)=>isoFor(j)===localDay()) || won(i)) {
       content.append(h('p', won(i) ? 'Esta misión ya se completó y no se puede repetir.' :
         'Solo se puede jugar en su fecha. Las actividades anteriores se cierran y las futuras siguen ocultas.', 'np-intro'));
       goBack();
