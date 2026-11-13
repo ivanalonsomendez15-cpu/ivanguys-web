@@ -1,0 +1,128 @@
+/* A new illustrated quarter that scrolls naturally with Google's original village. */
+#np-village-quarter{
+ position:relative;isolation:isolate;overflow:hidden;min-height:780px;
+ background:linear-gradient(180deg,#53c9f4 0%,#8ae0f5 47%,#e8faff 100%);
+ color:#fff;font-family:"Google Sans",Roboto,Arial,sans-serif;
+ box-shadow:inset 0 8px 0 #0001;
+}
+#np-village-quarter *{box-sizing:border-box}
+#np-village-quarter .npv-stars{
+ position:absolute;top:15px;left:0;right:0;text-align:center;font-size:38px;
+ letter-spacing:35px;color:#fff9;z-index:0;pointer-events:none;
+ animation:npv-twinkle 4s ease-in-out infinite;
+}
+#np-village-quarter::before{
+ content:'';position:absolute;inset:85px -2% auto;height:390px;z-index:-1;
+ background:linear-gradient(160deg,#d1f6f9,#f3ffff);clip-path:polygon(0 79%,10% 52%,19% 85%,33% 26%,45% 85%,60% 39%,73% 88%,85% 22%,100% 82%,100% 100%,0 100%);
+}
+#np-village-quarter::after{
+ content:'';position:absolute;bottom:-50px;left:-15%;right:-15%;height:330px;z-index:-1;
+ border-radius:50% 50% 0 0;background:linear-gradient(#ecffff,#e5f9ff);
+ box-shadow:0 -14px 0 #ddf6ff;
+}
+#np-village-quarter .npv-mountains{
+ pointer-events:none;position:absolute;top:160px;left:0;right:0;height:250px;z-index:-1;
+ background:linear-gradient(160deg,#aedee9,#8acade);
+ clip-path:polygon(0 100%,6% 55%,12% 100%,25% 28%,36% 100%,48% 45%,61% 100%,74% 33%,82% 100%,96% 40%,100% 100%);
+ opacity:.7;
+}
+#np-village-quarter .npv-title{text-align:center;padding:72px 15px 24px;text-shadow:0 3px 0 #176f9c55}
+#np-village-quarter .npv-ribbon{
+ display:inline-block;font-weight:900;letter-spacing:.08em;font-size:12px;
+ background:#fa5473;padding:8px 20px;border:3px solid #fff;border-radius:28px;
+ box-shadow:0 5px 0 #c53964;
+}
+#np-village-quarter h2{
+ font-family:Lobster,"Google Sans",sans-serif;font-weight:400;font-size:clamp(40px,6vw,78px);
+ transform:rotate(-2deg);margin:20px 0 5px;line-height:1.08;
+}
+#np-village-quarter .npv-title p{
+ font-size:clamp(14px,2.1vw,22px);font-weight:700;color:#fff;line-height:1.4;
+ max-width:780px;margin:17px auto;
+}
+#np-village-quarter .npv-town{
+ position:relative;z-index:2;display:flex;justify-content:space-around;
+ align-items:end;flex-wrap:wrap;gap:0 10px;padding:20px 28px 66px;
+ max-width:1500px;margin:auto;
+}
+#np-village-quarter .npv-house{
+ --wall:#ed7186;--roof:#825ab8;--accent:#ffe3a0;--dark:#b94364;
+ position:relative;isolation:isolate;flex:0 1 18%;
+ min-width:165px;max-width:280px;height:315px;
+ padding:0 3px 11px;border:0;background:transparent;
+ color:white;cursor:pointer;font:900 16px "Google Sans",Arial,sans-serif;
+ transform-origin:50% 100%;transition:transform .2s ease;
+ touch-action:manipulation;
+}
+#np-village-quarter .npv-house:hover,#np-village-quarter .npv-house:focus-visible{
+ transform:translateY(-14px) scale(1.035);outline:0;
+}
+#np-village-quarter .npv-house.arcade{--wall:#38bfbb;--roof:#2865b8;--dark:#087d91;--accent:#ffdd70;height:330px}
+#np-village-quarter .npv-house.adventures{--wall:#b4a0e5;--roof:#7561ba;--dark:#6561ad;--accent:#ffe39a;height:345px}
+#np-village-quarter .npv-house.selfie{--wall:#ffda91;--roof:#ef6b7d;--dark:#c9506f;--accent:#fff8ce;height:325px}
+#np-village-quarter .npv-house.passport{--wall:#7bcca2;--roof:#328c91;--dark:#28856c;--accent:#fdf2ab;height:320px}
+#np-village-quarter .npv-house .npv-roof{
+ position:absolute;top:19px;left:-2%;width:104%;height:115px;
+ background:var(--roof);clip-path:polygon(50% 4%,100% 85%,95% 100%,50% 28%,5% 100%,0 85%);
+ filter:drop-shadow(0 6px #0001);z-index:3;
+}
+#np-village-quarter .npv-house .npv-roof::after{
+ content:'';position:absolute;inset:0;background:#fff;clip-path:polygon(50% 4%,100% 85%,95% 95%,50% 20%,5% 95%,0 85%);
+}
+#np-village-quarter .npv-house .npv-chimney{
+ position:absolute;top:37px;right:18%;height:65px;width:27px;
+ background:var(--dark);border-top:10px solid #fff;border-radius:4px;z-index:1;
+}
+#np-village-quarter .npv-house .npv-building{
+ position:absolute;bottom:49px;left:10%;width:80%;height:194px;
+ background:var(--wall);border:7px solid #fff6;border-bottom-width:12px;
+ box-shadow:10px 12px 0 #176da025;border-radius:13px 13px 8px 8px;overflow:visible;
+}
+#np-village-quarter .npv-house .npv-marquee{
+ position:absolute;top:30px;left:50%;transform:translateX(-50%);
+ width:108%;white-space:nowrap;text-align:center;background:var(--accent);
+ color:var(--dark);border:5px solid #fff;border-radius:16px;
+ padding:9px 0;font-size:clamp(12px,1.4vw,17px);z-index:10;
+ box-shadow:0 5px 0 var(--dark);
+}
+#np-village-quarter .npv-house .npv-front{
+ position:absolute;left:26%;width:48%;bottom:12px;height:85px;
+ background:var(--dark);border:6px solid #fff5;border-bottom:0;
+ border-radius:23px 23px 0 0;display:grid;place-items:center;
+ font-size:48px;text-shadow:0 3px 1px #0002;
+}
+#np-village-quarter .npv-house .npv-windows{
+ position:absolute;left:0;right:0;bottom:110px;color:#fff9;font-size:12px;
+}
+#np-village-quarter .npv-house .npv-label{
+ position:absolute;bottom:-7px;left:50%;transform:translateX(-50%);
+ background:#fff;color:#155b79;white-space:nowrap;border-radius:40px;
+ border:4px solid #eafaff;padding:8px 17px;font-size:16px;
+ box-shadow:0 6px 0 #62a7bd88;
+}
+#np-village-quarter .npv-house:hover .npv-label{background:#fff4bb}
+#np-village-quarter .npv-snowdrift{
+ position:absolute;bottom:25px;left:0;right:0;height:90px;
+ pointer-events:none;background:radial-gradient(ellipse at 20% 50%,#fff 5%,transparent 45%),radial-gradient(ellipse at 80% 80%,#fff 9%,transparent 60%);
+}
+#np-village-quarter .npv-credit{position:relative;bottom:0;z-index:3;
+ text-align:center;margin:5px auto 20px;font-size:12px;color:#3987a0;font-weight:700;}
+@keyframes npv-twinkle{50%{opacity:.42;transform:translateY(7px)}}
+@media(max-width:1080px){
+ #np-village-quarter .npv-town{justify-content:center;gap:8px 22px;padding-bottom:50px}
+ #np-village-quarter .npv-house{flex-basis:29%}
+}
+@media(max-width:640px){
+ #np-village-quarter{min-height:960px}
+ #np-village-quarter .npv-title{padding:45px 12px 5px}
+ #np-village-quarter h2{font-size:40px}
+ #np-village-quarter .npv-stars{font-size:19px;letter-spacing:16px}
+ #np-village-quarter .npv-town{gap:2px 6px;padding:15px 4px 55px}
+ #np-village-quarter .npv-house{flex:0 1 47%;min-width:145px;max-width:200px;height:260px!important}
+ #np-village-quarter .npv-house .npv-building{height:158px;bottom:45px}
+ #np-village-quarter .npv-house .npv-roof{height:100px;top:19px}
+ #np-village-quarter .npv-house .npv-marquee{top:22px;font-size:11px;padding:7px 0}
+ #np-village-quarter .npv-house .npv-front{height:60px;bottom:10px;font-size:37px}
+ #np-village-quarter .npv-house .npv-windows{bottom:80px}
+ #np-village-quarter .npv-house .npv-label{font-size:13px;padding:7px 10px}
+}
