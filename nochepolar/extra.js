@@ -156,6 +156,7 @@
     window.NochepolarActive = null;
     if (window.NochepolarPlayingGame?.dispose) window.NochepolarPlayingGame.dispose();
     window.NochepolarPlayingGame = null;
+    if (window.NochepolarSpecials?.dispose) window.NochepolarSpecials.dispose();
   };
   function openOriginal(route) {
     clearExpedition();
@@ -174,9 +175,25 @@
       btn('🗓️ Calendario',showCalendar,'np-hub-link'),
       btn('🎬 Cine original',()=>showCollection('cine'),'np-hub-link'),
       btn('🎮 Juegos nuevos + clásicos',()=>showCollection('arcade'),'np-hub-link'),
-      btn('🏅 Pasaporte',showPassport,'np-hub-link')
+      btn('🏅 Pasaporte',showPassport,'np-hub-link'),
+      btn('🎪 8 grandes eventos',showWeekly,'np-hub-link'),
+      btn('👑 Reyes Magos',showKings,'np-hub-link')
     );
     return group;
+  }
+  function showWeekly() {
+    clearExpedition();enterNative('calendar');
+    content.replaceChildren(decorativeScene(),toolbar());
+    const holder=h('div','','np-special-host');content.append(holder);
+    if(window.NochepolarSpecials?.weekly)window.NochepolarSpecials.weekly(holder,showCalendar);
+    else holder.append(h('p','No se pudo cargar el módulo de eventos. Actualiza la página.'));
+  }
+  function showKings() {
+    clearExpedition();enterNative('calendar');
+    content.replaceChildren(decorativeScene(),toolbar());
+    const holder=h('div','','np-special-host');content.append(holder);
+    if(window.NochepolarSpecials?.kings)window.NochepolarSpecials.kings(holder,showCalendar);
+    else holder.append(h('p','No se pudo cargar el módulo de Reyes. Actualiza la página.'));
   }
   function showCollection(kind) {
     clearExpedition();
@@ -298,6 +315,10 @@
     content.replaceChildren(decorativeScene(),toolbar());
     content.append(h('h1', '55 días. 55 aventuras. Un gran final.'));
     content.append(h('p', 'Cada fecha descubre una misión distinta. Cuando pasa el día, se cierra para siempre. Los juegos clásicos de Santa Tracker siguen detrás de este portal.', 'np-intro'));
+    const specialLinks=h('div','','nps-callouts');
+    specialLinks.append(btn('🎪 OCHO GRANDES EVENTOS SEMANALES',showWeekly,'nps-button'),btn('👑 5 Y 6 DE ENERO · REYES MAGOS',showKings,'nps-button'));
+    content.append(specialLinks);
+    content.append(h('p','🎅 24 de diciembre: el seguimiento original de Papá Noel se conserva, y la expedición de 19 paradas es un complemento independiente.','np-intro'));
     for (const [month, start, end] of [['NOVIEMBRE', 0, 30], ['DICIEMBRE', 30, 55]]) {
       const heading = h('h2', month);
       content.append(heading);
@@ -323,6 +344,10 @@
     content.append(h('div', icons[i % icons.length], 'np-big-icon'));
     content.append(h('h1', titles[i]));
     content.append(h('p', isoFor(i) + ' · ' + status(i), 'np-day-status'));
+    if(i===53){
+      content.append(h('p','🎅 24 de diciembre: gran expedición ilustrada con 19 paradas. El seguimiento del Santa Tracker original sigue disponible como experiencia independiente. El recorrido nuevo es una simulación festiva, NO un GPS real.','np-intro'));
+      if(localDay()==='2026-12-24')content.append(btn('🎅 Abrir el seguimiento ORIGINAL de Papá Noel',()=>openOriginal('tracker'),'np-primary'));
+    }
     if (i !== titles.findIndex((_,j)=>isoFor(j)===localDay()) || won(i)) {
       content.append(h('p', won(i) ? 'Esta misión ya se completó y no se puede repetir.' :
         'Solo se puede jugar en su fecha. Las actividades anteriores se cierran y las futuras siguen ocultas.', 'np-intro'));
