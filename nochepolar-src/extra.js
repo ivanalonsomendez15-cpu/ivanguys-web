@@ -51,7 +51,7 @@
   const isoFor = (i) => i < 30 ? season + '-11-' + String(i + 1).padStart(2, '0')
     : season + '-12-' + String(i - 29).padStart(2, '0');
   const indexNow = titles.findIndex((_, i) => isoFor(i) === localDay());
-  const storageKey = (i) => 'np:v1:' + season + ':' + i;
+  const storageKey = (i) => 'np:v3:' + season + ':' + i;
   const won = (i) => localStorage.getItem(storageKey(i)) === 'done';
   const host = document.createElement('section');
   host.id = 'np-root';
@@ -65,9 +65,9 @@
   const screen = document.getElementById('np-screen');
   const content = document.getElementById('np-content');
   document.getElementById('np-entry').addEventListener('click', () => {screen.hidden = false; showCalendar();});
-  document.getElementById('np-close').addEventListener('click', () => screen.hidden = true);
-  screen.addEventListener('click', e => {if (e.target === screen) screen.hidden = true;});
-  document.addEventListener('keydown', e => {if (e.key === 'Escape') screen.hidden = true;});
+  document.getElementById('np-close').addEventListener('click', () => { screen.hidden = true; window.NochepolarActive?.dispose?.(); });
+  screen.addEventListener('click', e => {if (e.target === screen) {screen.hidden = true;window.NochepolarActive?.dispose?.();}});
+  document.addEventListener('keydown', e => {if (e.key === 'Escape') {screen.hidden = true;window.NochepolarActive?.dispose?.();}});
   const h = (tag, text, cls = '') => {
     const el = document.createElement(tag);
     el.textContent = text;
@@ -84,8 +84,81 @@
     isoFor(i) > localDay() ? '🔒 Próximamente' :
     isoFor(i) < localDay() ? '⌛ Cerrado' : '▶ ¡Solo hoy!';
   const goBack = () => content.prepend(btn('← Calendario', showCalendar, 'np-back'));
+
+  const originals = [
+    ['🛷','Jetpack','jetpack'],['🧪','Code Lab','codelab'],['🏂','Pistas navideñas','elfski'],
+    ['🎁','Envolver regalos','wrapbattle'],['🐧','Penguin Dash','penguindash'],
+    ['🦌','Carrera de renos','runner'],['🎨','Santa Selfie +','santaselfie'],
+    ['🎺','Banda de música','jamband'],['🧱','Construir','build'],
+    ['🧠','Memoria','matching'],['🌎','Mercator','mercator'],
+    ['🎨','Lienzo de Papá Noel','santascanvas'],['🚀','Despegue','takeoff'],
+    ['❄️','Snowball','snowball'],['🪂','Planeador','glider'],
+    ['🌪️','Túnel de viento','windtunnel']
+  ];
+  const cinema = [
+    ['🎬','La aventura del coche','carpool'],['🚀','Preparando el despegue','liftoff'],
+    ['📸','Selfies en la aldea','selfies'],['🏖️','Vacaciones polares','onvacation'],
+    ['🐧','Una prueba de pingüinos','penguinproof'],['🎄','Papá Noel ha vuelto','santasback'],
+    ['📡','Una señal desde el espacio','satellite'],['🏗️','En el taller','workshop'],
+    ['🌙','La noche de la aldea','yulelog'],['🛷','Todo preparado','takeoff'],
+    ['😴','Horas de descanso','tired'],['💡','Se hace la luz','likealight']
+  ];
+  const clearExpedition = () => {
+    if (window.NochepolarActive?.dispose) window.NochepolarActive.dispose();
+    window.NochepolarActive = null;
+  };
+  function openOriginal(route) {
+    clearExpedition();
+    screen.hidden = true;
+    if (window.santaApp && typeof window.santaApp.go === 'function') {
+      window.santaApp.go(route);
+    } else {
+      const base = '/ivanguys-web/nochepolar/intl/es/';
+      window.location.href = base + route + '.html';
+    }
+  }
+  function toolbar() {
+    const group = h('div','','np-hub-nav');
+    group.append(
+      btn('🗓️ Calendario',showCalendar,'np-hub-link'),
+      btn('🎬 Cine original',()=>showCollection('cine'),'np-hub-link'),
+      btn('🎮 Arcade clásico',()=>showCollection('arcade'),'np-hub-link'),
+      btn('🏅 Pasaporte',showPassport,'np-hub-link')
+    );
+    return group;
+  }
+  function showCollection(kind) {
+    clearExpedition();
+    content.replaceChildren(toolbar());
+    content.append(h('h1',kind==='cine'?'🎬 Cine de la aldea':'🎮 Arcade del Polo Norte'));
+    content.append(h('p',kind==='cine'?
+      'Clips y escenas animadas del Santa Tracker original. Pulsa para ver cada uno dentro del juego auténtico.':
+      'Todos estos juegos proceden del Santa Tracker original. No hemos sustituido sus controles ni sus puntuaciones.',
+      'np-intro'));
+    const items = kind==='cine'?cinema:originals;
+    const cards = h('div','','np-hub-cards');
+    for(const [emoji,name,route] of items){
+      const card = btn(emoji+'  '+name+'  ›',()=>openOriginal(route),'np-hub-card');
+      cards.append(card);
+    }
+    content.append(cards);
+    content.append(btn('Volver al calendario',showCalendar,'np-back'));
+  }
+  function showPassport() {
+    clearExpedition();
+    content.replaceChildren(toolbar());
+    const done = titles.map((name,i)=>({name,i})).filter(x=>won(x.i));
+    content.append(h('h1','🏅 Pasaporte de aventuras'));
+    content.append(h('p','Eventos completados en este navegador: '+done.length+' de 55. Cada fecha cuenta una sola vez y las misiones se cierran al terminar el día.','np-intro'));
+    const gallery = h('div','','np-hub-cards');
+    for(const x of done)gallery.append(h('div',icons[x.i%icons.length]+'  '+x.name,'np-hub-medal'));
+    if(!done.length) gallery.append(h('p','Completa la expedición de hoy para conseguir tu primera insignia.'));
+    content.append(gallery);
+    content.append(btn('Volver al calendario',showCalendar,'np-back'));
+  }
   function showCalendar() {
-    content.replaceChildren();
+    clearExpedition();
+    content.replaceChildren(toolbar());
     content.append(h('h1', '55 días. 55 aventuras. Un gran final.'));
     content.append(h('p', 'Cada fecha descubre una misión distinta. Cuando pasa el día, se cierra para siempre. Los juegos clásicos de Santa Tracker siguen detrás de este portal.', 'np-intro'));
     for (const [month, start, end] of [['NOVIEMBRE', 0, 30], ['DICIEMBRE', 30, 55]]) {
@@ -117,7 +190,6 @@
       goBack();
       return;
     }
-    if (i === 53) { showFinal(i); return; }
     const type = types[i % types.length];
     const box = h('div', '', 'np-game');
     content.append(box);
@@ -126,6 +198,14 @@
       box.replaceChildren(h('div', '🏆', 'np-big-icon'), h('h2', '¡Misión completada!'), h('p', 'Se ha sellado tu pasaporte. ¡Mañana habrá una aventura nueva!'));
       box.append(btn('Volver al calendario', showCalendar, 'np-primary'));
     }
+    if (window.NochepolarExpedition && typeof window.NochepolarExpedition.play === 'function') {
+      window.NochepolarActive = window.NochepolarExpedition.play({
+        box, day:i, title:titles[i], date:isoFor(i), onComplete:finish
+      });
+      goBack();
+      return;
+    }
+    if (i === 53) { showFinal(i); return; }
     if (type === 'destreza') {
       let clicks = 0;
       box.append(h('h2', 'Atrapa siete destellos'), h('p', 'Encuentra el destello que cambia de sitio cada vez que lo tocas.'));
