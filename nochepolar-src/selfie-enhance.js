@@ -56,6 +56,19 @@
   const actions=node('div','np-selfie-actions');
   panel.append(bar,tabs,options,msg,actions);
   root.append(open,panel);document.body.append(root);
+  // Put the additional cosmetics directly inside Google's ORIGINAL tool shelf,
+  // next to the spray, scissors and decorations. No separate Selfie website.
+  const originalShelf=document.querySelector('#module-santaselfie .Tools--scrollable');
+  if(originalShelf){
+    const shelfTool=document.createElement('button');
+    shelfTool.className='np-selfie-shelf-tool';
+    shelfTool.type='button';
+    shelfTool.title='Selfie+: sombreros, gafas, filtros, pegatinas y fondos';
+    shelfTool.setAttribute('aria-label','Abrir accesorios nuevos de Selfie+');
+    shelfTool.innerHTML='<span aria-hidden="true">✨</span><b>EXTRAS</b>';
+    shelfTool.addEventListener('click',ev=>{ev.stopPropagation();openPanel();});
+    originalShelf.append(shelfTool);
+  }
   let tab='sombreros';
   let stickerMode='';
   let previous=[];
