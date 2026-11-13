@@ -495,7 +495,7 @@
       const svgNS='http://www.w3.org/2000/svg';
       const mapPoint=([longitude,latitude])=>[
         Math.round((longitude+180)/360*900),
-        Math.round((83-latitude)/166*410)
+        Math.max(32,Math.min(385,Math.round((83-latitude)/166*410)))
       ];
       function svg(tag,attrs={}){
         const el=document.createElementNS(svgNS,tag);
