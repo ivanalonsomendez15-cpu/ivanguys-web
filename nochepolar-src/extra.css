@@ -1,0 +1,85 @@
+/* Integración visual de NOCHEPOLAR en Santa Tracker (no oficial). */
+#np-root { --np-green: #188452; --np-ink: #163c39; --np-blue: #54c8f4; font-family: "Google Sans", Roboto, Arial, sans-serif; }
+#np-root *,#np-root *::before,#np-root *::after {box-sizing:border-box}
+#np-entry {
+ position: fixed; right: max(14px,env(safe-area-inset-right)); bottom:max(18px,env(safe-area-inset-bottom));
+ z-index:2147483640; display:flex; align-items:center; gap:9px; color:#fff; border:4px solid white;
+ border-radius:100px; background:linear-gradient(135deg,#e94d58,#c82e4c); padding:12px 18px;
+ box-shadow:0 6px 25px rgba(0,0,0,.26); font:800 15px "Google Sans",sans-serif; cursor:pointer;
+}
+#np-entry:hover {transform:translateY(-3px);box-shadow:0 12px 25px rgba(0,0,0,.35)}
+#np-screen[hidden] {display:none !important}
+#np-screen {
+ position:fixed; z-index:2147483641; inset:0; background:rgba(4,30,35,.76);
+ backdrop-filter:blur(6px); display:flex; justify-content:center; align-items:center;
+ padding:12px; color:var(--np-ink);
+}
+#np-screen .np-window {
+ width:min(880px,100%); max-height:min(94dvh,950px); overflow:hidden;
+ display:flex;flex-direction:column;border-radius:30px;background:#fcfaf0;
+ box-shadow:0 28px 100px #0008;border:5px solid #fff;
+}
+#np-screen .np-head {
+ display:flex;justify-content:space-between;align-items:center; flex-shrink:0;
+ background:linear-gradient(135deg,#12784f,#36af72);padding:15px 22px;
+ color:#fff;box-shadow:0 3px 0 #125e3d;
+}
+#np-screen .np-brand {font-size:25px;letter-spacing:.5px;font-weight:1000}
+#np-screen .np-brand small {display:block;font-size:11px;font-weight:500;opacity:.9;letter-spacing:2px;text-transform:uppercase}
+#np-screen button {font-family:inherit;cursor:pointer}
+#np-screen #np-close {background:#fff;border:0;color:#d43f56;border-radius:50%;width:38px;height:38px;font-size:20px;font-weight:bold}
+#np-screen .np-content {overflow:auto;padding:24px 24px 32px;overscroll-behavior:contain}
+#np-screen h1 {font-weight:900;font-size:clamp(25px,4.4vw,38px);line-height:1.18;margin:3px 0 12px;color:#155b4a}
+#np-screen h2 {font-size:22px;margin:24px 0 12px;color:#0b735c}
+#np-screen p {font-size:16px;line-height:1.5}
+#np-screen .np-intro {margin:10px 0 24px;color:#4c6f68}
+#np-screen .np-calendar {display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px}
+#np-screen .np-date {background:#e8f6ec;color:#145947;border:2px solid #c1e4d0;border-radius:17px;
+ min-height:66px;font-size:19px;font-weight:900;transition:transform .15s,box-shadow .15s;
+}
+#np-screen .np-date:hover {transform:translateY(-2px);box-shadow:0 6px 12px #104c3333}
+#np-screen .np-date.np-today {background:#ffe082;border-color:#f8b931;color:#6a4400;box-shadow:0 0 0 3px #ffd14680}
+#np-screen .np-date.np-grand {background:linear-gradient(145deg,#e94248,#f89b35);color:#fff;border-color:#fff}
+#np-screen .np-date.np-done {background:#168757;color:#fff}
+#np-screen .np-count {font-weight:800;color:#168757}
+#np-screen .np-big-icon {font-size:65px;text-align:center;line-height:1.4}
+#np-screen .np-day-status {text-align:center;color:#ac6a0a;font-weight:800}
+#np-screen .np-game {background:linear-gradient(160deg,#d5f3ef,#f3ffec);border:3px solid #fff;
+ border-radius:23px;padding:23px;margin:22px auto;box-shadow:0 5px 16px #22755422;text-align:center;
+}
+#np-screen .np-game h2 {margin:6px 0 10px}
+#np-screen .np-option,#np-screen .np-number,#np-screen .np-primary,#np-screen .np-back {border:0;border-radius:15px;padding:15px 22px;font-size:17px;font-weight:800;margin:5px;
+ background:#fff;color:#146b4b;box-shadow:0 3px 0 #b8d7c0}
+#np-screen .np-option {display:block;width:min(500px,95%);margin:9px auto;text-align:left}
+#np-screen .np-number {font-size:25px}
+#np-screen .np-option:hover,#np-screen .np-number:hover {background:#ffe6a2}
+#np-screen .np-primary {background:#e94955;color:#fff;box-shadow:0 4px 0 #a92d37}
+#np-screen .np-back {background:#227c70;color:white;font-size:14px;box-shadow:none}
+#np-screen .np-option:disabled,#np-screen .np-number:disabled {opacity:.65;cursor:default}
+#np-screen .np-hint {color:#af4b35;min-height:24px;font-weight:700}
+#np-screen input {padding:13px 15px;font-size:17px;border-radius:14px;border:2px solid #65a898;max-width:90%;margin-right:7px}
+#np-screen .np-arena {position:relative;height:210px;border-radius:20px;background:linear-gradient(#8fdded 0%,#d5f5f0 68%,#bde6b7 69%,#9bcf97);
+ border:3px solid white;overflow:hidden}
+#np-screen .np-target {position:absolute;font-size:35px;border:0;border-radius:50%;width:62px;height:62px;background:#fff;box-shadow:0 3px 14px #174c6777}
+#np-screen .np-pairs {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;max-width:390px;margin:15px auto}
+#np-screen .np-memory-tile {border:3px solid #fff;background:#3d9eb0;color:#fff;border-radius:16px;min-height:67px;font-size:30px;font-weight:900}
+#np-screen .np-memory-tile.np-match {background:#5bb96a}
+#np-screen .np-number.np-match {background:#50b75e;color:#fff}
+#np-screen .np-sequence {font-size:32px;letter-spacing:7px}
+#np-screen .np-actions {display:flex;flex-wrap:wrap;justify-content:center}
+#np-screen .np-ready {background:#49b76e!important;box-shadow:0 4px 0 #308748!important}
+#np-screen .np-route {border-radius:40px;min-height:120px;display:grid;place-items:center;
+ background:radial-gradient(ellipse,#a2e8f6,#208fb1);font-size:28px;letter-spacing:4px;white-space:normal}
+#np-screen .np-grand-stop {font-size:24px;font-weight:900;padding:13px}
+#np-screen footer {flex-shrink:0;background:#e7f2ed;padding:12px 18px;text-align:center;color:#53766c;font-size:11px}
+@media(max-width:580px){
+ #np-entry {font-size:13px;padding:10px 12px;right:8px;bottom:max(8px,env(safe-area-inset-bottom))}
+ #np-screen .np-window {border-radius:20px;max-height:96dvh}
+ #np-screen .np-head {padding:11px 14px}
+ #np-screen .np-brand {font-size:19px}
+ #np-screen .np-content {padding:15px}
+ #np-screen .np-calendar {gap:5px}
+ #np-screen .np-date {min-height:52px;border-radius:11px;font-size:15px}
+ #np-screen .np-game {padding:12px}
+ #np-screen .np-route {font-size:21px}
+}
