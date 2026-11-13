@@ -1,0 +1,22 @@
+<!DOCTYPE html><html lang="hu"><head><meta charset="utf-8"><meta content="IE=edge" http-equiv="X-UA-Compatible"><meta content="width=device-width,initial-scale=1" name="viewport"><style>body{margin:0;background:#000;touch-action:none}#player{width:100vw;height:100vh;min-width:320px;min-height:200px;display:block}#center{z-index:100;position:fixed;top:0;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center}button.play{border-radius:16px;background:#32a658;width:280px;height:140px;padding:0;margin:0;display:flex;align-items:center;justify-content:center;border:none;cursor:pointer;border:2px solid transparent;box-shadow:0 0 0 4px rgba(0,0,0,.125);transition:box-shadow .25s,transform .25s ease-in-out;will-change:box-shadow,transform;transition:opacity .25s ease-in;background-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMTAgMjB2LTZoNHY2aDV2LThoM0wxMiAzIDIgMTJoM3Y4eiIgZmlsbD0iI2ZmZiIvPjxwYXRoIGQ9Ik0wIDBoMjR2MjRIMHoiIGZpbGw9Im5vbmUiLz48L3N2Zz4=");background-position:center;background-repeat:no-repeat}button.play svg{filter:drop-shadow(2px 4px 0 rgba(0, 0, 0, 0.125))}button.play:hover{box-shadow:0 0 0 8px rgba(0,0,0,.09)}button.play:focus{outline:0;border-color:rgba(0,0,0,.25)}button.play:disabled{opacity:0;pointer-events:none}.background{background:rgba(0,0,0,.5);z-index:-100;position:fixed;top:0;left:0;right:0;bottom:0;transition:opacity .25s ease-in}button.play:disabled+.background{opacity:0}</style></head><body><div id="center"><button class="play" disabled="" id="playButton"><svg height="128" viewBox="0 0 24 24" width="128" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7z" fill="#fff"></path></svg></button><div class="background"></div></div><video id="player" playsinline=""></video><script>
+(function() {
+  var fallback = (location.search || '').match(/\bfallback=1\b/);
+  var all = [false].map(function(i18n, i) {
+    return (fallback ? 'fallback-' : '') + i + (i18n ? '_' + document.documentElement.lang : '') + '.js';
+  });
+  fallback && all.unshift("../../support.js");
+  (function next() {
+    var src = all.shift();
+    if (src) {
+      var node = document.createElement('script');
+      node.src = src;
+      if (fallback) {
+        node.onload = node.onerror = next;
+      } else {
+        node.setAttribute('type', 'module');
+        next();
+      }
+      document.head.appendChild(node);
+    }
+  })();
+})();</script></body></html>

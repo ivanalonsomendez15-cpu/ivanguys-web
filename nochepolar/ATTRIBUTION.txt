@@ -1,0 +1,6 @@
+NOCHEPOLAR: adaptación no oficial de Google Santa Tracker.
+Código original © Google LLC — Apache-2.0.
+Imágenes y sonidos originales © Google LLC — licencia CC BY.
+Fuente: https://github.com/google/santa-tracker-web
+Google no participa ni avala esta adaptación.
+Eventos NOCHEPOLAR: desarrollo independiente de 2026.

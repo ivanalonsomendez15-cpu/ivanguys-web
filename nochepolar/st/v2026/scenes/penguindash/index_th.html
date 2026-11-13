@@ -1,0 +1,22 @@
+<!DOCTYPE html><html lang="th"><head><meta charset="utf-8"><meta content="IE=edge" http-equiv="X-UA-Compatible"><meta content="width=device-width,initial-scale=1" name="viewport"><link href="//fonts.googleapis.com/css?family=Roboto:300,600" rel="stylesheet"><style>#module-penguindash .levelup{border:0 solid #ea4437;border-radius:50%;box-sizing:border-box;pointer-events:none;position:absolute;transition:border-width 500ms ease;visibility:hidden}#module-penguindash .levelup.is-visible{visibility:visible}#module-penguindash .levelup--number{color:#fff;font-family:"Lobster",sans-serif;font-size:8em;font-weight:400;height:200px;left:50%;margin-left:-200px;margin-top:-75px;position:absolute;text-align:center;top:50%;transform:scale(0);transform-origin:50% 30%;transition:200ms opacity;opacity:1;width:400px}#module-penguindash .levelup--number.show{animation:1s module-penguindash-levelup 250ms ease-out forwards;animation-timing-function:cubic-bezier(0.255, 1.005, 0.38, 0.95)}#module-penguindash .levelup--number.hide{opacity:0}@keyframes module-penguindash-levelup{100%{transform:scale(1)}}#module-penguindash .lockscreen{background:#46e9ff;bottom:0;display:block;left:0;position:absolute;right:0;top:0;z-index:2000}#module-penguindash .lockscreen.hidden{display:none}#module-penguindash .lockscreen[hidden]{display:none !important}#module-penguindash .lockscreen-graphic{background:url(img/lock-screen.svg) 50% top/contain no-repeat;height:200px;left:50%;margin-left:-100px;margin-top:-105px;position:absolute;top:50%;width:200px}#module-penguindash .lockscreen-explanation{color:#fff;font-family:Roboto,sans-serif;font-size:16px;-webkit-font-smoothing:900;font-weight:900;left:50%;margin-left:-100px;margin-top:105px;position:absolute;text-align:center;top:50%;width:200px}body{overflow:hidden;touch-action:none}#module-penguindash{background:#46e9ff;height:100%;left:0;position:absolute;top:0;width:100%}#module-penguindash #penguindash-game{display:flex;align-items:center;justify-content:center;height:100%;width:100%;max-width:100vw;max-height:100vh}#module-penguindash .scene{height:100%;left:0;position:absolute;top:0;width:100%;z-index:2}#module-penguindash .gui{height:100%;position:relative;width:100%;z-index:3}#module-penguindash .hidden{transform:translate3d(0, 9999px, 0) !important}</style></head><body><div id="module-penguindash"><div class="scene"><div id="penguindash-game"></div></div><div class="gui"><div class="levelup"></div><div class="levelup--number"></div></div><div class="hidden lockscreen" id="locked"><div class="lockscreen-graphic"></div><div class="lockscreen-explanation"><i18n-msg>ล็อกการวางแนวหน้าจอเพื่อให้ได้รับประสบการณ์ที่ดีที่สุด</i18n-msg></div></div></div><script src="../../third_party/lib/phaser/phaser-arcade-physics.js"></script><script src="../../node_modules/jquery/dist/jquery.min.js"></script><script>
+(function() {
+  var fallback = (location.search || '').match(/\bfallback=1\b/);
+  var all = [false].map(function(i18n, i) {
+    return (fallback ? 'fallback-' : '') + i + (i18n ? '_' + document.documentElement.lang : '') + '.js';
+  });
+  fallback && all.unshift("../../support.js");
+  (function next() {
+    var src = all.shift();
+    if (src) {
+      var node = document.createElement('script');
+      node.src = src;
+      if (fallback) {
+        node.onload = node.onerror = next;
+      } else {
+        node.setAttribute('type', 'module');
+        next();
+      }
+      document.head.appendChild(node);
+    }
+  })();
+})();</script></body></html>

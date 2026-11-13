@@ -1,0 +1,22 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta content="IE=edge" http-equiv="X-UA-Compatible"><meta content="width=device-width,initial-scale=1" name="viewport"><link href="//fonts.googleapis.com/css?family=Roboto:300,600|Lobster" rel="stylesheet"><style>#module-racer{position:absolute;top:0;right:0;bottom:0;left:0}#module-racer .view{position:absolute;top:0;right:0;bottom:0;left:0;background:#d3e4ed url("img/surround.png") center center no-repeat;transform-origin:0 0}#module-racer .touchpad{background:url("img/touchpad.png") -79px 0 no-repeat;height:258px;margin-left:-125px;margin-top:-125px;position:absolute;transform:translate3d(0, 0, 0) scale(0.5);width:255px}@media(min-width: 668px){#module-racer .touchpad{transform:translate3d(0, 0, 0) scale(0.8)}}#module-racer .touchpad-nub{background:url("img/touchpad.png") no-repeat;height:85px;left:49.02%;margin-left:-35px;margin-top:-35px;position:absolute;top:48.45%;width:79px}#module-racer .game{position:absolute;left:50%;top:50%;margin:-320px 0 0 -302px}#module-racer .game.loaded{background:none}#module-racer .hidden{display:none}body{margin:0;touch-action:none}</style></head><body><div id="module-racer"><div class="view"><canvas class="game" height="640" width="576"></canvas></div><div class="hidden touchpad"><div class="touchpad-nub"></div></div><div class="gui"><div class="levelup"></div><div class="levelup--number"></div></div></div><script src="../../node_modules/jquery/dist/jquery.min.js"></script><script>
+(function() {
+  var fallback = (location.search || '').match(/\bfallback=1\b/);
+  var all = [false].map(function(i18n, i) {
+    return (fallback ? 'fallback-' : '') + i + (i18n ? '_' + document.documentElement.lang : '') + '.js';
+  });
+  fallback && all.unshift("../../support.js");
+  (function next() {
+    var src = all.shift();
+    if (src) {
+      var node = document.createElement('script');
+      node.src = src;
+      if (fallback) {
+        node.onload = node.onerror = next;
+      } else {
+        node.setAttribute('type', 'module');
+        next();
+      }
+      document.head.appendChild(node);
+    }
+  })();
+})();</script></body></html>

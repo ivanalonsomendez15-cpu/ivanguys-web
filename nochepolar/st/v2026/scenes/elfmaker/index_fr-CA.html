@@ -1,0 +1,22 @@
+<!DOCTYPE html><html lang="fr-CA"><head><meta charset="utf-8"><meta content="IE=edge" http-equiv="X-UA-Compatible"><meta content="width=device-width,initial-scale=1" name="viewport"><link href="//fonts.googleapis.com/css?family=Roboto:100,300,400,500,600,700,800|Lobster|Material+Icons" rel="stylesheet"><style>body{margin:0;display:flex;flex-flow:column;height:100vh;max-height:100vh;overflow:hidden;user-select:none;-webkit-overflow-scrolling:touch;touch-action:pan-y}footer{z-index:22000}maker-photo{z-index:25000}maker-elf{cursor:pointer}#main{background:url(img/backgrounds/snow.png) no-repeat center/cover;flex-grow:1;z-index:100;position:relative;overflow:hidden;box-shadow:inset 0 -12px 12px -12px rgba(0,0,0,.125)}#main .viewport{position:absolute;top:0;left:0;right:0;bottom:0;display:flex}#main .mid{flex-grow:1;position:relative;display:flex;justify-content:center}#main .mid maker-elf{flex-grow:1;box-sizing:border-box;height:100%;padding:1em 0}maker-control{background:#fff}santa-button{margin:12px}@media(min-width: 768px){santa-button{width:72px;height:72px;margin:12px;font-size:3em;display:inline-block}}@media(max-width: 767px){body{overflow:auto;min-height:100vh}#main{height:50vh;position:fixed;width:100%}#main .mid{height:100%}footer{position:absolute;top:45vh;width:100%;height:55vh;padding-top:5vh;box-sizing:border-box;overflow:scroll}footer maker-control{box-sizing:border-box;min-height:50vh;padding-bottom:15vh}}.buttons{display:flex;flex-direction:column;z-index:1;position:relative;align-self:center}.buttons.left{left:20px}.buttons.left::before{content:"";background:url(img/tray_lg.svg) center/contain no-repeat;position:absolute;left:-20px;top:-20px;right:-20px;bottom:-20px;display:block}.buttons.right{right:20px}santa-button#downloadButton{transform:translate(0);transition:transform .25s}santa-button#downloadButton[disabled]{transform:translate(120px)}santa-button[hidden]{display:none !important}</style><script src="../../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script></head><body><main id="main"><div class="viewport"><div class="buttons left"><santa-button color="purple" id="random">shuffle</santa-button><santa-button color="red" id="camera">photo_camera</santa-button></div><div class="mid"><maker-elf id="elf"></maker-elf></div><div class="buttons right"><santa-button color="green" id="share">share</santa-button><santa-button color="red" id="downloadButton" disabled="">save</santa-button><a download="elfmaker.png" hidden="" href="#" id="download" target="_blank"></a></div></div></main><footer><maker-control category="body" id="control"></maker-control></footer><maker-photo id="photo"></maker-photo><script>
+(function() {
+  var fallback = (location.search || '').match(/\bfallback=1\b/);
+  var all = [false].map(function(i18n, i) {
+    return (fallback ? 'fallback-' : '') + i + (i18n ? '_' + document.documentElement.lang : '') + '.js';
+  });
+  fallback && all.unshift("../../support.js");
+  (function next() {
+    var src = all.shift();
+    if (src) {
+      var node = document.createElement('script');
+      node.src = src;
+      if (fallback) {
+        node.onload = node.onerror = next;
+      } else {
+        node.setAttribute('type', 'module');
+        next();
+      }
+      document.head.appendChild(node);
+    }
+  })();
+})();</script></body></html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html><html lang="pt-PT"><head><meta charset="utf-8"><meta content="IE=edge" http-equiv="X-UA-Compatible"><meta content="width=device-width,initial-scale=1" name="viewport"><link href="//fonts.googleapis.com/css?family=Lobster" rel="stylesheet"><style>body{margin:0;background:#71a7db;font-family:"Roboto","Arial",Sans-Serif;overflow:hidden;touch-action:none}.tutorial-hand{position:absolute;top:58%;left:calc(50% + 15vh);scale:.6;animation:5s infinite tutorial-hand-click;pointer-events:none}.throw-accessibility-button{pointer-events:none;margin:0;padding:0;overflow:hidden;position:absolute;border:none;background:none;left:2%;right:2%;top:100px;bottom:2%}.canvas-button:focus-visible{outline-offset:-8px}.score-animation{position:absolute;visiblity:hidden;color:#fff;font-size:5em;text-align:center;text-shadow:#f99 0 0 5px;transform:translate(-50%, -120%);width:fit-content}@keyframes animated-score{from{opacity:100%;visibility:visible;font-size:5em}to{opacity:0%;visibility:hidden;top:0px;left:50%;font-size:1em}}.score-animation.animating{animation-name:animated-score;animation-duration:1s;animation-fill-mode:forwards;animation-timing-function:ease-in}.hidden{display:none}@keyframes tutorial-hand-click{0%{scale:.6;translate:50vw 50vh}30%{scale:.6;translate:0}45%{scale:.6}50%{scale:.66}53%{scale:.53}56%{scale:.6}}</style><script src="../../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script></head><body><div id="content"><img class="tutorial-hand" role="presentation" src="img/tutorial-hand.png"> <button aria-label="throw" class="throw-accessibility-button"></button></div><script>
+(function() {
+  var fallback = (location.search || '').match(/\bfallback=1\b/);
+  var all = [true].map(function(i18n, i) {
+    return (fallback ? 'fallback-' : '') + i + (i18n ? '_' + document.documentElement.lang : '') + '.js';
+  });
+  fallback && all.unshift("../../support.js");
+  (function next() {
+    var src = all.shift();
+    if (src) {
+      var node = document.createElement('script');
+      node.src = src;
+      if (fallback) {
+        node.onload = node.onerror = next;
+      } else {
+        node.setAttribute('type', 'module');
+        next();
+      }
+      document.head.appendChild(node);
+    }
+  })();
+})();</script></body></html>

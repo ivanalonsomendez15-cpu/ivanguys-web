@@ -1,0 +1,144 @@
+import { s as sceneApi } from '../../_e310d67a.js';
+import { h as href, e as rectify } from '../../_e1311d95.js';
+const models = [{
+  id: 'code',
+  heading: {
+    title: "\u8207\u8056\u8A95\u8001\u4EBA\u7684\u5C0F\u7CBE\u9748\u4E00\u8D77\u5B78\u7FD2\u7DE8\u78BC",
+    body: "\u5C0F\u7CBE\u9748\u4E00\u76F4\u5728\u78E8\u7DF4\u7DE8\u78BC\u6280\u5DE7\u3002\u63A2\u7D22\u5B78\u7FD2\u57FA\u790E\u6280\u8853\u7684\u904A\u6232\u3002\u6240\u6709\u4EBA\u90FD\u53EF\u9AD4\u9A57\u7DE8\u78BC\u7684\u6A02\u8DA3\uFF01"
+  },
+  cards: [{
+    id: 'codelab',
+    title: "\u7DE8\u78BC\u5BE6\u9A57\u5BA4",
+    body: "\u904B\u7528\u7DE8\u78BC\u57FA\u790E\u77E5\u8B58\uFF0C\u5F15\u5C0E\u5C0F\u7CBE\u9748\u7A7F\u904E\u68EE\u6797\uFF0C\u5C0B\u627E\u6389\u4E0B\u4F86\u7684\u79AE\u7269\u3002"
+  }, {
+    id: 'codeboogie',
+    title: "\u7DE8\u78BC\u71B1\u821E",
+    body: "\u5C0F\u7CBE\u9748\u56DE\u4F86\u7DF4\u7FD2\u7DE8\u78BC\u4E86\uFF0C\u66F4\u540C\u6642\u52A0\u5165\u4E86\u821E\u8E48\u6280\u5DE7\u3002\u904B\u7528\u7A0B\u5F0F\u78BC\u66FF\u5C0F\u7CBE\u9748\u7DE8\u821E\u3002\u4F46\u8981\u7559\u610F\uFF0C\u60A8\u7DE8\u78BC\u7DE8\u5F97\u8D8A\u597D\uFF0C\u821E\u6B65\u96E3\u5EA6\u5C31\u6703\u63D0\u5347\uFF01"
+  }]
+}, {
+  id: 'celebrate',
+  heading: {
+    title: "\u63A2\u7D22\u4E16\u754C\u5404\u5730\u7684\u4F73\u7BC0",
+    body: "\u5404\u5730\u7684\u4F73\u7BC0\u90FD\u4E0D\u592A\u4E00\u6A23\u3002\u900F\u904E\u5927\u91CF\u7684\u904A\u6232\u548C\u5C0F\u6E2C\u9A57\uFF0C\u77AD\u89E3\u4E16\u754C\u5404\u5730\u5982\u4F55\u6176\u795D\u4F73\u7BC0\u3002"
+  },
+  cards: [{
+    id: 'traditions',
+    title: "\u7BC0\u65E5\u50B3\u7D71",
+    body: "\u5F9E\u52A0\u62FF\u5927\u4EBA\u6234\u51B7\u5E3D\u4EE5\u81F3\u6FB3\u6D32\u4EBA\u7A7F\u6CF3\u8932\uFF0C\u6309\u4E00\u4E0B\u5730\u5716\u5716\u91D8\u5373\u53EF\u77AD\u89E3\u4E16\u754C\u5404\u5730\u7684\u4F73\u7BC0\u50B3\u7D71\u3002"
+  }, {
+    id: 'translations',
+    title: "\u7FFB\u8B6F",
+    body: "\u5B78\u7FD2\u4E16\u754C\u5404\u5730\u7684\u4F73\u7BC0\u7528\u8A9E\uFF0C\u5305\u62EC\u7CBE\u9748\u6587\u7684\u300C\u65B0\u5E74\u5FEB\u6A02\u300D\uFF0C\u5230\u4E86\u89E3\u300C\u0414\u0435\u0434 \u041C\u043E\u0440\u043E\u0437\u300D\u7684\u610F\u601D\u7B49\u3002"
+  }, {
+    id: 'mercator',
+    title: "\u5730\u5716\u5C0F\u6E2C\u9A57",
+    body: "\u8056\u8A95\u8001\u4EBA\u6709\u5F88\u591A\u5730\u65B9\u8981\u53BB\u3002\u60A8\u8981\u5728\u9019\u500B\u5730\u7406\u904A\u6232\u4E2D\uFF0C\u5C07\u570B\u5BB6/\u5730\u5340\u7684\u8F2A\u5ED3\u8207\u5730\u5716\u914D\u5C0D\u3002"
+  }, {
+    id: 'traditionsquiz',
+    title: "\u7BC0\u65E5\u50B3\u7D71\u5C0F\u6E2C\u9A57",
+    body: "\u60A8\u77AD\u89E3\u4F73\u7BC0\u7684\u6B77\u53F2\u55CE\uFF1F\u6E2C\u8A66\u60A8\u7684\u51B7\u77E5\u8B58\uFF0C\u5728 9 \u689D\u554F\u984C\u7684\u5C0F\u6E2C\u9A57\u4E2D\u5C55\u73FE\u5BE6\u529B\u3002",
+    href: 'https://earth.google.com/web/@43.129579,-112.010821,1838a,2269637d,35y,0.00000182h,0.4t,0r/data=CisSKRIgZDRkYTI4YTFkMmYwMTFlODk2YTFjZDc4YmJiZmMxYTkiBXNwbC0w'
+  }]
+}, {
+  id: 'create',
+  heading: {
+    title: "\u64F7\u53D6\u9748\u611F\uFF0C\u767C\u63EE\u5275\u610F",
+    body: "\u5275\u9020\u7684\u9B54\u6CD5\u4EE4\u8056\u8A95\u8001\u4EBA\u6751\u66F4\u6709\u751F\u6C23\u3002\u63A2\u7D22\u8B93\u60A8\u8207\u6240\u6709\u6700\u611B\u89D2\u8272\u4E00\u8D77\u756B\u756B\u3001\u586B\u8272\u3001\u5EFA\u7ACB\u548C\u5275\u4F5C\u7684\u4E0D\u540C\u904A\u6232\u3002"
+  },
+  cards: [{
+    id: 'santascanvas',
+    title: "\u8056\u8A95\u8001\u4EBA\u7684\u756B\u5E03",
+    body: "\u8D70\u9032\u8056\u8A95\u8001\u4EBA\u7684\u5C08\u5C6C\u5275\u610F\u5DE5\u4F5C\u5BA4\u3002\u6240\u6709\u5DE5\u5177\u3001\u7B46\u5237\u548C\u8CBC\u5716\u90FD\u5177\u6709\u81EA\u8A02\u8072\u6548\uFF0C\u5E36\u4F86\u7CBE\u5F69\u7684\u8996\u807D\u9AD4\u9A57\u3002"
+  }, {
+    id: 'snowbox',
+    title: "\u96EA\u7BB1",
+    body: "\u5728\u60A8\u7684\u51AC\u5929\u6C99\u7BB1\u76E1\u60C5\u5BE6\u9A57\u548C\u73A9\u800D\u3002\u4F7F\u7528 3D \u6750\u6599\u5EFA\u9020\u623F\u5C4B\u3001\u73A9\u5177\u3001\u96EA\u4EBA\u3001\u68EE\u6797\u6216\u60A8\u80FD\u60F3\u50CF\u7684\u4EFB\u4F55\u4E8B\u7269\u3002"
+  }, {
+    id: 'elfmaker',
+    title: "\u5C0F\u7CBE\u9748\u88FD\u9020\u5668",
+    body: "\u5F9E\u982D\u5230\u8173\u88FD\u4F5C\u5C6C\u65BC\u60A8\u7684\u5C0F\u7CBE\u9748\uFF0C\u4EE5\u4ED9\u6C23\u5341\u8DB3\u7684\u300C\u7CBE\u9748\u300D\u9020\u578B\u8FCE\u63A5\u5317\u6975\u7684\u7BC0\u65E5\u805A\u6703\u3002"
+  }, {
+    id: 'santaselfie',
+    title: "\u8056\u8A95\u8001\u4EBA\u81EA\u62CD",
+    body: "\u8056\u8A95\u8001\u4EBA\u5728\u7406\u9AEE\u5E97\uFF0C\u60F3\u8981\u4E00\u500B\u5168\u65B0\u9020\u578B\u3002\u8ACB\u70BA\u4ED6\u7684\u9B0D\u5B50\u67D3\u8272\u3001\u70BA\u4ED6\u5439\u4E7E\u982D\u9AEE\u3001\u52A0\u4E0A\u88DD\u98FE\u6216\u7528\u7406\u9AEE\u5668\u5243\u904E\u4E7E\u6DE8\u3002"
+  }]
+}, {
+  id: 'family',
+  heading: {
+    title: "\u4E00\u8D77\u5171\u4EAB\u5BB6\u5EAD\u6642\u5149",
+    body: "\u6E96\u5099\u597D\u7206\u8C37\uFF0C\u7136\u5F8C\u8EB2\u9032\u8212\u9069\u88AB\u7AA9\u4E4B\u4E2D\u3002\u5728\u8056\u8A95\u8001\u4EBA\u6751\u7684\u5F71\u9662\u5927\u87A2\u5E55\u89C0\u770B\u6240\u6709\u89D2\u8272\uFF0C\u6216\u95B2\u8B80\u4E92\u52D5\u6545\u4E8B\u66F8\uFF0C\u966A\u540C\u7368\u89D2\u9BE8 Ollie \u5728\u6D77\u5E95\u6176\u795D\u4F73\u7BC0\u3002"
+  },
+  cards: [{
+    id: 'storybook',
+    title: "\u6D77\u5E95\u7684 Ollie",
+    body: "\u300C\u8056\u8A95\u8001\u4EBA\u6751\u300D\u7684\u597D\u53CB\u8207\u7368\u89D2\u9BE8 Ollie \u4E00\u8D77\u5728\u6D77\u5E95\u5171\u5EA6\u5FEB\u6A02\u4E00\u5929\uFF0C\u8209\u884C\u9996\u500B\u5E74\u5EA6\u6D77\u85FB\u71C8\u5149\u6176\u5178\u3002"
+  }, {
+    id: 'museum',
+    title: "\u535A\u7269\u9928\u4E00\u65E5\u904A",
+    body: "\u8207\u5C0F\u7CBE\u9748\u3001\u99B4\u9E7F\u3001\u8056\u8A95\u8001\u4EBA\u548C\u5176\u592A\u592A\u4E00\u8D77\u53C3\u89C0\u5145\u6EFF\u4F73\u7BC0\u6C23\u6C1B\u7684\u535A\u7269\u9928\uFF01"
+  }, {
+    id: 'carpool',
+    title: "\u7CBE\u9748\u8ECA",
+    body: "\u773E\u591A\u5C0F\u7CBE\u9748\u3001\u99B4\u9E7F\u548C\u8863\u593E\u4EBA\u5728\u5317\u6975\u5468\u570D\u7A7F\u68AD\u3002\u770B\u770B\u4ED6\u5011\u5982\u4F55\u5230\u8655\u904A\u8D70\u3002"
+  }, {
+    id: 'liftoff',
+    title: "\u8056\u8A95\u8001\u4EBA\u51FA\u767C",
+    body: "\u8056\u8A95\u8001\u4EBA\u548C\u99B4\u9E7F\u5DF2\u6E96\u5099\u51FA\u767C\uFF0C\u4F46\u5FC5\u9808\u5F97\u5230\u7DE8\u78BC\u5C0F\u7CBE\u9748\u5E6B\u5FD9\u624D\u80FD\u8D77\u98DB\u3002"
+  }]
+}];
+const cta = "\u5B78\u7FD2";
+const ageLabel = "\u4EFB\u4F55\u5E74\u9F61";
+class Accordion {
+  constructor(el) {
+    this.el = el;
+    this.dom();
+    this.appendCards();
+  }
+  dom() {
+    this.cards_container = this.el.querySelector('.accordion__content');
+  }
+  _renderItem(item) {
+    const rawHref = item.href || `${item.id}.html` || '#';
+    const safeHref = href(rawHref);
+    const imageBase = "/ivanguys-web/nochepolar/st/v2026/img/scenes/" + item.id;
+    return `
+<div class="accordion__card">
+  <a href="${safeHref}" ${item.href ? `target="_blank"` : ''}>
+    <div class="card__upper">
+      <img src="${imageBase}_2x.png" srcset="${imageBase}_2x.png 2x, ${imageBase}_1x.png 1x" loading="lazy" />
+    </div>
+    <div class="card__text">
+      <h5 class="card__title">${item.title}</h5>
+      <div class="card__age">${ageLabel}</div>
+      <div class="card__desc">${item.body}</div>
+      <div class="card__cta">${cta}</div>
+    </div>
+  </a>
+</div>
+`;
+  }
+  appendCards() {
+    const fragment = document.createDocumentFragment();
+    for (let i = 0; i < models.length; i++) {
+      const group = document.createElement('div');
+      group.className = 'accordion__content-block';
+      if (models[i].id) {
+        group.id = models[i].id;
+      }
+      group.innerHTML = `
+<div class="accordion__info">
+  <h5 class="accordion__info-title">${models[i].heading.title}</h5>
+  <p class="accordion__info-body">${models[i].heading.body}</p>
+</div>
+<div class="accordion__cards">
+${models[i].cards.map(item => this._renderItem(item)).join('')}
+</div>
+      `;
+      fragment.appendChild(group);
+    }
+    this.cards_container.appendChild(fragment);
+  }
+}
+rectify(document.body);
+new Accordion(document.querySelector('[data-familyguide-accordion]'));
+sceneApi.ready(async () => {});

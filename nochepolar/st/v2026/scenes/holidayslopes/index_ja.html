@@ -1,0 +1,22 @@
+<html lang="ja"><head><meta charset="utf-8"><meta content="width=device-width,initial-scale=1" name="viewport"><title>GameSnacks Wrapper</title><style>body,html{margin:0;overflow:hidden;height:100%}#GSFrame{width:100%;height:100%;border:none}</style></head><body><iframe id="GSFrame" src="https://gamesnacks.com/embed/santa/games/holidayslopes"></iframe><script>
+(function() {
+  var fallback = (location.search || '').match(/\bfallback=1\b/);
+  var all = [false].map(function(i18n, i) {
+    return (fallback ? 'fallback-' : '') + i + (i18n ? '_' + document.documentElement.lang : '') + '.js';
+  });
+  fallback && all.unshift("../../support.js");
+  (function next() {
+    var src = all.shift();
+    if (src) {
+      var node = document.createElement('script');
+      node.src = src;
+      if (fallback) {
+        node.onload = node.onerror = next;
+      } else {
+        node.setAttribute('type', 'module');
+        next();
+      }
+      document.head.appendChild(node);
+    }
+  })();
+})();</script></body></html>
