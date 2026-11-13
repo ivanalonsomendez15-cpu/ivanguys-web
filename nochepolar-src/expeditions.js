@@ -437,8 +437,8 @@
       }
       show();shell.append(route,city,question,options,note);
     }
-    const handlers={experimento:experiment, buscar:search,laberinto:maze,memoria,clasificar:sorting,
-      taller:workshop,atrapar:catching,ritmo,final};
+    const handlers={experimento:experiment, buscar:search,laberinto:maze,memoria:memory,clasificar:sorting,
+      taller:workshop,atrapar:catching,ritmo:rhythm,final};
     function render(){
       if(!nextIfLive())return;
       cleanup();cleanup=()=>{};
