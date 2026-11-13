@@ -80,6 +80,7 @@ def finish(root, dst, addon):
             '<link rel="stylesheet" href="' + BASE + 'extra.css">'
             '<link rel="stylesheet" href="' + BASE + 'expeditions.css">'
             '<link rel="stylesheet" href="' + BASE + 'new-games.css">'
+            '<link rel="stylesheet" href="' + BASE + 'native-scenes.css">'
             '<script defer src="' + BASE + 'expeditions.js"></script>'
             '<script defer src="' + BASE + 'new-games.js"></script>'
             '<script defer src="' + BASE + 'extra.js"></script>'
@@ -102,6 +103,21 @@ def finish(root, dst, addon):
         if "</head>" not in html:
             raise RuntimeError("Cannot augment Santa Selfie scene: missing head")
         selfie_page.write_text(html.replace("</head>", addition + "</head>", 1), encoding="utf8")
+
+    # Insert a new illustrated neighborhood INSIDE the real upstream village
+    # scene. Original <modvil-module> elements, cards, games and tracker remain.
+    village_pages = list((prod / "st" / "v2026" / "scenes" / "modvil").glob("index*.html"))
+    if not village_pages:
+        raise RuntimeError("Original modvil village scene was not compiled")
+    for village_page in village_pages:
+        html = village_page.read_text(encoding="utf8")
+        extension = (
+            '<link rel="stylesheet" href="' + BASE + 'village-native.css">'
+            '<script defer src="' + BASE + 'village-native.js"></script>'
+        )
+        if "</head>" not in html:
+            raise RuntimeError("Cannot extend original village scene")
+        village_page.write_text(html.replace("</head>", extension + "</head>", 1), encoding="utf8")
 
     # Stable Spanish route; built upstream locales use es_ALL as their output folder.
     original_es = prod / "intl" / "es_ALL"
@@ -128,7 +144,7 @@ def finish(root, dst, addon):
     shutil.copytree(prod, dst)
     shutil.copy2(addon / "extra.js", dst / "extra.js")
     shutil.copy2(addon / "extra.css", dst / "extra.css")
-    for filename in ["expeditions.js", "expeditions.css", "new-games.js", "new-games.css", "selfie-enhance.js", "selfie-enhance.css"]:
+    for filename in ["expeditions.js", "expeditions.css", "new-games.js", "new-games.css", "native-scenes.css", "village-native.js", "village-native.css", "selfie-enhance.js", "selfie-enhance.css"]:
         shutil.copy2(addon / filename, dst / filename)
     (dst / "ATTRIBUTION.txt").write_text(
         "NOCHEPOLAR: adaptación no oficial de Google Santa Tracker.\n"
