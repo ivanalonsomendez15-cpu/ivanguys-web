@@ -101,3 +101,46 @@
  #np-screen .np-hub-card{font-size:13px;padding:9px;min-height:72px}
  #np-screen .np-hub-link{font-size:11px;padding:7px 8px}
 }
+
+
+/* Permanent shortcuts in the REAL Santa Tracker village: all features discoverable. */
+#np-shortcuts{
+ position:fixed;z-index:2147483639;left:195px;top:9px;
+ display:flex;flex-wrap:wrap;gap:7px;max-width:calc(100vw - 420px);
+ font-family:"Google Sans",Roboto,Arial,sans-serif;pointer-events:auto
+}
+#np-shortcuts .np-shortcut{
+ font-family:inherit;border:3px solid #fff;color:#fff;font-size:12px;font-weight:900;
+ background:#198e6b;border-radius:100px;padding:10px 13px;white-space:nowrap;
+ box-shadow:0 4px 0 #0c6449;cursor:pointer;transition:transform .15s,background .15s
+}
+#np-shortcuts .np-shortcut:hover{background:#f59e49;transform:translateY(-2px)}
+#np-shortcuts .np-shortcut-selfie{background:#d63e63;box-shadow:0 4px 0 #a42e4a}
+#np-screen .np-hub-feature{
+ background:linear-gradient(140deg,#fff3ba,#ffca69)!important;
+ color:#87521d!important;border-color:#ffecb0!important;
+ box-shadow:0 5px 0 #e5a440!important;
+}
+#np-screen .np-new-game-stage{margin:16px auto}
+#np-screen .npq-lab-feedback{
+ font-size:16px;color:#146e5b;font-weight:900;padding:12px;text-align:center;
+ background:#ffffffbd;border-radius:14px;margin:13px auto;
+}
+#np-screen .npq-lab-status{
+ font-size:12px;font-weight:900;text-align:center;
+ border-radius:10px;padding:6px;background:#ffe4ac;color:#855218;white-space:nowrap
+}
+#np-screen .npq-lab-status.npq-lab-correct{background:#b6efd5;color:#03633e}
+#np-screen .npq-lab-control{
+ grid-template-columns:minmax(100px,1.1fr) minmax(135px,3fr) 28px minmax(95px,1fr)!important;
+}
+@media(max-width:920px){
+ #np-shortcuts{top:max(56px,env(safe-area-inset-top));left:8px;right:8px;
+  max-width:none;display:flex;flex-wrap:nowrap;overflow-x:auto;padding:3px 3px 8px;scrollbar-width:none}
+ #np-shortcuts .np-shortcut{font-size:11px;padding:8px 10px;flex-shrink:0}
+}
+@media(max-width:540px){
+ #np-screen .npq-lab-control{grid-template-columns:75px minmax(80px,1fr) 20px!important}
+ #np-screen .npq-lab-status{grid-column:1 / -1;justify-self:stretch}
+ #np-shortcuts .np-shortcut{font-size:10px;padding:7px 9px}
+}
