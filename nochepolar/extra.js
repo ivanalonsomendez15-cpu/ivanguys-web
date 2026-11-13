@@ -318,7 +318,7 @@
     const specialLinks=h('div','','nps-callouts');
     specialLinks.append(btn('🎪 OCHO GRANDES EVENTOS SEMANALES',showWeekly,'nps-button'),btn('👑 5 Y 6 DE ENERO · REYES MAGOS',showKings,'nps-button'));
     content.append(specialLinks);
-    content.append(h('p','🎅 24 de diciembre: el seguimiento original de Papá Noel se conserva, y la expedición de 19 paradas es un complemento independiente.','np-intro'));
+    content.append(h('p','🎅 24 de diciembre: no se altera el código original de Santa Tracker. El viaje de 19 paradas es una simulación añadida. El seguimiento oficial se consulta en la web de Google cuando esté disponible.','np-intro'));
     for (const [month, start, end] of [['NOVIEMBRE', 0, 30], ['DICIEMBRE', 30, 55]]) {
       const heading = h('h2', month);
       content.append(heading);
@@ -345,8 +345,11 @@
     content.append(h('h1', titles[i]));
     content.append(h('p', isoFor(i) + ' · ' + status(i), 'np-day-status'));
     if(i===53){
-      content.append(h('p','🎅 24 de diciembre: gran expedición ilustrada con 19 paradas. El seguimiento del Santa Tracker original sigue disponible como experiencia independiente. El recorrido nuevo es una simulación festiva, NO un GPS real.','np-intro'));
-      if(localDay()==='2026-12-24')content.append(btn('🎅 Abrir el seguimiento ORIGINAL de Papá Noel',()=>openOriginal('tracker'),'np-primary'));
+      content.append(h('p','🎅 24 de diciembre: expedición ilustrada con 19 paradas, simulada y sin GPS real. No sustituye el seguimiento oficial de Google, que depende del servicio externo.','np-intro'));
+      if(localDay()==='2026-12-24'){
+        content.append(btn('🌍 Consultar el seguimiento oficial de Google',()=>window.open('https://santatracker.google.com/intl/es/','_blank','noopener,noreferrer'),'np-primary'));
+        content.append(btn('🎄 Volver a la aldea original',()=>openOriginal(''),'np-hub-link'));
+      }
     }
     if (i !== titles.findIndex((_,j)=>isoFor(j)===localDay()) || won(i)) {
       content.append(h('p', won(i) ? 'Esta misión ya se completó y no se puede repetir.' :
