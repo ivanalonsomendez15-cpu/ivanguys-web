@@ -51,6 +51,7 @@
     ['buscar','taller','atrapar','clasificar','laberinto','ritmo','memoria','final']
   ];
   const names = {
+    experimento:'Laboratorio de copos — estreno del 13 de noviembre',
     buscar:'Bosque de descubrimientos',laberinto:'Pasadizos de hielo',
     memoria:'Archivo de recuerdos',taller:'Banco de inventos',
     clasificar:'Cinta de paquetes',atrapar:'Vuelo de estrellas',
@@ -75,7 +76,9 @@
   }
   const ordinal=n=>String(n).padStart(2,'0');
   function play({box,day,title,onComplete,date}){
-    const plan=plans[day%plans.length];
+    const plan = day === 12
+      ? ['experimento','laberinto','buscar','memoria','taller','clasificar','atrapar','ritmo','final']
+      : plans[day%plans.length];
     const memoryKey='np:expedition:v3:'+date;
     let index=Math.max(0,Math.min(plan.length,Number(localStorage.getItem(memoryKey)||0)));
     let cleanup=()=>{};
@@ -106,6 +109,7 @@
       shell.style.setProperty('--npq-hue',String((day*47)%360));
       const kicker=h('p','CAPÍTULO '+ordinal(index+1)+' / '+ordinal(plan.length)+' · '+area[0],'npq-kicker');
       const progress=h('div','','npq-progress');
+      progress.style.gridTemplateColumns='repeat('+plan.length+',minmax(0,1fr))';
       for(let n=0;n<plan.length;n++){
         const p=h('span','','npq-step');
         if(n<index)p.classList.add('done');
@@ -122,6 +126,67 @@
         dispose();box.replaceChildren(h('p','Este evento ha terminado. Vuelve al calendario.'));return false;
       }
       return true;
+    }
+
+    function experiment(){
+      const shell=header('experimento');
+      shell.append(h('p','¡Experiencia exclusiva de hoy! Fabrica cuatro cristales para reactivar el laboratorio. Cada cristal exige un equilibrio distinto de frío, simetría y brillo.','npq-description'));
+      const recipes=[
+        [3,6,5,'Copo de ventana'],[7,4,8,'Aurora de hielo'],
+        [5,9,3,'Cristal perfecto'],[9,7,9,'Supercopo polar']
+      ];
+      let round=0;
+      const screen=h('div','','npq-experiment-screen');
+      const art=document.createElementNS('http://www.w3.org/2000/svg','svg');
+      art.setAttribute('viewBox','0 0 220 220');art.setAttribute('aria-label','Copo de nieve experimental');
+      art.style.cssText='width:min(270px,85%);height:220px;display:block;margin:auto;filter:drop-shadow(0 4px 12px #008bb655)';
+      for(let k=0;k<6;k++){
+        const g=document.createElementNS('http://www.w3.org/2000/svg','g');
+        g.setAttribute('transform','translate(110 110) rotate('+(k*60)+')');
+        const p=document.createElementNS('http://www.w3.org/2000/svg','path');
+        p.setAttribute('d','M0 0 L0 -81 M0 -50 L-23 -63 M0 -50 L23 -63 M0 -29 L-19 -38 M0 -29 L19 -38');
+        p.setAttribute('fill','none');p.setAttribute('stroke','#58d9ff');
+        p.setAttribute('stroke-linecap','round');p.setAttribute('stroke-linejoin','round');
+        p.classList.add('npq-ice-path');g.append(p);art.append(g);
+      }
+      screen.append(art);
+      const title=h('h3','','npq-order'),guide=h('p','','npq-hint'),count=h('p','','npq-counter');
+      const controls=[];
+      for(const label of ['❄️ Frío','🔷 Simetría','✨ Brillo']){
+        const wrapper=h('label','','npq-lab-control');
+        const caption=h('span',label);
+        const value=h('b','5');
+        const input=document.createElement('input');input.type='range';input.min='0';input.max='10';input.step='1';input.value='5';
+        input.addEventListener('input',()=>{value.textContent=input.value;updateSnow();});
+        wrapper.append(caption,input,value);controls.push(input);shell.append(wrapper);
+      }
+      function updateSnow(){
+        const [cold,symmetry,shine]=controls.map(el=>Number(el.value));
+        for(const line of art.querySelectorAll('.npq-ice-path')){
+          line.setAttribute('stroke-width',String(2+Math.round(symmetry/2)));
+          line.setAttribute('stroke','hsl('+(175+cold*7)+' 90% '+(50+shine*3)+'%)');
+        }
+        art.style.transform='rotate('+(symmetry*6)+'deg) scale('+(0.82+shine*.03)+')';
+      }
+      function showTarget(){
+        const [cold,symmetry,shine,name]=recipes[round];
+        title.textContent='Experimento '+(round+1)+'/4: '+name;
+        guide.textContent='Objetivo: Frío '+cold+' · Simetría '+symmetry+' · Brillo '+shine+'. Ajusta los tres mandos.';
+        count.textContent='Cristales fabricados: '+round+'/4';
+        controls.forEach(c=>c.value='5');updateSnow();
+      }
+      const check=button('🧪 ACTIVAR EL CRISTAL',()=>{
+        const [cold,symmetry,shine]=recipes[round];
+        const values=controls.map(c=>Number(c.value));
+        if(values[0]!==cold||values[1]!==symmetry||values[2]!==shine){
+          guide.textContent='No se ha estabilizado. Compara tus tres mandos con los valores del objetivo y vuelve a intentarlo.';
+          return;
+        }
+        round++;
+        if(round===recipes.length){completeTask();return;}
+        showTarget();
+      },'npq-button-big');
+      showTarget();shell.append(screen,title,guide,count,check);
     }
     function search(){
       const shell=header('buscar');
@@ -372,7 +437,7 @@
       }
       show();shell.append(route,city,question,options,note);
     }
-    const handlers={buscar:search,laberinto:maze,memoria,clasificar:sorting,
+    const handlers={experimento, buscar:search,laberinto:maze,memoria,clasificar:sorting,
       taller:workshop,atrapar:catching,ritmo,final};
     function render(){
       if(!nextIfLive())return;
