@@ -1,0 +1,45 @@
+/* Weekly festivals + Reyes Magos; contained within existing Santa Tracker village overlay. */
+#np-screen .nps-panel{max-width:970px;margin:12px auto 22px;padding:clamp(17px,3vw,30px);background:linear-gradient(145deg,#f1fbff,#fff7dd 52%,#e5faef);color:#174b4a;border:4px solid #fff;border-radius:25px;box-shadow:0 10px 30px #164b5c24}
+#np-screen .nps-panel h2{font-size:clamp(24px,4vw,34px);color:#127360;line-height:1.18;margin:5px 0 12px}
+#np-screen .nps-panel h3{font-size:clamp(17px,3vw,21px);line-height:1.25;margin:8px 0}
+#np-screen .nps-desc{line-height:1.6;font-size:16px;color:#48685d}
+#np-screen .nps-overline{color:#ca4054;font-size:12px;font-weight:950;letter-spacing:.08em;margin:2px 0 10px}
+#np-screen .nps-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px;margin-top:18px}
+#np-screen .nps-card{background:#fff;border:3px solid #d8eee9;border-radius:19px;padding:18px;box-shadow:0 6px 0 #0a665c0a;display:flex;flex-direction:column;gap:7px}
+#np-screen .nps-card h3{color:#14665b;margin:2px 0 5px}
+#np-screen .nps-card p{margin:3px 0;line-height:1.45}
+#np-screen .nps-card button{margin-top:auto}
+#np-screen .nps-count{font-weight:800;color:#0b7065;font-size:14px}
+#np-screen .nps-label{font-weight:800;color:#b05f2e}
+#np-screen .nps-button{cursor:pointer;min-height:46px;border:2px solid #c4e9eb;border-radius:14px;background:#fff;color:#155f64;font-weight:900;font-size:15px;padding:10px 15px;box-shadow:0 3px 0 #acc9c5;touch-action:manipulation}
+#np-screen .nps-button:focus-visible{outline:3px solid #e24d67;outline-offset:2px}
+#np-screen .nps-button:hover:not(:disabled){background:#edfcff;transform:translateY(-1px)}
+#np-screen .nps-button:disabled{background:#c2e8df;color:#206d53;opacity:.85}
+#np-screen .nps-primary{display:block;margin:20px auto;background:#e83e59;color:white;border-color:white;box-shadow:0 5px 0 #a72d40;font-size:17px;padding:14px 20px}
+#np-screen .nps-back{cursor:pointer;display:inline-flex;border:2px solid #c9e0de;background:white;padding:9px 13px;border-radius:12px;font-weight:800;color:#12675a;margin-bottom:10px}
+#np-screen .nps-board{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px;margin:20px auto;max-width:710px}
+#np-screen .nps-board .nps-button{font-size:clamp(14px,3vw,22px);min-height:64px}
+#np-screen .nps-board.nps-lights{max-width:380px}
+#np-screen .nps-board.nps-lights button{font-size:32px;min-height:85px}
+#np-screen .nps-board .nps-on{background:#fff3af}
+#np-screen .nps-banner{margin:16px auto;padding:21px 12px;min-height:82px;border:4px solid white;border-radius:18px;text-align:center;background:linear-gradient(135deg,#246d9e,#6acde1);color:#fff;font-weight:900;font-size:clamp(18px,4vw,27px);letter-spacing:.02em;box-shadow:0 6px 20px #186d7c26}
+#np-screen .nps-instructions{text-align:center;font-size:16px;font-weight:750}
+#np-screen .nps-hint{min-height:25px;color:#ba4268;font-weight:850;text-align:center}
+#np-screen .nps-map{font-size:60px;text-align:center;padding:20px;background:linear-gradient(180deg,#b0f2ff,#e5ffea);border:4px solid #fff;border-radius:20px}
+#np-screen .nps-kings{font-size:clamp(40px,9vw,73px);text-align:center;padding:20px 0;background:#e1f7f6;border-radius:18px;margin:15px 0}
+#np-screen .nps-trophy{font-size:95px;text-align:center;padding:20px}
+#np-screen .nps-callouts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:18px 0}
+#np-screen .nps-callouts .nps-button{min-height:62px;background:#f7fcff}
+#np-screen .nps-callouts .nps-button:first-child{background:#ebf9da}
+@media(max-width:650px){
+ #np-screen .nps-list{grid-template-columns:1fr}
+ #np-screen .nps-card{padding:13px}
+ #np-screen .nps-panel{padding:15px;margin:5px auto}
+ #np-screen .nps-board{gap:6px}
+ #np-screen .nps-board .nps-button{padding:8px 3px;min-height:52px;font-size:14px}
+ #np-screen .nps-board.nps-lights button{min-height:67px;font-size:27px}
+ #np-screen .nps-callouts{grid-template-columns:1fr}
+}
+@media(prefers-reduced-motion:reduce){
+ #np-screen .nps-button{transition:none}
+}
