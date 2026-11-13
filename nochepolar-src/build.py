@@ -79,7 +79,9 @@ def finish(root, dst, addon):
         extra = (
             '<link rel="stylesheet" href="' + BASE + 'extra.css">'
             '<link rel="stylesheet" href="' + BASE + 'expeditions.css">'
+            '<link rel="stylesheet" href="' + BASE + 'new-games.css">'
             '<script defer src="' + BASE + 'expeditions.js"></script>'
+            '<script defer src="' + BASE + 'new-games.js"></script>'
             '<script defer src="' + BASE + 'extra.js"></script>'
         )
         if "</head>" not in s:
@@ -126,7 +128,7 @@ def finish(root, dst, addon):
     shutil.copytree(prod, dst)
     shutil.copy2(addon / "extra.js", dst / "extra.js")
     shutil.copy2(addon / "extra.css", dst / "extra.css")
-    for filename in ["expeditions.js", "expeditions.css", "selfie-enhance.js", "selfie-enhance.css"]:
+    for filename in ["expeditions.js", "expeditions.css", "new-games.js", "new-games.css", "selfie-enhance.js", "selfie-enhance.css"]:
         shutil.copy2(addon / filename, dst / filename)
     (dst / "ATTRIBUTION.txt").write_text(
         "NOCHEPOLAR: adaptación no oficial de Google Santa Tracker.\n"
