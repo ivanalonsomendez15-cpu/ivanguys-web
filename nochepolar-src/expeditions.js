@@ -130,36 +130,48 @@
 
     function experiment(){
       const shell=header('experimento');
-      shell.append(h('p','¡Experiencia exclusiva de hoy! Fabrica cuatro cristales para reactivar el laboratorio. Cada cristal exige un equilibrio distinto de frío, simetría y brillo.','npq-description'));
+      shell.append(h('p','El laboratorio ha perdido su energía. Fabrica cuatro cristales únicos. ¡No tienes que adivinar combinaciones! El panel te indica qué mando subir o bajar.','npq-description'));
       const recipes=[
         [3,6,5,'Copo de ventana'],[7,4,8,'Aurora de hielo'],
         [5,9,3,'Cristal perfecto'],[9,7,9,'Supercopo polar']
       ];
-      let round=0;
+      let round=0,helpStep=0;
       const screen=h('div','','npq-experiment-screen');
       const art=document.createElementNS('http://www.w3.org/2000/svg','svg');
-      art.setAttribute('viewBox','0 0 220 220');art.setAttribute('aria-label','Copo de nieve experimental');
+      art.setAttribute('viewBox','0 0 220 220');
+      art.setAttribute('aria-label','Cristal de nieve interactivo');
       art.style.cssText='width:min(270px,85%);height:220px;display:block;margin:auto;filter:drop-shadow(0 4px 12px #008bb655)';
       for(let k=0;k<6;k++){
         const g=document.createElementNS('http://www.w3.org/2000/svg','g');
         g.setAttribute('transform','translate(110 110) rotate('+(k*60)+')');
-        const p=document.createElementNS('http://www.w3.org/2000/svg','path');
-        p.setAttribute('d','M0 0 L0 -81 M0 -50 L-23 -63 M0 -50 L23 -63 M0 -29 L-19 -38 M0 -29 L19 -38');
-        p.setAttribute('fill','none');p.setAttribute('stroke','#58d9ff');
-        p.setAttribute('stroke-linecap','round');p.setAttribute('stroke-linejoin','round');
-        p.classList.add('npq-ice-path');g.append(p);art.append(g);
+        const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+        path.setAttribute('d','M0 0 L0 -81 M0 -50 L-23 -63 M0 -50 L23 -63 M0 -29 L-19 -38 M0 -29 L19 -38');
+        path.setAttribute('fill','none');path.setAttribute('stroke','#58d9ff');
+        path.setAttribute('stroke-linecap','round');path.setAttribute('stroke-linejoin','round');
+        path.classList.add('npq-ice-path');g.append(path);art.append(g);
       }
       screen.append(art);
-      const title=h('h3','','npq-order'),guide=h('p','','npq-hint'),count=h('p','','npq-counter');
-      const controls=[];
-      for(const label of ['❄️ Frío','🔷 Simetría','✨ Brillo']){
+      const title=h('h3','','npq-order');
+      const guide=h('p','','npq-hint');
+      guide.setAttribute('role','status');
+      const count=h('p','','npq-counter');
+      const summary=h('div','','npq-lab-feedback');
+      const controls=[],statuses=[];
+      const labels=['❄️ Frío','🔷 Simetría','✨ Brillo'];
+      labels.forEach((label,n)=>{
         const wrapper=h('label','','npq-lab-control');
         const caption=h('span',label);
         const value=h('b','5');
-        const input=document.createElement('input');input.type='range';input.min='0';input.max='10';input.step='1';input.value='5';
-        input.addEventListener('input',()=>{value.textContent=input.value;updateSnow();});
-        wrapper.append(caption,input,value);controls.push(input);shell.append(wrapper);
-      }
+        const input=document.createElement('input');
+        input.type='range';input.min='0';input.max='10';input.step='1';input.value='5';
+        input.setAttribute('aria-label',label);
+        input.addEventListener('input',()=>{value.textContent=input.value;updateSnow();updateHints();});
+        const status=h('span','', 'npq-lab-status');
+        status.setAttribute('role','status');
+        wrapper.append(caption,input,value,status);
+        controls.push(input);statuses.push(status);
+        shell.append(wrapper);
+      });
       function updateSnow(){
         const [cold,symmetry,shine]=controls.map(el=>Number(el.value));
         for(const line of art.querySelectorAll('.npq-ice-path')){
@@ -168,25 +180,57 @@
         }
         art.style.transform='rotate('+(symmetry*6)+'deg) scale('+(0.82+shine*.03)+')';
       }
+      function target(){return recipes[round].slice(0,3);}
+      function updateHints(){
+        const expected=target(),actual=controls.map(el=>Number(el.value));
+        let matched=0;
+        statuses.forEach((node,n)=>{
+          const diff=expected[n]-actual[n];
+          if(!diff){node.textContent='✓ CORRECTO';node.classList.add('npq-lab-correct');matched++;}
+          else{
+            node.textContent=(diff>0?'↑ SUBE '+diff:'↓ BAJA '+(-diff));
+            node.classList.remove('npq-lab-correct');
+          }
+        });
+        summary.textContent='⚙️ Ajustes correctos: '+matched+'/3';
+        if(matched===3) guide.textContent='✅ ¡Cristal estabilizado! Pulsa ACTIVAR EL CRISTAL para guardarlo.';
+        else guide.textContent='🔎 Pista: sigue las flechas de cada mando. Cuando los tres estén en verde, activa el cristal.';
+      }
       function showTarget(){
         const [cold,symmetry,shine,name]=recipes[round];
-        title.textContent='Experimento '+(round+1)+'/4: '+name;
-        guide.textContent='Objetivo: Frío '+cold+' · Simetría '+symmetry+' · Brillo '+shine+'. Ajusta los tres mandos.';
+        title.textContent='Cristal '+(round+1)+'/4: '+name;
         count.textContent='Cristales fabricados: '+round+'/4';
-        controls.forEach(c=>c.value='5');updateSnow();
+        // The three target values are always visible: do not force blind guesses.
+        summary.setAttribute('aria-label','Objetivo del experimento');
+        controls.forEach((control,n)=>{
+          control.value='5';
+          const valueNode=control.parentElement&&control.parentElement.querySelector('b');
+          if(valueNode)valueNode.textContent='5';
+        });
+        updateSnow();updateHints();
       }
+      const help=button('💡 ¿Necesitas ayuda?',()=>{
+        const expected=target(),actual=controls.map(x=>Number(x.value));
+        const wrong=actual.findIndex((v,n)=>v!==expected[n]);
+        if(wrong<0){guide.textContent='¡Todo correcto! Pulsa el botón rojo para fabricar el copo.';return;}
+        guide.textContent='Pista concreta: '+labels[wrong]+' debe quedar en '+expected[wrong]+
+          '. Está ahora en '+actual[wrong]+'. Desliza hacia '+(actual[wrong]<expected[wrong]?'la derecha':'la izquierda')+'.';
+      },'npq-btn');
       const check=button('🧪 ACTIVAR EL CRISTAL',()=>{
-        const [cold,symmetry,shine]=recipes[round];
-        const values=controls.map(c=>Number(c.value));
-        if(values[0]!==cold||values[1]!==symmetry||values[2]!==shine){
-          guide.textContent='No se ha estabilizado. Compara tus tres mandos con los valores del objetivo y vuelve a intentarlo.';
+        const expected=target(),actual=controls.map(c=>Number(c.value));
+        const match=actual.every((v,n)=>v===expected[n]);
+        if(!match){
+          updateHints();
+          guide.textContent='Casi: '+labels[actual.findIndex((v,n)=>v!==expected[n])]+
+            ' aún no coincide. Mira las flechas verdes y rojas debajo de los mandos.';
           return;
         }
         round++;
         if(round===recipes.length){completeTask();return;}
         showTarget();
       },'npq-button-big');
-      showTarget();shell.append(screen,title,guide,count,check);
+      shell.append(screen,title,summary,guide,count,help,check);
+      showTarget();
     }
     function search(){
       const shell=header('buscar');
