@@ -1,0 +1,80 @@
+name: NOCHEPOLAR — Santa Tracker original ampliado
+
+on:
+  push:
+    paths:
+      - 'nochepolar-src/**'
+      - '.github/workflows/nochepolar-oficial.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: nochepolar-source-build
+  cancel-in-progress: true
+
+jobs:
+  compile-and-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      NODE_OPTIONS: --max-old-space-size=6144
+    steps:
+      - name: Checkout IVANGUYS without changing its other files
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Checkout the ORIGINAL open-source Google Santa Tracker
+        run: |
+          git clone --depth 1 https://github.com/google/santa-tracker-web.git "$RUNNER_TEMP/santa-tracker-web"
+          test -f "$RUNNER_TEMP/santa-tracker-web/LICENSE"
+          test -f "$RUNNER_TEMP/santa-tracker-web/static/scenes/modvil/index.html"
+
+      - name: Install Node.js for Santa Tracker
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install upstream source dependencies
+        working-directory: ${{ runner.temp }}/santa-tracker-web
+        run: |
+          npm ci --omit=dev --legacy-peer-deps --no-audit --no-fund
+          test -d node_modules
+          test -e static/node_modules
+
+      - name: Adapt Google source for GitHub Pages subfolder
+        run: |
+          python3 nochepolar-src/build.py prepare --root "$RUNNER_TEMP/santa-tracker-web"
+
+      - name: Compile the original village, games and their assets
+        working-directory: ${{ runner.temp }}/santa-tracker-web
+        run: |
+          node release.js --build v2026 --baseurl /ivanguys-web/nochepolar/st/ --transpile=false --minify=false
+          test -f dist/prod/index.html
+
+      - name: Add 55 exclusive NOCHEPOLAR missions without removing original games
+        run: |
+          python3 nochepolar-src/build.py finish --root "$RUNNER_TEMP/santa-tracker-web" --dst nochepolar --addon nochepolar-src
+          test -f nochepolar/index.html
+          test -f nochepolar/extra.js
+          test -f nochepolar/st/v2026/entrypoint_es.js
+
+      - name: Ensure the existing IVANGUYS site remains untouched
+        run: |
+          test -f index.html
+          test -f games.js
+          git status --short | head -25
+
+      - name: Publish only the NOCHEPOLAR directory to the same GitHub repository
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A nochepolar
+          if ! git diff --cached --quiet; then
+            git commit -m "Publish NOCHEPOLAR based on original Google Santa Tracker sources"
+            git push origin HEAD:main
+          else
+            echo "NOCHEPOLAR build unchanged"
+          fi
