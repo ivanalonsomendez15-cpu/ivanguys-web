@@ -82,17 +82,67 @@
         ctx.beginPath();ctx.moveTo(x-120,h);ctx.lineTo(x+60,280);ctx.lineTo(x+230,h);ctx.fill();
         ctx.fillStyle='#fff';ctx.beginPath();ctx.moveTo(x+14,333);ctx.lineTo(x+60,280);ctx.lineTo(x+102,333);ctx.fill();
       }
-      // The player has a visible silhouette and two following reindeer.
+      // Hand-drawn vector sleigh + reindeer: preserve the original Santa
+      // Tracker cartoon look instead of relying on the platform's emojis.
       const sy=192+lane*86;
-      ctx.font='54px "Segoe UI Emoji",sans-serif';ctx.textAlign='center';
-      ctx.fillText('🦌',86,sy);ctx.fillText('🦌',141,sy);
-      ctx.strokeStyle='#854520';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(166,sy-21);ctx.lineTo(211,sy-9);ctx.stroke();
-      ctx.fillText('🛷',205,sy+6);
-      if(boost>0){ctx.font='25px sans-serif';ctx.fillText('✨',251,sy-13);}
+      function deer(x,y,scale){
+        ctx.save();ctx.translate(x,y);ctx.scale(scale,scale);
+        ctx.strokeStyle='#955c3d';ctx.lineWidth=5;ctx.lineCap='round';
+        for(const px of [-16,14]){
+          ctx.beginPath();ctx.moveTo(px,13);ctx.lineTo(px-4,35);ctx.stroke();
+        }
+        ctx.fillStyle='#b97948';ctx.beginPath();ctx.ellipse(-3,3,34,23,-.1,0,Math.PI*2);ctx.fill();
+        ctx.fillStyle='#d7a773';ctx.beginPath();ctx.ellipse(22,-17,17,23,.4,0,Math.PI*2);ctx.fill();
+        ctx.strokeStyle='#9a7347';ctx.lineWidth=4;
+        ctx.beginPath();ctx.moveTo(24,-30);ctx.lineTo(21,-55);ctx.lineTo(9,-67);ctx.moveTo(21,-55);ctx.lineTo(36,-68);
+        ctx.moveTo(31,-34);ctx.lineTo(44,-60);ctx.moveTo(44,-60);ctx.lineTo(54,-66);ctx.stroke();
+        ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(28,-17,5,0,Math.PI*2);ctx.fill();
+        ctx.fillStyle='#274052';ctx.beginPath();ctx.arc(29,-17,2.4,0,Math.PI*2);ctx.fill();
+        ctx.fillStyle='#ef535c';ctx.beginPath();ctx.arc(38,-8,7,0,Math.PI*2);ctx.fill();
+        ctx.restore();
+      }
+      function sleigh(x,y){
+        ctx.save();ctx.translate(x,y);
+        ctx.strokeStyle='#8a503a';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(-22,-6);ctx.lineTo(-73,-17);ctx.stroke();
+        ctx.fillStyle='#e74661';ctx.beginPath();ctx.moveTo(-37,-20);ctx.lineTo(42,-20);ctx.lineTo(30,14);
+        ctx.quadraticCurveTo(12,35,-26,16);ctx.closePath();ctx.fill();
+        ctx.fillStyle='#fff';ctx.beginPath();ctx.roundRect(-36,-26,76,10,5);ctx.fill();
+        ctx.strokeStyle='#cb9742';ctx.lineWidth=6;ctx.beginPath();ctx.moveTo(-44,29);ctx.quadraticCurveTo(6,44,43,25);
+        ctx.moveTo(-28,16);ctx.lineTo(-33,27);ctx.moveTo(24,15);ctx.lineTo(30,29);ctx.stroke();
+        ctx.fillStyle='#f5caab';ctx.beginPath();ctx.arc(4,-47,15,0,Math.PI*2);ctx.fill();
+        ctx.fillStyle='#f7f7f7';ctx.beginPath();ctx.arc(4,-30,17,0,Math.PI*2);ctx.fill();
+        ctx.fillStyle='#e34755';ctx.beginPath();ctx.arc(4,-67,16,Math.PI,Math.PI*2);ctx.fill();
+        ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(19,-66,6,0,Math.PI*2);ctx.fill();
+        ctx.restore();
+      }
+      function present(x,y){
+        ctx.save();ctx.translate(x,y);
+        ctx.fillStyle='#ec4f72';ctx.beginPath();ctx.roundRect(-28,-27,56,52,7);ctx.fill();
+        ctx.fillStyle='#ffdf8a';ctx.fillRect(-4,-27,8,52);ctx.fillRect(-28,-6,56,9);
+        ctx.strokeStyle='#ffdf8a';ctx.lineWidth=5;ctx.beginPath();ctx.ellipse(-11,-33,11,6,.5,0,Math.PI*2);
+        ctx.ellipse(11,-33,11,6,-.5,0,Math.PI*2);ctx.stroke();ctx.restore();
+      }
+      function thunder(x,y){
+        ctx.save();ctx.translate(x,y);
+        ctx.fillStyle='#5b709a';for(const [dx,dy,r] of [[-20,1,21],[0,-12,30],[25,3,22]]){
+          ctx.beginPath();ctx.arc(dx,dy,r,0,Math.PI*2);ctx.fill();
+        }
+        ctx.fillStyle='#ffdf5f';ctx.beginPath();ctx.moveTo(6,7);ctx.lineTo(-4,30);ctx.lineTo(8,27);
+        ctx.lineTo(0,50);ctx.lineTo(27,17);ctx.lineTo(14,21);ctx.closePath();ctx.fill();ctx.restore();
+      }
+      function heart(x,y){
+        ctx.save();ctx.translate(x,y);ctx.fillStyle='#ff7698';
+        ctx.beginPath();ctx.moveTo(0,23);ctx.bezierCurveTo(-40,-12,-27,-36,-6,-26);
+        ctx.bezierCurveTo(1,-23,3,-17,0,-13);ctx.bezierCurveTo(5,-30,20,-37,29,-23);
+        ctx.bezierCurveTo(38,-9,22,9,0,23);ctx.fill();ctx.restore();
+      }
+      deer(90,sy-22,.8);deer(157,sy-22,.88);sleigh(244,sy-9);
+      if(boost>0){ctx.fillStyle='#fff5b1';ctx.beginPath();ctx.arc(265,sy-49,8,0,Math.PI*2);ctx.fill();}
       for(const item of obstacles){
         const iy=192+item.lane*86;
-        ctx.font=item.type==='storm'?'62px sans-serif':'52px sans-serif';
-        ctx.fillText(item.type==='storm'?'🌩️':item.type==='star'?'💖':'🎁',item.x,iy);
+        if(item.type==='storm') thunder(item.x,iy-13);
+        else if(item.type==='star') heart(item.x,iy-13);
+        else present(item.x,iy-13);
       }
       if(flash>0){
         ctx.fillStyle='rgba(255,247,148,'+Math.min(.4,flash)+')';ctx.fillRect(0,0,w,h);
