@@ -51,7 +51,7 @@
   const isoFor = (i) => i < 30 ? season + '-11-' + String(i + 1).padStart(2, '0')
     : season + '-12-' + String(i - 29).padStart(2, '0');
   const indexNow = titles.findIndex((_, i) => isoFor(i) === localDay());
-  const storageKey = (i) => 'np:v3:' + season + ':' + i;
+  const storageKey = (i) => 'np:v' + (i === 12 ? '4' : '3') + ':' + season + ':' + i;
   const won = (i) => localStorage.getItem(storageKey(i)) === 'done';
   const host = document.createElement('section');
   host.id = 'np-root';
