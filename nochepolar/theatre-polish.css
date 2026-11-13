@@ -1,0 +1,64 @@
+/* NOCHEPOLAR — theatrical scene pass, additive to native-scenes.css.
+   Pure CSS decorations, no interference with original Santa Tracker. */
+#np-screen.np-native-mode.np-cine .np-scene-decor{
+ background:
+ radial-gradient(ellipse at 50% 27%,#fff1ac88 0%,transparent 35%),
+ repeating-linear-gradient(90deg,#a92d62 0 28px,#c74776 28px 49px,#812c65 49px 58px)!important;
+}
+#np-screen.np-native-mode.np-cine .np-scene-decor::before{
+ top:11%;left:14%;right:14%;height:47%;
+ background:linear-gradient(155deg,#1a3d70,#4368a1 48%,#162b63)!important;
+ clip-path:none!important;border:14px solid #f4c66d!important;
+ border-radius:14px;box-shadow:0 0 0 7px #74366c,0 15px 0 #642c60,0 25px 30px #321d5966;
+ animation:np-screen-glow 5s ease-in-out infinite;
+}
+#np-screen.np-native-mode.np-cine .np-scene-decor::after{
+ bottom:0;height:32%;left:0;right:0;border-radius:0;
+ background:repeating-linear-gradient(90deg,#702e57 0 65px,#82375e 65px 70px)!important;
+ box-shadow:inset 0 16px 0 #f5c36a,inset 0 25px 0 #5a2b56!important;
+}
+@keyframes np-screen-glow{50%{filter:brightness(1.2)}}
+#np-screen.np-native-mode.np-cine .np-hub-card{
+ position:relative;overflow:hidden;isolation:isolate;
+ border:7px solid #f8d68c!important;border-radius:18px!important;
+ background:linear-gradient(135deg,#9d3877,#512f80)!important;
+ box-shadow:0 9px 0 #542758,0 15px 25px #251a5660!important;
+}
+#np-screen.np-native-mode.np-cine .np-hub-card::after{
+ content:'';position:absolute;inset:9px;
+ border:2px solid #ffe9aa80;border-radius:8px;
+ pointer-events:none;
+}
+#np-screen.np-native-mode.np-arcade .np-scene-decor{
+ background:radial-gradient(circle at 20% 15%,#fff8b6 0 48px,transparent 50px),
+ repeating-linear-gradient(90deg,#28a8c4 0 55px,#37bad0 55px 110px)!important;
+}
+#np-screen.np-native-mode.np-arcade .np-hub-card{
+ position:relative;isolation:isolate;overflow:hidden;
+ background:linear-gradient(155deg,#276ba3 0 22%,#4b58b0 22% 78%,#223b83 78%)!important;
+ border:8px solid #f7df7a!important;
+ box-shadow:0 12px 0 #304a83,0 20px 0 #2e8396!important;
+}
+#np-screen.np-native-mode.np-arcade .np-hub-card:nth-child(even){
+ background:linear-gradient(155deg,#c94779 0 22%,#b23d94 22% 78%,#713884 78%)!important;
+}
+#np-screen.np-native-mode.np-arcade .np-hub-card::after{
+ content:'';position:absolute;left:12%;right:12%;bottom:11px;height:14px;
+ border-radius:20px;background:radial-gradient(circle at 24% 50%,#ffea72 0 5px,transparent 6px),
+ radial-gradient(circle at 75% 50%,#65edb9 0 5px,transparent 6px),#263d6d;
+ border:3px solid #fff5;
+}
+#np-screen.np-native-mode .np-hub-card:focus-visible,
+#np-screen.np-native-mode .np-native-back:focus-visible{
+ outline:5px solid #ffe57a!important;outline-offset:4px;
+}
+@media(prefers-reduced-motion:reduce){
+ #np-screen.np-native-mode.np-cine .np-scene-decor::before{animation:none}
+}
+@media(max-width:600px){
+ #np-screen.np-native-mode.np-cine .np-scene-decor::before{
+ left:6%;right:6%;top:15%;height:35%;border-width:8px!important;
+ }
+ #np-screen.np-native-mode .np-hub-cards{gap:12px}
+ #np-screen.np-native-mode.np-cine .np-hub-card{min-height:190px}
+}
