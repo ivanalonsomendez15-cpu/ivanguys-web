@@ -176,8 +176,12 @@
       const offset=(level%2)?1:-1;
       const bendLeft=2+(level%2),bendRight=4+(level%2);
       const mid=2,next=mid+offset;
-      const points=[[0,mid],[1,mid],[bendLeft,mid],[bendLeft,next],
-        [bendLeft+1,next],[bendRight,next],[bendRight,mid],[5,mid],[6,mid]];
+      const points=[];
+      for(let x=0;x<=bendLeft;x++)points.push([x,mid]);
+      points.push([bendLeft,next]);
+      for(let x=bendLeft+1;x<=bendRight;x++)points.push([x,next]);
+      points.push([bendRight,mid]);
+      for(let x=bendRight+1;x<width;x++)points.push([x,mid]);
       // Remove duplicates while preserving the route.
       path=[];const seen=new Set();
       points.forEach(([x,y])=>{const k=x+','+y;if(!seen.has(k)){seen.add(k);path.push([x,y]);}});
