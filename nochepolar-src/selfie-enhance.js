@@ -55,7 +55,7 @@
   const msg=node('p','np-selfie-msg','Amplía el selfie sin perder las herramientas originales.');
   const actions=node('div','np-selfie-actions');
   panel.append(bar,tabs,options,msg,actions);
-  root.append(open,panel);scene.append(root);
+  root.append(open,panel);document.body.append(root);
   let tab='sombreros';
   let stickerMode='';
   let previous=[];
@@ -165,5 +165,19 @@
   window.addEventListener('keydown',e=>{
     if(e.key==='Escape'&&!panel.hidden){panel.hidden=true;stickerMode='';}
   });
+
+  function openPanel() {
+    panel.hidden = false;
+    renderPanel();
+    const entry = document.querySelector('#np-selfie-hub .np-selfie-toolbar');
+    if (entry) entry.scrollIntoView({ block: 'nearest' });
+  }
+  window.NochepolarSelfie = { open: openPanel, version: '2' };
+  window.addEventListener('message', event => {
+    if (event.origin !== window.location.origin) return;
+    if (event.data && event.data.type === 'np:selfie:open') openPanel();
+  });
+  // Auto-open once when the user enters via the Selfie+ shortcut.
+  if (new URLSearchParams(window.location.search).has('np-selfie-plus')) openPanel();
   renderPanel();apply();
 })();
