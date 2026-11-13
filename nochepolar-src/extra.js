@@ -64,10 +64,58 @@
   document.body.appendChild(host);
   const screen = document.getElementById('np-screen');
   const content = document.getElementById('np-content');
-  document.getElementById('np-entry').addEventListener('click', () => {screen.hidden = false; showCalendar();});
-  document.getElementById('np-close').addEventListener('click', () => { screen.hidden = true; window.NochepolarActive?.dispose?.(); });
-  screen.addEventListener('click', e => {if (e.target === screen) {screen.hidden = true;window.NochepolarActive?.dispose?.();}});
-  document.addEventListener('keydown', e => {if (e.key === 'Escape') {screen.hidden = true;window.NochepolarActive?.dispose?.();}});
+  const nativeBack = document.createElement('button');
+  nativeBack.id = 'np-native-back';
+  nativeBack.className = 'np-native-back';
+  nativeBack.type = 'button';
+  nativeBack.textContent = '⌂';
+  nativeBack.title = 'Volver a la aldea';
+  nativeBack.setAttribute('aria-label', 'Volver a la aldea original');
+  nativeBack.addEventListener('click', () => {
+    clearExpedition();
+    leaveNative();
+    screen.hidden = true;
+  });
+  screen.querySelector('.np-window').append(nativeBack);
+  function enterNative(scene) {
+    screen.hidden = false;
+    screen.classList.add('np-native-mode');
+    ['np-cine','np-arcade','np-calendar','np-gameplay','np-passport','np-adventure'].forEach(c=>screen.classList.remove(c));
+    screen.classList.add('np-'+scene);
+    nativeBack.hidden = false;
+  }
+  function leaveNative() {
+    screen.classList.remove('np-native-mode','np-cine','np-arcade','np-calendar','np-gameplay','np-passport','np-adventure');
+    nativeBack.hidden = true;
+  }
+  nativeBack.hidden = true;
+  function decorativeScene() {
+    const sky = h('div','','np-scene-decor');
+    sky.setAttribute('aria-hidden','true');
+    sky.append(h('div','❄　✧　✦　❄　⋆　✧　❄','np-scene-snow'));
+    return sky;
+  }
+  const entry = document.getElementById('np-entry');
+  entry.innerHTML = '🎄 <span>Nuevo barrio ↓</span>';
+  function scrollToDistrict() {
+    const send = () => {
+      const players=Array.from(document.querySelectorAll('santa-gameloader'));
+      const frames=players.flatMap(p=>Array.from(p.shadowRoot?.querySelectorAll('iframe')||[]));
+      const village=frames.find(f=>(f.src||'').includes('/modvil/'));
+      if (!village?.contentWindow) return false;
+      village.contentWindow.postMessage({source:'nochepolar-main',action:'scroll-quarter'},location.origin);
+      return true;
+    };
+    if(send())return;
+    if(window.santaApp && typeof window.santaApp.go === 'function') {
+      window.santaApp.go('');
+      setTimeout(()=>{if(!send())showCalendar();},1100);
+    } else showCalendar();
+  }
+  entry.addEventListener('click',scrollToDistrict);
+  document.getElementById('np-close').addEventListener('click', () => { screen.hidden = true; clearExpedition(); leaveNative(); });
+  screen.addEventListener('click', e => {if (e.target === screen && !screen.classList.contains('np-native-mode')) {screen.hidden = true;clearExpedition();}});
+  document.addEventListener('keydown', e => {if (e.key === 'Escape' && !screen.hidden) {screen.hidden = true;clearExpedition();leaveNative();}});
   const h = (tag, text, cls = '') => {
     const el = document.createElement(tag);
     el.textContent = text;
@@ -112,6 +160,7 @@
   function openOriginal(route) {
     clearExpedition();
     screen.hidden = true;
+    leaveNative();
     if (window.santaApp && typeof window.santaApp.go === 'function') {
       window.santaApp.go(route);
     } else {
@@ -131,7 +180,8 @@
   }
   function showCollection(kind) {
     clearExpedition();
-    content.replaceChildren(toolbar());
+    enterNative(kind==='cine'?'cine':'arcade');
+    content.replaceChildren(decorativeScene(),toolbar());
     content.append(h('h1',kind==='cine'?'🎬 Cine de la aldea':'🎮 Arcade del Polo Norte'));
     content.append(h('p',kind==='cine'?
       'Clips y escenas animadas del Santa Tracker original. Pulsa para ver cada uno dentro del juego auténtico.':
@@ -154,7 +204,8 @@
   }
   function showPassport() {
     clearExpedition();
-    content.replaceChildren(toolbar());
+    enterNative('passport');
+    content.replaceChildren(decorativeScene(),toolbar());
     const done = titles.map((name,i)=>({name,i})).filter(x=>won(x.i));
     content.append(h('h1','🏅 Pasaporte de aventuras'));
     content.append(h('p','Eventos completados en este navegador: '+done.length+' de 55. Cada fecha cuenta una sola vez y las misiones se cierran al terminar el día.','np-intro'));
@@ -167,8 +218,8 @@
 
   function showNewGame(which) {
     clearExpedition();
-    screen.hidden = false;
-    content.replaceChildren(toolbar());
+    enterNative('gameplay');
+    content.replaceChildren();
     if (!window.NochepolarArcade || !window.NochepolarArcade[which]) {
       content.append(h('p','El juego nuevo no se ha cargado. Actualiza la página e inténtalo de nuevo.','np-intro'));
       return;
@@ -180,6 +231,7 @@
   function launchSelfiePlus(){
     clearExpedition();
     screen.hidden=true;
+    leaveNative();
     // Directly navigate to Google's existing selfie, not a replacement canvas.
     try{
       if(window.santaApp&&typeof window.santaApp.go==='function')
@@ -231,7 +283,8 @@
   host.append(shortcuts);
   function showCalendar() {
     clearExpedition();
-    content.replaceChildren(toolbar());
+    enterNative('calendar');
+    content.replaceChildren(decorativeScene(),toolbar());
     content.append(h('h1', '55 días. 55 aventuras. Un gran final.'));
     content.append(h('p', 'Cada fecha descubre una misión distinta. Cuando pasa el día, se cierra para siempre. Los juegos clásicos de Santa Tracker siguen detrás de este portal.', 'np-intro'));
     for (const [month, start, end] of [['NOVIEMBRE', 0, 30], ['DICIEMBRE', 30, 55]]) {
@@ -253,7 +306,9 @@
     content.append(h('p', 'Completadas: ' + titles.filter((_,i) => won(i)).length + '/55 · Zona horaria: España peninsular', 'np-count'));
   }
   function showDay(i) {
-    content.replaceChildren();
+    clearExpedition();
+    enterNative('adventure');
+    content.replaceChildren(decorativeScene(),toolbar());
     content.append(h('div', icons[i % icons.length], 'np-big-icon'));
     content.append(h('h1', titles[i]));
     content.append(h('p', isoFor(i) + ' · ' + status(i), 'np-day-status'));
@@ -426,6 +481,19 @@
     }, 'np-primary'));
     content.append(box);goBack();
   }
+  // The original village sends clicks from its physically illustrated buildings.
+  window.addEventListener('message',ev=>{
+    if(ev.origin!==location.origin)return;
+    const data=ev.data;
+    if(!data||data.source!=='nochepolar-village')return;
+    switch(data.action){
+      case 'cine': showCollection('cine');break;
+      case 'arcade': showCollection('arcade');break;
+      case 'aventuras': showCalendar();break;
+      case 'selfie': launchSelfiePlus();break;
+      case 'pasaporte': showPassport();break;
+    }
+  });
   // Permite abrir el portal sin alterar ninguna escena original.
   if (new URLSearchParams(location.search).get('nochepolar') === '1') {
     screen.hidden = false; showCalendar();
