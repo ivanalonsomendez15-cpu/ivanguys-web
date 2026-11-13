@@ -78,12 +78,28 @@ def finish(root, dst, addon):
         )
         extra = (
             '<link rel="stylesheet" href="' + BASE + 'extra.css">'
+            '<link rel="stylesheet" href="' + BASE + 'expeditions.css">'
+            '<script defer src="' + BASE + 'expeditions.js"></script>'
             '<script defer src="' + BASE + 'extra.js"></script>'
         )
         if "</head>" not in s:
             raise RuntimeError("No head in " + str(path))
         s = s.replace("</head>", extra + "</head>", 1)
         path.write_text(s, encoding="utf8")
+
+    # Add tools to Google's ORIGINAL Santa Selfie scene, not a replacement game.
+    selfie_pages = list((prod / "st" / "v2026" / "scenes" / "santaselfie").glob("index*.html"))
+    if not selfie_pages:
+        raise RuntimeError("Original Santa Selfie scene not found in upstream compilation")
+    for selfie_page in selfie_pages:
+        html = selfie_page.read_text(encoding="utf8")
+        addition = (
+            '<link rel="stylesheet" href="' + BASE + 'selfie-enhance.css">'
+            '<script defer src="' + BASE + 'selfie-enhance.js"></script>'
+        )
+        if "</head>" not in html:
+            raise RuntimeError("Cannot augment Santa Selfie scene: missing head")
+        selfie_page.write_text(html.replace("</head>", addition + "</head>", 1), encoding="utf8")
 
     # Stable Spanish route; built upstream locales use es_ALL as their output folder.
     original_es = prod / "intl" / "es_ALL"
@@ -110,6 +126,8 @@ def finish(root, dst, addon):
     shutil.copytree(prod, dst)
     shutil.copy2(addon / "extra.js", dst / "extra.js")
     shutil.copy2(addon / "extra.css", dst / "extra.css")
+    for filename in ["expeditions.js", "expeditions.css", "selfie-enhance.js", "selfie-enhance.css"]:
+        shutil.copy2(addon / filename, dst / filename)
     (dst / "ATTRIBUTION.txt").write_text(
         "NOCHEPOLAR: adaptación no oficial de Google Santa Tracker.\n"
         "Código original © Google LLC — Apache-2.0.\n"
