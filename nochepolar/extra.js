@@ -187,6 +187,17 @@
       'Clips y escenas animadas del Santa Tracker original. Pulsa para ver cada uno dentro del juego auténtico.':
       'Dos juegos originales añadidos por NOCHEPOLAR, junto con los juegos auténticos de Santa Tracker. No sustituimos ninguno de los originales.',
       'np-intro'));
+    if(kind==='cine') {
+      const upcoming = h('section','','np-film-coming');
+      upcoming.setAttribute('aria-label','Película original en producción');
+      upcoming.append(
+        h('div','🎞️  ✨  🎄','np-film-reels'),
+        h('h2','La gran película de NOCHEPOLAR'),
+        h('p','En producción · Una aventura animada original. Se estrenará cuando estén terminados y comprobados todos los fotogramas, escenas y sonidos.','np-film-copy'),
+        h('div','🔒 Próximamente · No disponible todavía','np-film-lock')
+      );
+      content.append(upcoming);
+    }
     const items = kind==='cine'?cinema:originals;
     const cards = h('div','','np-hub-cards');
     if(kind!=='cine'){
