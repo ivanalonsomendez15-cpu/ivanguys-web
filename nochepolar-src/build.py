@@ -73,7 +73,7 @@ def finish(root, dst, addon):
         s = path.read_text(encoding="utf8")
         s = re.sub(
             r'(?P<attr>\b(?:src|href)\s*=\s*["\'])/(?!/)',
-            lambda m: m.group("attr") + BASE.lstrip("/"),
+            lambda m: m.group("attr") + BASE,
             s
         )
         extra = (
