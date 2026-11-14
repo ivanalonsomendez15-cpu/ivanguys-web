@@ -82,6 +82,20 @@
       '<linearGradient id="npv-floor" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#33b4e3"/><stop offset="1" stop-color="#1c81b7"/></linearGradient>',
     '</defs>',
     '<rect width="1440" height="1500" fill="url(#npv-factory)"/>',
+
+    // Arranque de la nueva escena con juguetes y regalos: puente visual con el taller anterior.
+    '<g class="npv-presents-bridge">',
+    '<path d="M0 0H1440V118Q1265 108 1120 136Q936 167 742 132Q541 97 359 134Q165 170 0 112Z" fill="#493b95"/>',
+    '<path d="M0 0H1440V46H0Z" fill="#fcda7b"/>',
+    '<path d="M0 44H1440V55H0Z" fill="#69cfd0"/>',
+    ...Array.from({length:22},(_,i)=>'<circle cx="'+(i*71+8)+'" cy="49" r="7" fill="'+(['#ff6a85','#7ce5ba','#fee89d','#ffffff'][i%4])+'"/>'),
+    makeGift(95,116,1.2,'#da4c71'),makeGift(240,143,1.55,'#2b96c5'),
+    makeGift(430,116,1.18,'#ffc044'),makeGift(625,146,1.6,'#a758c2'),
+    makeGift(830,102,1.22,'#f27949'),makeGift(1040,138,1.5,'#27ba98'),
+    makeGift(1235,108,1.28,'#a77cdd'),makeGift(1390,136,1.38,'#e04e72'),
+    '<path d="M0 160Q180 148 360 172T720 175T1080 166T1440 180" fill="none" stroke="#fee8a8" stroke-width="20"/>',
+    '</g>',
+
     // Coloured wall, detailed panels, cables and pipes.
     '<path d="M0 192H1440M0 510H1440M0 886H1440M0 1264H1440" stroke="#ffe482" stroke-width="24"/>',
     '<path d="M0 214H1440M0 530H1440M0 906H1440" stroke="#2998ca" stroke-width="12"/>',
@@ -116,6 +130,23 @@
     '<g class="npv-gears"><circle cx="789" cy="404" r="88" fill="#fee29a" stroke="#ff94a1" stroke-width="19"/>',
     '<circle cx="789" cy="404" r="49" fill="#54c3dc" stroke="#2b5698" stroke-width="22"/>',
     '<circle cx="789" cy="404" r="11" fill="#fff4c1"/></g>',
+
+    // Pequeños detalles no interactivos para llenar el escenario sin tapar los carteles.
+    '<g class="npv-detail-layer">',
+    '<path d="M0 680Q340 649 760 691T1440 665" fill="none" stroke="#f3ce69" stroke-width="10"/>',
+    ...Array.from({length:19},(_,i)=>{
+      const x=i*81+16, y=680-11*Math.sin(i/2.9),c=['#8be5cb','#fff1af','#ed718e','#88d2f1'][i%4];
+      return '<path d="M'+x+' '+y+'l13 3-9 15Z" fill="'+c+'"/>';
+    }),
+    '<g transform="translate(68 853)"><rect x="0" y="0" width="108" height="72" rx="10" fill="#f7bb55"/><rect x="10" y="10" width="88" height="46" rx="8" fill="#fff1b5"/><path d="M20 52h68" stroke="#e27a65" stroke-width="7"/><circle cx="32" cy="25" r="6" fill="#e77c94"/><circle cx="55" cy="25" r="6" fill="#3faabf"/><circle cx="78" cy="25" r="6" fill="#52bf95"/></g>',
+    '<g transform="translate(1260 785)"><rect width="116" height="98" rx="12" fill="#a458af"/><path d="M0 17H116" stroke="#ffd08d" stroke-width="16"/><circle cx="58" cy="61" r="31" fill="#fff0ac"/><path d="M58 41v23l16 10" stroke="#5b89b6" stroke-width="9" stroke-linecap="round" fill="none"/></g>',
+    '<path d="M45 1180h170M1240 1194h164" stroke="#e8dc9e" stroke-width="10" stroke-linecap="round"/>',
+    ...Array.from({length:13},(_,i)=>{
+       const x=i*117+31, y=1261+(i%3)*8;
+       return '<circle cx="'+x+'" cy="'+y+'" r="7" fill="'+(['#f9b96a','#9ce7d2','#ffd899'][i%3])+'"/>';
+    }),
+    '</g>',
+
     '<g class="npv-sparks">',
       ...Array.from({length:32},(_,i)=>{
         const x=(i*227)%1420+12,y=(i*293)%1280+60;
@@ -153,7 +184,7 @@
     '<div class="npv-village-stage">',
       scene,
       '<div class="npv-hanging-garland" aria-hidden="true"><span></span></div>',
-      '<div class="npv-title"><span class="npv-ribbon">✦ UNA NUEVA ZONA DE LA ALDEA ✦</span><h2>Nochepolar</h2></div>',
+      '<div class="npv-title"><span class="npv-ribbon">✦ TALLER DE JUEGOS ✦</span><h2>Nochepolar</h2></div>',
       '<div class="npv-town">',cards.map(makeCard).join(''),'</div>',
     '</div>',
     '<p class="npv-credit">NOCHEPOLAR · Aventuras de invierno</p>'
