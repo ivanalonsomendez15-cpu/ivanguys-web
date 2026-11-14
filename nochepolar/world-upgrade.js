@@ -56,11 +56,27 @@ function interior(host,kind,open){
  const wrap=h('section','','npw-interior');
  wrap.append(heading(titles[kind]||'La aldea',prompts[kind]||'¡Bienvenido!',kind==='cine'?'🎬':kind==='arcade'?'🎮':kind==='pasaporte'?'🏅':'🎁'));
  const art=h('div','','npw-interior-art');art.innerHTML=makeScene(kind);wrap.append(art);
+ // Cada sala incluye un reto propio de encontrar tres objetos.
+ const key='room-'+kind, collected=read(key,[]);
+ const props={cine:['🎟️','🎞️','🍿'],arcade:['🕹️','⭐','🏆'],aventuras:['🧭','🎁','🔔'],pasaporte:['📬','🗝️','🏅']}[kind]||['🌟','🎁','🔔'];
+ const note=p('Busca los tres secretos de la sala: '+collected.length+'/3','npw-room-note');
+ const spots=h('div','','npw-room-props');
+ props.forEach((symbol,i)=>{
+   const button=b(collected.includes(i)?'✓':symbol,()=>{
+     if(collected.includes(i))return;
+     collected.push(i);keep(key,collected);
+     button.textContent='✓';button.classList.add('collected');
+     note.textContent=collected.length===3?'🏅 ¡Has encontrado todos los secretos!':'Secretos encontrados: '+collected.length+'/3';
+   },'npw-room-prop'+(collected.includes(i)?' collected':''));
+   button.setAttribute('aria-label','Encontrar objeto '+(i+1));
+   spots.append(button);
+ });
+ art.append(spots);wrap.append(note);
  const actions=h('div','','npw-interior-actions');
- if(kind==='cine'){actions.append(b('🎥 Abrir películas',()=>open('cine'),'npw-btn npw-red'),b('🎬 Ver la aldea',()=>open('village')))}
+ if(kind==='cine'){actions.append(b('🎥 Ver la cartelera',()=>host.querySelector('.np-hub-cards')?.scrollIntoView({behavior:'smooth'}),'npw-btn npw-red'),b('🚂 Visitar el tren',()=>open('train')))}
  if(kind==='arcade'){actions.append(b('🦌 Reno Express',()=>open('reno'),'npw-btn npw-red'),b('💡 Circuitos del Polo',()=>open('circuito')))}
- if(kind==='aventuras'){actions.append(b('🗓️ Misiones del día',()=>open('calendar'),'npw-btn npw-red'),b('🎪 Grandes eventos',()=>open('weekly')))}
- if(kind==='pasaporte'){actions.append(b('🏅 Abrir álbum',()=>open('passport'),'npw-btn npw-red'),b('🧝 Mi elfo',()=>open('elfo')))}
+ if(kind==='aventuras'){actions.append(b('🎪 Grandes eventos',()=>open('weekly'),'npw-btn npw-red'),b('🚂 Tren Polar',()=>open('train')))}
+ if(kind==='pasaporte'){actions.append(b('🧝 Vestir a mi elfo',()=>open('elfo'),'npw-btn npw-red'),b('🚂 Tren Polar',()=>open('train')))}
  wrap.append(actions);host.append(wrap);
 }
 const stations=[
@@ -91,7 +107,7 @@ function feature(root,kind,open,back){
     // El cambio de estación es interactivo y sin esperas obligatorias.
     locked=false};
    render();
-   shell.append(rail,label,counter,stops,b('Entrar en '+stations[position].n,()=>open(stations[position].action),'npw-btn npw-red'));
+   shell.append(rail,label,counter,stops);
    const go=b('Visitar la estación seleccionada',()=>open(stations[position].action),'npw-btn npw-red');shell.append(go);
    const setGo=()=>go.textContent='Visitar '+stations[position].n;
    stops.addEventListener('click',setGo);setGo();
@@ -166,7 +182,7 @@ function passport(root,context={}){
    base:Math.max(0,Number(localStorage.getItem('nochepolar:special:2026-27:k'+i))||0),
    bonus:read('bonus-kings-'+i,0)
  }));
- const ticket=read('train',null),elf=read('avatar',null);
+ const ticket=read('train',null),elf=read('avatar',null),secrets=read('village-secrets',[]);
  const count=completedDays.length+weekly.filter(x=>x.base===3&&x.bonus===2).length+kings.filter(x=>x.base===3&&x.bonus===2).length;
  const stats=h('div','','npw-passport-stats');
  [['Aventuras',completedDays.length+'/55'],['Eventos completos',weekly.filter(x=>x.base===3&&x.bonus===2).length+'/8'],
@@ -180,7 +196,9 @@ function passport(root,context={}){
    ...weekly.map((v,i)=>({name:seasonNames[i],icon:['🚂','🏰','☄️','⚙️','🦌','🌍','🎼','🎄'][i],earned:v.base===3&&v.bonus===2})),
    ...kings.map((v,i)=>({name:v.name,icon:i?'🎁':'👑',earned:v.base===3&&v.bonus===2})),
    {name:'Tren Polar',icon:'🚂',earned:ticket!==null},
-   {name:'Mi elfo',icon:'🧝',earned:!!elf}
+   {name:'Mi elfo',icon:'🧝',earned:!!elf},
+   ...secrets.map((n)=>({name:['Copo secreto','Sello del taller','Estrella del tren','Chispa de Navidad'][n]||'Secreto',icon:'✦',earned:true})),
+   ...['cine','arcade','aventuras','pasaporte'].map(k=>({name:'Sala '+k,icon:'✨',earned:read('room-'+k,[]).length===3}))
  ];
  stickers.forEach(v=>{
    const cell=h('div','','npw-sticker'+(v.earned?' earned':''));
