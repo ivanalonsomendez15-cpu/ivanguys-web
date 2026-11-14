@@ -1,347 +1,163 @@
-/* NOCHEPOLAR | Barrio ilustrado dentro de la aldea original.
- * Escena continua con senderos, árboles, vecinos y cinco edificios distintos.
- * Mantiene clic/tacto, navegación con teclado y adaptación móvil.
- */
+/* NOCHEPOLAR: 5 carteles ilustrados dentro de una continuación del taller.
+   No son edificios: cada cartel abre un juego, como en la aldea original.
+   Escenografía original: máquinas de regalos, plataformas, luces y elfos. */
 #np-village-quarter{
- --npv-sky:#66cce9;
  position:relative;isolation:isolate;overflow:hidden;width:100%;min-width:0;
- color:#fff;background:#69cde8;font-family:"Google Sans",Roboto,Arial,sans-serif;
- border:0!important;box-shadow:none!important;
+ font-family:"Google Sans",Roboto,Arial,sans-serif;color:#fff;
+ background:#713dba;border:0!important;box-shadow:none!important;
 }
 #np-village-quarter,#np-village-quarter *{box-sizing:border-box}
-#np-village-quarter .npv-top-bridge{
- position:relative;z-index:4;min-height:88px;
- background:
- radial-gradient(ellipse 110px 33px at 4% 0%,#fafff3 96%,transparent 100%),
- radial-gradient(ellipse 145px 48px at 21% -6%,#fafff3 96%,transparent 100%),
- radial-gradient(ellipse 110px 30px at 40% -2%,#fafff3 96%,transparent 100%),
- radial-gradient(ellipse 132px 40px at 62% -5%,#fafff3 96%,transparent 100%),
- radial-gradient(ellipse 155px 38px at 83% -4%,#fafff3 96%,transparent 100%),
- radial-gradient(ellipse 120px 46px at 102% -5%,#fafff3 96%,transparent 100%),
- linear-gradient(180deg,#78cbde,#6ecce8);
-}
-#np-village-quarter .npv-top-bridge::before{
- content:"";position:absolute;top:0;left:0;right:0;height:12px;
- background:repeating-linear-gradient(96deg,#fdfefd 0 36px,#dbf0f0 36px 40px,#fff 40px 92px);
- opacity:.75;
-}
-#np-village-quarter .npv-top-bridge::after{
- content:"";position:absolute;inset:auto 0 -9px;height:25px;
- background:
- radial-gradient(ellipse 90px 24px at 11% 0,#f0fbf8 95%,transparent),
- radial-gradient(ellipse 106px 28px at 33% -4px,#ecfbf7 95%,transparent),
- radial-gradient(ellipse 110px 28px at 63% -4px,#ebfbf7 95%,transparent),
- radial-gradient(ellipse 92px 24px at 91% 0,#edfaf6 95%,transparent);
-}
-#np-village-quarter .npv-top-ribbon{
- display:block;text-align:center;padding-top:26px;
- font-size:29px;letter-spacing:22px;color:#fff;
- text-shadow:0 3px 0 #177f9166;pointer-events:none;
-}
-#np-village-quarter .npv-title{
- position:relative;z-index:3;text-align:center;padding:13px 12px 11px;
- background:linear-gradient(180deg,#6ecce8,#63cae8);
- text-shadow:0 3px 0 #197e9b70;
-}
-#np-village-quarter .npv-ribbon{
- display:inline-block;padding:8px 17px;background:#e94e65;
- border:4px solid #fff;border-radius:100px;
- font-size:clamp(10px,1.3vw,14px);font-weight:900;letter-spacing:.035em;
- box-shadow:0 5px 0 #b93653,0 8px 0 #257f9966;
- transform:rotate(-3deg);
-}
-#np-village-quarter h2{
- position:relative;z-index:3;max-width:900px;
- margin:17px auto 5px;font:400 clamp(40px,6vw,76px)/1.12 Lobster,"Google Sans",sans-serif;
- text-align:center;color:#fff;transform:rotate(-2deg);
- text-shadow:0 5px 0 #1a8fa877,0 9px 18px #196a8d36;
-}
-#np-village-quarter .npv-title p{
- max-width:780px;margin:6px auto 8px;
- font-size:clamp(14px,1.75vw,19px);font-weight:750;line-height:1.4;
- color:#fff;text-shadow:0 2px 0 #2889a066;
-}
 #np-village-quarter .npv-village-stage{
- position:relative;isolation:isolate;height:950px;overflow:hidden;
- background:linear-gradient(#59cae8,#c8f5ed 55%,#f6fff1);
+ position:relative;isolation:isolate;overflow:hidden;width:100%;height:1110px;
+ background:linear-gradient(170deg,#723ba4 0%,#c85aaf 42%,#2eadd6 76%,#45499e);
 }
 #np-village-quarter .npv-illustration{
- position:absolute;inset:0;width:100%;height:100%;
- pointer-events:none;z-index:0;
+ position:absolute;inset:0;display:block;width:100%;height:100%;z-index:0;
+ pointer-events:none;
+}
+#np-village-quarter .npv-illustration .npv-sparks{
+ animation:npv-sparkle 4.3s ease-in-out infinite;
+ transform-origin:50% 50%;
+}
+#np-village-quarter .npv-illustration .npv-gears{
+ transform-box:fill-box;transform-origin:center;animation:npv-rotate 17s linear infinite;
+}
+#np-village-quarter .npv-title{
+ position:absolute;z-index:3;top:17px;left:50%;width:fit-content;max-width:94%;
+ transform:translateX(-50%);text-align:center;pointer-events:none;
+}
+#np-village-quarter .npv-ribbon{
+ display:inline-block;background:#f65a73;border:5px solid #fff6d4;
+ border-radius:22px;padding:7px 21px;white-space:nowrap;
+ font-size:clamp(10px,1.2vw,14px);font-weight:900;letter-spacing:.07em;
+ color:#fff;box-shadow:0 5px 0 #b53258,0 11px 20px #25265b44;
+}
+#np-village-quarter h2{
+ display:block;margin:12px auto 0;
+ font:400 clamp(40px,5.3vw,72px)/1 Lobster,"Google Sans",sans-serif;
+ color:#fff;transform:rotate(-4deg);
+ text-shadow:0 5px 0 #77308a,0 12px 20px #27398c66;
 }
 #np-village-quarter .npv-town{
- position:absolute;inset:0;z-index:3;
- max-width:1440px;margin:0 auto;pointer-events:none;
+ position:absolute;inset:0;z-index:5;width:100%;max-width:1500px;
+ margin:auto;left:0;right:0;pointer-events:none;
 }
-#np-village-quarter .npv-house{
- --wall:#e96586;--wall-side:#bb4b75;--roof:#9d507b;--roof-light:#f6f2e1;
- --sign:#ffe1a3;--ink:#9a3f51;--trim:#ffe89e;
- appearance:none;position:absolute;
- width:clamp(170px,19vw,255px);height:323px;
- background:transparent;border:none;padding:0;margin:0;
- cursor:pointer;pointer-events:auto;
- color:#fff;font-family:"Google Sans",Roboto,Arial,sans-serif;
- font-weight:900;text-align:center;line-height:1.15;
- transform-origin:50% 90%;transition:transform .2s ease,filter .2s ease;
- touch-action:manipulation;filter:drop-shadow(0 7px 0 #25657828);
+#np-village-quarter .npv-game-card{
+ appearance:none;display:flex;flex-direction:column;justify-content:stretch;
+ position:absolute;width:clamp(180px,19.6vw,293px);height:clamp(232px,22vw,290px);
+ padding:0;overflow:hidden;cursor:pointer;pointer-events:auto;
+ border:0;border-radius:18px;
+ background:var(--npv-card);color:#fff;
+ text-align:center;font-family:inherit;touch-action:manipulation;
+ box-shadow:0 12px 0 var(--npv-shadow),0 19px 19px #202a6463;
+ transition:transform .15s ease,filter .15s ease;
+ transform:rotate(var(--npv-angle,-2deg));
+ transform-origin:50% 100%;
 }
-#np-village-quarter .npv-house.cinema{left:7%;top:159px;--wall:#ef6882;--wall-side:#c44b65;--roof:#bc476b;--ink:#a43c57;--sign:#ffdf8c;transform:rotate(-2deg)}
-#np-village-quarter .npv-house.arcade{left:39%;top:97px;--wall:#35b9b7;--wall-side:#208b9e;--roof:#3a80b3;--ink:#16788c;--sign:#ffe38c;transform:rotate(2deg)}
-#np-village-quarter .npv-house.adventures{left:72%;top:166px;--wall:#b69bdc;--wall-side:#8474b6;--roof:#8467b7;--ink:#6b5da2;--sign:#ffe4a0;transform:rotate(-1deg)}
-#np-village-quarter .npv-house.selfie{left:22%;top:514px;--wall:#fbd58e;--wall-side:#d69a65;--roof:#ec7283;--ink:#b8556a;--sign:#fff4b5;transform:rotate(2deg)}
-#np-village-quarter .npv-house.passport{left:59%;top:491px;--wall:#84cda8;--wall-side:#4e9e83;--roof:#328e95;--ink:#267d79;--sign:#fff0a7;transform:rotate(-2deg)}
-#np-village-quarter .npv-house.cinema:hover,
-#np-village-quarter .npv-house.arcade:hover,
-#np-village-quarter .npv-house.adventures:hover,
-#np-village-quarter .npv-house.selfie:hover,
-#np-village-quarter .npv-house.passport:hover,
-#np-village-quarter .npv-house:focus-visible{
- transform:translateY(-10px) scale(1.04) rotate(0deg);
- filter:drop-shadow(0 12px 5px #296a7d3d);
+#np-village-quarter .npv-game-card:hover,
+#np-village-quarter .npv-game-card:focus-visible{
+ transform:translateY(-9px) rotate(0deg) scale(1.035);
+ filter:brightness(1.08);
 }
-#np-village-quarter .npv-house:focus-visible{
- outline:4px solid #ffe46d;outline-offset:7px;border-radius:24px;
+#np-village-quarter .npv-game-card:active{transform:translateY(3px) scale(.985);box-shadow:0 4px 0 var(--npv-shadow)}
+#np-village-quarter .npv-game-card:focus-visible{
+ outline:5px solid #fff4a7;outline-offset:5px;
 }
-#np-village-quarter .npv-ground-shadow{
- position:absolute;left:0;right:3%;bottom:13px;height:29px;
- border-radius:50%;background:#81beba62;
+#np-village-quarter .npv-card-green{--npv-card:#2fa95c;--npv-shadow:#188050}
+#np-village-quarter .npv-card-yellow{--npv-card:#fac530;--npv-shadow:#d39a25}
+#np-village-quarter .npv-card-blue{--npv-card:#315dad;--npv-shadow:#244184}
+#np-village-quarter .npv-card-lightblue{--npv-card:#6ab7ed;--npv-shadow:#378ac9}
+#np-village-quarter .npv-card-brown{--npv-card:#b88169;--npv-shadow:#8e574c}
+#np-village-quarter .npv-card-art{
+ display:block;flex:1 1 auto;min-height:0;position:relative;overflow:hidden;
+ margin:14px 14px 0;border-radius:10px;
+ background:rgba(255,255,255,.2);
 }
-#np-village-quarter .npv-side-wall{
- position:absolute;left:16%;right:1%;top:94px;bottom:36px;
- border-radius:13px 15px 3px 4px;
- background:var(--wall-side);transform:skewY(-5deg);
- box-shadow:9px 11px 0 #4a829533;
+#np-village-quarter .npv-card-art svg{
+ display:block;width:100%;height:100%;object-fit:cover;
 }
-#np-village-quarter .npv-chimney{
- position:absolute;top:34px;right:20%;width:28px;height:100px;
- border-radius:4px 4px 0 0;background:var(--wall-side);
- border-left:5px solid #ffffff3d;
- box-shadow:inset 0 8px 0 #fff6;z-index:1;
+#np-village-quarter .npv-card-bottom{
+ display:flex;flex:0 0 29%;flex-direction:column;justify-content:center;
+ align-items:center;gap:1px;
+ padding:6px 8px 11px;
 }
-#np-village-quarter .npv-chimney::after{
- content:"";position:absolute;left:-5px;right:-5px;top:-8px;height:15px;
- background:#f7fff9;border-radius:8px 8px 4px 4px;
+#np-village-quarter .npv-card-title{
+ display:block;color:#fff;font:400 clamp(20px,2.15vw,31px)/1.06 Lobster,"Google Sans",sans-serif;
+ text-shadow:0 2px 0 #3c3a7c3b;
 }
-#np-village-quarter .npv-chimney i{
- position:absolute;top:-48px;left:0;width:26px;height:34px;
- opacity:.6;border-radius:70% 40% 50% 40%;
- border:6px solid #e4faf7;border-right:0;border-bottom:0;
- transform:rotate(25deg);animation:npv-smoke 3s ease-in-out infinite;
+#np-village-quarter .npv-card-sub{
+ font:700 clamp(9px,.82vw,12px)/1.15 "Google Sans",Roboto,sans-serif;
+ color:#fff5c8;letter-spacing:.015em;
 }
-#np-village-quarter .npv-roof{
- position:absolute;left:1%;right:2%;top:15px;height:129px;
- background:var(--roof);z-index:3;
- clip-path:polygon(50% 0%,100% 77%,98% 90%,2% 90%,0 77%);
- filter:drop-shadow(0 6px 0 #0002);
+#np-village-quarter .npv-card-cine{left:5%;top:225px;--npv-angle:-3deg}
+#np-village-quarter .npv-card-arcade{left:36%;top:325px;--npv-angle:2deg}
+#np-village-quarter .npv-card-aventuras{right:5%;top:222px;--npv-angle:3deg}
+#np-village-quarter .npv-card-selfie{left:17%;top:665px;--npv-angle:2deg}
+#np-village-quarter .npv-card-pasaporte{right:19%;top:690px;--npv-angle:-3deg}
+#np-village-quarter .npv-hanging-garland{
+ position:absolute;z-index:2;top:0;left:0;right:0;height:15px;pointer-events:none;
+ border-top:7px solid #ffeb9d;box-shadow:0 7px 0 #277bc2;
 }
-#np-village-quarter .npv-roof::before{
- content:"";position:absolute;inset:0;background:#ffffff;
- clip-path:polygon(50% 0,100% 77%,96% 83%,50% 15%,4% 83%,0 77%);
+#np-village-quarter .npv-hanging-garland::after{
+ content:"";position:absolute;top:3px;left:0;right:0;height:17px;
+ background:radial-gradient(circle,#f95c6b 5px,transparent 6px) 0 0/77px 17px repeat-x,
+ radial-gradient(circle,#41d6b0 5px,transparent 6px) 38px 0/77px 17px repeat-x;
 }
-#np-village-quarter .npv-roof .npv-snow-ridge{
- position:absolute;left:5%;right:5%;bottom:10px;height:12px;
- border-radius:20px;background:#fff9;transform:scaleY(.5);
-}
-#np-village-quarter .npv-building{
- position:absolute;top:95px;left:9%;width:81%;height:187px;
- background:var(--wall);border:6px solid #ffffff64;
- border-bottom:12px solid #ffffff7d;border-radius:12px 13px 4px 4px;
- box-shadow:inset -11px 0 0 #544e6925;z-index:4;
-}
-#np-village-quarter .npv-upper-window{
- display:block;position:absolute;left:50%;top:5px;
- width:38px;height:28px;transform:translateX(-50%);
- border:4px solid #fff5;background:var(--roof);
- border-radius:26px 26px 6px 6px;
- color:#fff8b0;font-size:17px;line-height:20px;
-}
-#np-village-quarter .npv-window{
- position:absolute;top:67px;width:28%;height:58px;
- border:6px solid #f7ebba;border-radius:10px 10px 6px 6px;
- background:#6dbddd;overflow:hidden;
- box-shadow:inset -5px 0 0 #2687a2a8,0 4px 0 #286b8440;
-}
-#np-village-quarter .npv-window::before{
- content:"";position:absolute;top:48%;left:0;right:0;
- height:5px;background:#fff5c7;
-}
-#np-village-quarter .npv-window::after{
- content:"";position:absolute;left:48%;top:0;bottom:0;
- width:5px;background:#fff5c7;
-}
-#np-village-quarter .npv-window i{
- display:block;position:absolute;left:6px;top:6px;right:6px;bottom:4px;
- border-radius:6px;background:linear-gradient(135deg,#f3fbd433,transparent 65%);
-}
-#np-village-quarter .npv-window-left{left:7%}
-#np-village-quarter .npv-window-right{right:7%}
-#np-village-quarter .npv-awning{
- position:absolute;left:-1%;right:-1%;top:62px;height:17px;z-index:2;
- background:repeating-linear-gradient(90deg,#ffffff 0 16px,var(--roof) 16px 32px);
- border-bottom:4px solid #fff8;border-radius:0 0 13px 13px;
- box-shadow:0 5px 0 #324c7a19;
-}
-#np-village-quarter .npv-festoon{
- position:absolute;left:0;right:0;top:48px;
- color:#ffe47d;letter-spacing:2px;font-size:11px;z-index:4;
- text-shadow:0 2px #457a87ad;
-}
-#np-village-quarter .npv-door{
- position:absolute;left:50%;bottom:-2px;transform:translateX(-50%);
- width:33%;height:98px;z-index:5;
- background:var(--wall-side);border:7px solid #f8e6b3;border-bottom:0;
- border-radius:38px 38px 0 0;
- box-shadow:inset 7px 0 0 #3a487420,inset -6px 0 0 #283d5b30;
- display:grid;place-items:center;
-}
-#np-village-quarter .npv-door span{
- font-size:clamp(27px,3vw,42px);color:#fff8cf;
- text-shadow:0 4px 0 #3b698a66;
-}
-#np-village-quarter .npv-marquee{
- position:absolute;top:28px;left:-4%;width:108%;z-index:7;
- padding:8px 3px;border:5px solid #fff;border-radius:17px;
- background:var(--sign);color:var(--ink);
- box-shadow:0 5px 0 var(--roof),0 9px 0 #2b6d8633;
- font-size:clamp(11px,1.35vw,16px);letter-spacing:.01em;
- white-space:nowrap;
-}
-#np-village-quarter .npv-step{
- position:absolute;z-index:6;bottom:32px;left:24%;width:54%;height:13px;
- background:#f9f1cb;border-radius:7px 7px 3px 3px;
- box-shadow:0 9px 0 #b2c5b0,0 14px 0 #fff;
-}
-#np-village-quarter .npv-porch{
- position:absolute;z-index:2;bottom:29px;left:0;right:4%;height:18px;
- border-radius:50%;background:#fafef4;box-shadow:0 6px 0 #c7e8dd;
-}
-#np-village-quarter .npv-tooltip{
- position:absolute;z-index:8;top:0;left:50%;transform:translate(-50%,-60%);
- padding:7px 12px;border-radius:30px;border:4px solid white;
- color:#277081;background:#ffefab;font-size:13px;
- box-shadow:0 4px 0 #8ac2c4;white-space:nowrap;
- opacity:0;pointer-events:none;transition:opacity .15s ease;
-}
-#np-village-quarter .npv-house:hover .npv-tooltip,
-#np-village-quarter .npv-house:focus-visible .npv-tooltip{opacity:1}
-#np-village-quarter .npv-decoration{
- position:absolute;z-index:5;font-size:65px;
- text-shadow:0 7px 0 #31789555;pointer-events:none;
- transform:rotate(-16deg);
-}
-#np-village-quarter .npv-decoration span{
- font-size:27px;position:absolute;top:-15px;right:-19px;color:#fff;
-}
-#np-village-quarter .npv-deco-left{left:8%;bottom:16px}
-#np-village-quarter .npv-deco-right{right:14%;bottom:21px;transform:rotate(13deg)}
 #np-village-quarter .npv-credit{
- position:relative;z-index:3;text-align:center;
- background:#e9fbf5;color:#2c8ca1;
- font-size:12px;font-weight:800;letter-spacing:.02em;
- padding:8px 14px 18px;margin:0;
+ margin:0;padding:9px 12px;text-align:center;position:relative;
+ background:#3958b2;color:#ffecb0;font-size:11px;font-weight:850;
+ border-top:7px solid #f2cd7e;letter-spacing:.03em;
 }
-@keyframes npv-smoke{
- 0%,100%{opacity:.2;transform:translateY(6px) rotate(25deg) scale(.85)}
- 50%{opacity:.65;transform:translateY(-9px) rotate(15deg) scale(1.1)}
+@keyframes npv-sparkle{50%{opacity:.45;transform:translateY(10px)}}
+@keyframes npv-rotate{to{transform:rotate(360deg)}}
+@media(min-width:1550px){
+ #np-village-quarter .npv-village-stage{height:1190px}
+ #np-village-quarter .npv-card-selfie{top:730px}
+ #np-village-quarter .npv-card-pasaporte{top:765px}
 }
-@media(max-width:1080px){
- #np-village-quarter .npv-village-stage{height:875px}
- #np-village-quarter .npv-house{width:clamp(166px,23vw,222px);height:296px}
- #np-village-quarter .npv-house.cinema{left:6%;top:123px}
- #np-village-quarter .npv-house.arcade{left:37.6%;top:79px}
- #np-village-quarter .npv-house.adventures{left:70%;top:129px}
- #np-village-quarter .npv-house.selfie{left:20%;top:457px}
- #np-village-quarter .npv-house.passport{left:58%;top:437px}
- #np-village-quarter .npv-roof{height:117px}
- #np-village-quarter .npv-building{height:170px;top:87px}
- #np-village-quarter .npv-door{height:86px}
- #np-village-quarter .npv-window{top:57px;height:54px}
- #np-village-quarter .npv-marquee{font-size:12px;top:26px}
- #np-village-quarter .npv-awning{top:54px}
- #np-village-quarter .npv-festoon{top:43px}
+@media(max-width:900px){
+ #np-village-quarter .npv-village-stage{height:1050px}
+ #np-village-quarter .npv-game-card{width:27%;max-width:235px;height:255px}
+ #np-village-quarter .npv-card-cine{left:4%;top:210px}
+ #np-village-quarter .npv-card-arcade{left:37%;top:318px}
+ #np-village-quarter .npv-card-aventuras{right:4%;top:198px}
+ #np-village-quarter .npv-card-selfie{left:16%;top:665px}
+ #np-village-quarter .npv-card-pasaporte{right:16%;top:680px}
+ #np-village-quarter .npv-card-title{font-size:clamp(19px,2.8vw,28px)}
 }
 @media(max-width:620px){
- #np-village-quarter .npv-top-bridge{min-height:54px}
- #np-village-quarter .npv-top-ribbon{padding-top:13px;font-size:17px;letter-spacing:8px}
- #np-village-quarter .npv-title{padding:9px 6px 8px}
- #np-village-quarter .npv-ribbon{padding:6px 11px;font-size:10px;border-width:3px}
- #np-village-quarter h2{font-size:clamp(31px,8vw,45px);margin:14px auto 5px}
- #np-village-quarter .npv-title p{font-size:13px;max-width:290px}
- #np-village-quarter .npv-village-stage{height:1200px}
- #np-village-quarter .npv-illustration{width:100%;height:100%}
- #np-village-quarter .npv-house{width:45%;min-width:0;height:287px}
- #np-village-quarter .npv-house.cinema{left:2%;top:135px}
- #np-village-quarter .npv-house.arcade{left:53%;top:103px}
- #np-village-quarter .npv-house.adventures{left:3%;top:427px}
- #np-village-quarter .npv-house.selfie{left:53%;top:440px}
- #np-village-quarter .npv-house.passport{left:27%;top:747px}
- #np-village-quarter .npv-roof{height:100px;top:24px}
- #np-village-quarter .npv-chimney{top:41px;right:17%;width:19px;height:75px}
- #np-village-quarter .npv-building{top:93px;height:152px;left:9%;width:81%;border-width:4px;border-bottom-width:9px}
- #np-village-quarter .npv-side-wall{top:93px;bottom:41px}
- #np-village-quarter .npv-window{top:54px;height:47px;border-width:4px}
- #np-village-quarter .npv-window::before{height:3px}
- #np-village-quarter .npv-window::after{width:3px}
- #np-village-quarter .npv-awning{top:51px;height:14px}
- #np-village-quarter .npv-upper-window{width:32px;height:22px;font-size:14px}
- #np-village-quarter .npv-festoon{display:none}
- #np-village-quarter .npv-door{height:72px;border-width:5px;border-bottom:0}
- #np-village-quarter .npv-door span{font-size:26px}
- #np-village-quarter .npv-marquee{top:28px;padding:7px 0;font-size:clamp(10px,2.5vw,13px);border-width:4px}
- #np-village-quarter .npv-ground-shadow{bottom:35px}
- #np-village-quarter .npv-step{bottom:31px}
- #np-village-quarter .npv-porch{bottom:24px}
- #np-village-quarter .npv-deco-left{left:3%;bottom:50px;font-size:45px}
- #np-village-quarter .npv-deco-right{right:6%;bottom:35px;font-size:45px}
+ #np-village-quarter .npv-village-stage{height:1370px}
+ #np-village-quarter .npv-title{top:30px;max-width:100%}
+ #np-village-quarter .npv-ribbon{font-size:9px;padding:7px 12px;border-width:3px}
+ #np-village-quarter h2{font-size:clamp(35px,9vw,52px);margin-top:7px}
+ #np-village-quarter .npv-game-card{
+  width:42%;max-width:none;height:clamp(188px,56vw,240px);
+  border-radius:16px;
+  box-shadow:0 8px 0 var(--npv-shadow),0 14px 15px #202a6470;
+ }
+ #np-village-quarter .npv-card-art{margin:8px 8px 0;border-radius:8px}
+ #np-village-quarter .npv-card-bottom{flex-basis:32%;padding:4px 5px 9px}
+ #np-village-quarter .npv-card-title{font-size:clamp(18px,5.3vw,25px)}
+ #np-village-quarter .npv-card-sub{font-size:9px;line-height:1.05;max-width:98%}
+ #np-village-quarter .npv-card-cine{left:4%;top:169px}
+ #np-village-quarter .npv-card-arcade{left:auto;right:4%;top:315px}
+ #np-village-quarter .npv-card-aventuras{left:6%;right:auto;top:558px}
+ #np-village-quarter .npv-card-selfie{left:auto;right:6%;top:761px}
+ #np-village-quarter .npv-card-pasaporte{left:27%;right:auto;top:1055px;width:46%}
 }
 @media(max-width:385px){
- #np-village-quarter .npv-village-stage{height:1170px}
- #np-village-quarter .npv-house{height:265px}
- #np-village-quarter .npv-house.cinema{top:122px}
- #np-village-quarter .npv-house.arcade{top:98px}
- #np-village-quarter .npv-house.adventures{top:385px}
- #np-village-quarter .npv-house.selfie{top:400px}
- #np-village-quarter .npv-house.passport{top:687px}
- #np-village-quarter .npv-building{height:136px}
- #np-village-quarter .npv-door{height:64px}
- #np-village-quarter .npv-window{height:43px}
- #np-village-quarter .npv-illustration{opacity:.93}
+ #np-village-quarter .npv-village-stage{height:1310px}
+ #np-village-quarter .npv-game-card{height:198px}
+ #np-village-quarter .npv-card-cine{top:170px}
+ #np-village-quarter .npv-card-arcade{top:310px}
+ #np-village-quarter .npv-card-aventuras{top:536px}
+ #np-village-quarter .npv-card-selfie{top:746px}
+ #np-village-quarter .npv-card-pasaporte{top:1025px}
+}
+@media(max-height:500px) and (orientation:landscape){
+ #np-village-quarter .npv-village-stage{height:1000px}
+ #np-village-quarter .npv-game-card{min-height:215px}
 }
 @media(prefers-reduced-motion:reduce){
  #np-village-quarter *,#np-village-quarter *::before,#np-village-quarter *::after{animation:none!important;transition:none!important}
 }
-
-/* Los iconos de cada local son dibujos SVG, no caracteres emoji del sistema. */
-#np-village-quarter .npv-door span{
- width:100%;height:100%;display:grid;place-items:center;overflow:hidden;
-}
-#np-village-quarter .npv-door span svg{
- display:block;width:94%;height:90%;max-width:68px;max-height:78px;
- filter:drop-shadow(0 3px 0 #1b648733);
-}
-#np-village-quarter .npv-decoration svg{display:block;width:80px;height:80px}
-@media(max-width:620px){
- #np-village-quarter .npv-door span svg{max-width:52px;max-height:54px}
- #np-village-quarter .npv-decoration svg{width:60px;height:60px}
-}
-
-/* Siluetas diferenciadas: no son cinco variaciones del mismo tejadito. */
-#np-village-quarter .npv-house.arcade .npv-roof{
- clip-path:polygon(9% 25%,91% 25%,100% 82%,97% 92%,3% 92%,0 82%);
- border-radius:16px;
-}
-#np-village-quarter .npv-house.arcade .npv-roof::before{
- clip-path:polygon(9% 25%,91% 25%,94% 37%,6% 37%);
-}
-#np-village-quarter .npv-house.adventures .npv-roof{
- clip-path:polygon(50% 0,100% 77%,95% 92%,5% 92%,0 77%);
-}
-#np-village-quarter .npv-house.selfie .npv-roof{
- clip-path:polygon(0 44%,25% 25%,50% 4%,75% 25%,100% 44%,100% 90%,0 90%);
-}
-#np-village-quarter .npv-house.passport .npv-roof{
- clip-path:polygon(9% 25%,42% 5%,60% 5%,93% 25%,100% 81%,95% 91%,5% 91%,0 81%);
-}
-#np-village-quarter .npv-house.selfie .npv-marquee{transform:rotate(2deg)}
-#np-village-quarter .npv-house.cinema .npv-marquee{transform:rotate(-2deg)}
-#np-village-quarter .npv-house.passport .npv-marquee{border-radius:25px 8px 25px 8px}
