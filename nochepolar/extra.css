@@ -144,3 +144,6 @@
  #np-screen .npq-lab-status{grid-column:1 / -1;justify-self:stretch}
  #np-shortcuts .np-shortcut{font-size:10px;padding:7px 9px}
 }
+
+/* No superponer el botón de barrio a los juegos mientras se recorre. */
+#np-root.np-quarter-visible #np-entry{display:none!important}
