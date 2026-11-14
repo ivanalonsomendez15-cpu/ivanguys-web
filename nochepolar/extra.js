@@ -60,7 +60,7 @@
     '<div class="np-window"><div class="np-head"><div class="np-brand">❄️ NOCHEPOLAR <small>Edición ampliada</small></div>' +
     '<button id="np-close" type="button" aria-label="Cerrar">✕</button></div>' +
     '<div class="np-content" id="np-content"></div>' +
-    '<footer>Basado en el código abierto de Google Santa Tracker · Adaptación no oficial · El seguimiento del 24 es una simulación festiva</footer></div></div>';
+    '<footer>NOCHEPOLAR · Aventuras de invierno · Adaptación no oficial de Santa Tracker</footer></div></div>';
   document.body.appendChild(host);
   const screen = document.getElementById('np-screen');
   const content = document.getElementById('np-content');
@@ -80,12 +80,12 @@
   function enterNative(scene) {
     screen.hidden = false;
     screen.classList.add('np-native-mode');
-    ['np-cine','np-arcade','np-calendar','np-gameplay','np-passport','np-adventure'].forEach(c=>screen.classList.remove(c));
+    ['np-cine','np-arcade','np-calendar','np-gameplay','np-passport','np-adventure','np-weekly','np-kings'].forEach(c=>screen.classList.remove(c));
     screen.classList.add('np-'+scene);
     nativeBack.hidden = false;
   }
   function leaveNative() {
-    screen.classList.remove('np-native-mode','np-cine','np-arcade','np-calendar','np-gameplay','np-passport','np-adventure');
+    screen.classList.remove('np-native-mode','np-cine','np-arcade','np-calendar','np-gameplay','np-passport','np-adventure','np-weekly','np-kings');
     nativeBack.hidden = true;
   }
   nativeBack.hidden = true;
@@ -182,14 +182,14 @@
     return group;
   }
   function showWeekly() {
-    clearExpedition();enterNative('calendar');
+    clearExpedition();enterNative('weekly');
     content.replaceChildren(decorativeScene(),toolbar());
     const holder=h('div','','np-special-host');content.append(holder);
     if(window.NochepolarSpecials?.weekly)window.NochepolarSpecials.weekly(holder,showCalendar);
     else holder.append(h('p','No se pudo cargar el módulo de eventos. Actualiza la página.'));
   }
   function showKings() {
-    clearExpedition();enterNative('calendar');
+    clearExpedition();enterNative('kings');
     content.replaceChildren(decorativeScene(),toolbar());
     const holder=h('div','','np-special-host');content.append(holder);
     if(window.NochepolarSpecials?.kings)window.NochepolarSpecials.kings(holder,showCalendar);
