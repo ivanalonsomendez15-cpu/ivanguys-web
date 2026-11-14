@@ -483,7 +483,7 @@
         [-74,41],[-99,19],[-77,-12],[-70,-33],[-58,-34],[0,86]
       ];
       shell.append(h('p',isBig?
-        '🎅 EL GRAN EVENTO DEL 24: tras superar los capítulos de preparación, pilotarás el recorrido ilustrado por 19 paradas del mundo, recogerás sellos y desbloquearás el gran final. Es una simulación festiva, no seguimiento GPS real.':
+        '🎅 EL GRAN EVENTO DEL 24: tras superar los capítulos de preparación, pilotarás el recorrido ilustrado por 19 paradas del mundo, recogerás sellos y desbloquearás el gran final. ¡La magia de la Navidad te espera en cada destino!':
         'Ya tienes todos los materiales. Sigue las seis paradas de la ruta final para terminar '+title.toLowerCase()+'.',
         'npq-description'));
       const route=h('div','','npq-route');
