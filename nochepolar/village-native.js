@@ -200,6 +200,16 @@
   };
   addEventListener('scroll', reveal, {passive:true});
   reveal();
+  // El acceso flotante deja de cubrir los juegos cuando se entra en el barrio.
+  if (typeof IntersectionObserver === 'function') {
+    const observer = new IntersectionObserver(entries => {
+      const visible = !!entries[0]?.isIntersecting;
+      if (window.parent !== window) window.parent.postMessage({
+        source:'nochepolar-village', action:'quarter-visibility', visible
+      }, location.origin);
+    }, {threshold:0.03});
+    observer.observe(quarter);
+  }
   addEventListener('message', event => {
     if (event.origin !== location.origin) return;
     if (event.data && event.data.source === 'nochepolar-main' && event.data.action === 'scroll-quarter') {
