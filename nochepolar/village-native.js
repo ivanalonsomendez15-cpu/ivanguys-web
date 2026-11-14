@@ -189,6 +189,64 @@
     '</div>',
     '<p class="npv-credit">NOCHEPOLAR · Aventuras de invierno</p>'
   ].join('');
+
+  // Capa viva: copos, auroras, día y noche, y cuatro secretos coleccionables.
+  const stage=quarter.querySelector('.npv-village-stage');
+  const weather=document.createElement('div');
+  weather.className='npv-weather-layer';weather.setAttribute('aria-hidden','true');
+  stage.append(weather);
+  const secrets=document.createElement('div');secrets.className='npv-secret-layer';
+  const titles=['Copo secreto','Sello del taller','Estrella del tren','Chispa de Navidad'];
+  const places=[[9,22],[86,45],[22,77],[77,91]];
+  const key='np:world:v1:village-secrets';
+  const saved=(()=>{try{return JSON.parse(localStorage.getItem(key)||'[]')}catch(e){return []}})();
+  places.forEach(([x,y],i)=>{
+    const btn=document.createElement('button');
+    btn.type='button';btn.className='npv-secret'+(saved.includes(i)?' found':'');
+    btn.style.left=x+'%';btn.style.top=y+'%';
+    btn.textContent=saved.includes(i)?'✓':'✦';
+    btn.setAttribute('aria-label',saved.includes(i)?titles[i]+' encontrado':'Descubrir '+titles[i]);
+    btn.addEventListener('click',()=>{
+      if(saved.includes(i))return;
+      saved.push(i);
+      try{localStorage.setItem(key,JSON.stringify(saved))}catch(e){}
+      btn.classList.add('found');btn.textContent='✓';
+      const toast=document.createElement('p');
+      toast.className='npv-secret-note';toast.textContent='¡Has encontrado '+titles[i]+'!';
+      stage.append(toast);setTimeout(()=>toast.remove(),2700);
+    });
+    secrets.append(btn);
+  });
+  stage.append(secrets);
+  const applyClimate=value=>{
+    const v=['auto','day','night','snow','aurora'].includes(value)?value:'auto';
+    let hour=12;
+    try{hour=Number(new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/Madrid',hour:'2-digit',hour12:false}).format(new Date()))%24}catch(e){}
+    const night=v==='night'||v==='aurora'||v==='auto'&&(hour<8||hour>=19);
+    quarter.setAttribute('data-npw-climate',v);
+    quarter.setAttribute('data-npw-phase',night?'night':'day');
+    weather.replaceChildren();
+    if(v==='snow'||v==='aurora')for(let i=0;i<42;i++){
+      const dot=document.createElement('span');dot.className='npv-flake';dot.textContent=v==='snow'?'❄':'✦';
+      dot.style.left=((i*83+19)%100)+'%';
+      dot.style.animationDelay=-(i*7%15)+'s';
+      dot.style.animationDuration=(7+i%8)+'s';
+      dot.style.fontSize=(12+i%14)+'px';
+      weather.append(dot);
+    }
+  };
+  const climate=()=>{try{return JSON.parse(localStorage.getItem('np:world:v1:climate')||'"auto"')}catch(e){return 'auto'}};
+  applyClimate(climate());
+  addEventListener('storage',event=>{if(event.key==='np:world:v1:climate')applyClimate(climate())});
+  const today=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Madrid',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
+  const weeks=[['2026-11-01','2026-11-07'],['2026-11-08','2026-11-14'],['2026-11-15','2026-11-21'],
+  ['2026-11-22','2026-11-28'],['2026-11-29','2026-12-05'],['2026-12-06','2026-12-12'],
+  ['2026-12-13','2026-12-19'],['2026-12-20','2026-12-25']];
+  const week=weeks.findIndex(([start,end])=>today>=start&&today<=end);
+  quarter.style.setProperty('--npv-festival-color',['#41bdbb','#f1b653','#9981d2','#f27992',
+  '#5eb4d9','#56b99a','#cb8dca','#ed8160'][Math.max(week,0)]);
+  quarter.setAttribute('data-npw-week',String(week));
+
   const last = Array.from(main.querySelectorAll('modvil-module')).pop();
   if (last) last.insertAdjacentElement('afterend', quarter);
   else main.append(quarter);
@@ -212,6 +270,7 @@
   }
   addEventListener('message', event => {
     if (event.origin !== location.origin) return;
+    if(event.data?.source==='nochepolar-world'&&event.data.type==='climate-changed')applyClimate(event.data.value);
     if (event.data && event.data.source === 'nochepolar-main' && event.data.action === 'scroll-quarter') {
       quarter.scrollIntoView({behavior:'smooth',block:'start'});
     }
