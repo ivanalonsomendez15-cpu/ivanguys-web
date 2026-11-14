@@ -525,6 +525,10 @@
     if(ev.origin!==location.origin)return;
     const data=ev.data;
     if(!data||data.source!=='nochepolar-village')return;
+    if(data.action==='quarter-visibility'){
+      host.classList.toggle('np-quarter-visible',Boolean(data.visible));
+      return;
+    }
     switch(data.action){
       case 'cine': showCollection('cine');break;
       case 'arcade': showCollection('arcade');break;
