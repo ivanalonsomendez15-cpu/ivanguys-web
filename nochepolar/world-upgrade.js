@@ -351,7 +351,22 @@ function eventHeader(root,kind,index=-1){
  const wrap=h('div','','npw-event-diorama');
  wrap.style.setProperty('--npw-event-color',palettes[(Math.max(0,i))%8]);
  const icon=kind==='kings'?'👑':['🚂','🏰','☄️','⚙️','🦌','🌍','🎼','🎄'][Math.max(0,i)%8];
- wrap.append(h('span',icon,'npw-event-icon'),h('div',kind==='kings'?'La estrella de Oriente':seasonNames[Math.max(0,i)%8],'npw-event-title'));
+ const art=h('div','','npw-event-art');
+ const themes=[
+   '<rect x="235" y="102" width="290" height="85" rx="19" fill="#e95d79"/><rect x="342" y="65" width="120" height="91" rx="18" fill="#54bfd2"/><circle cx="299" cy="194" r="25" fill="#294e98"/><circle cx="466" cy="194" r="25" fill="#294e98"/><path d="M180 200H590" stroke="#ffdd91" stroke-width="16"/>',
+   '<rect x="188" y="91" width="94" height="105" fill="#e59d5b"/><rect x="315" y="58" width="135" height="138" fill="#86bdd5"/><rect x="484" y="105" width="98" height="91" fill="#9f7eca"/><path d="M165 92l73-76 72 76M296 60l91-56 91 56M470 107l63-65 66 65" stroke="#f7f8dc" stroke-width="14" fill="none"/>',
+   '<path d="M110 196L360 44M340 212L580 52" stroke="#ffdda0" stroke-width="21" stroke-linecap="round"/><circle cx="370" cy="42" r="31" fill="#fff7cc"/><circle cx="589" cy="47" r="28" fill="#f7ae9f"/><path d="M505 183l23-46 20 46 48 9-42 34 8 18-34-24-32 18 8-46Z" fill="#ffe398"/>',
+   '<circle cx="377" cy="119" r="92" fill="#f4b96d" stroke="#fff0b4" stroke-width="19"/><circle cx="377" cy="119" r="45" fill="#3f8aa8"/><rect x="115" y="157" width="147" height="69" rx="8" fill="#e97e99"/><path d="M173 158v69M115 181h147" stroke="#fbe4a2" stroke-width="13"/><rect x="505" y="134" width="103" height="90" rx="12" fill="#6ccbaa"/>',
+   '<path d="M110 190Q270 85 590 178" stroke="#ffeab2" stroke-width="15" stroke-dasharray="18 13" fill="none"/><path d="M285 112L365 48L393 103L443 102L412 146L355 153L316 179Z" fill="#f7d297"/><circle cx="390" cy="78" r="5" fill="#453858"/><path d="M405 98L458 75L426 119" fill="#f7d297"/>',
+   '<rect x="230" y="74" width="75" height="147" rx="9" fill="#f2dfb3"/><rect x="429" y="74" width="75" height="147" rx="9" fill="#e3c7f0"/><path d="M216 72l51-53 51 53M414 72l51-53 51 53" fill="#ed718a"/><path d="M264 18V2M465 18V2" stroke="#ffe693" stroke-width="12"/><path d="M260 152L370 29L465 152" stroke="#fff2b0" stroke-width="10" fill="none"/>',
+   '<path d="M170 163q65-89 129 0T428 163T565 163" fill="none" stroke="#ffe9c0" stroke-width="15"/><circle cx="283" cy="175" r="44" fill="#f0c577"/><circle cx="480" cy="175" r="48" fill="#e77b98"/><path d="M285 87v-40h70v49M483 82V38h75v49" stroke="#fff0b5" stroke-width="13" fill="none"/><text x="374" y="91" font-size="68" fill="#fff9c4">♫</text>',
+   '<path d="M375 10L480 186H270Z" fill="#3eb08d"/><path d="M375 56L460 206H290Z" fill="#258a84"/><rect x="360" y="199" width="28" height="34" fill="#986f51"/><circle cx="375" cy="39" r="18" fill="#ffe78f"/><rect x="135" y="156" width="100" height="71" fill="#df5b7c"/><path d="M174 156v71M135 183h100" stroke="#ffe49c" stroke-width="13"/><rect x="506" y="156" width="99" height="71" fill="#6fc2d6"/><path d="M544 156v71M506 183h99" stroke="#fff0b0" stroke-width="12"/>'
+ ];
+ const design=themes[kind==='kings'?7:Math.max(0,i)%8];
+ art.innerHTML='<svg viewBox="0 0 730 245" role="img" aria-label="Escenario ilustrado del evento">'+
+  '<path d="M0 0H730V245H0Z" fill="#5bafd1" opacity=".14"/>'+
+  '<path d="M0 225Q145 173 307 222T730 216V245H0Z" fill="#fff4d1" opacity=".85"/>'+design+'</svg>';
+ wrap.append(art,h('span',icon,'npw-event-icon'),h('div',kind==='kings'?'La estrella de Oriente':seasonNames[Math.max(0,i)%8],'npw-event-title'));
  root.append(wrap);
 }
 window.NochepolarWorld={feature,interior,passport,extraDay,bonus,festive24,eventHeader,themeForDate,
