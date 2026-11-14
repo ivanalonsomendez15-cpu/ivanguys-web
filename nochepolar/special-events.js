@@ -29,7 +29,7 @@
   function clear(){disposed=true;stop();stop=()=>{}}
   function create(root,title,description){
     root.replaceChildren();const c=$('section','','nps-panel');
-    c.append($('p','❄ NOCHEPOLAR · NUEVA AVENTURA','nps-overline'),$('h2',title),$('p',description,'nps-desc'));root.append(c);return c
+    c.append($('div','❄️　✦　🌟　✦　❄️','nps-hero-art'),$('p','✦ NOCHEPOLAR · LA ALDEA TE ESPERA','nps-overline'),$('h2',title),$('p',description,'nps-desc'));root.append(c);return c
   }
   function info(root,message){let el=root.querySelector('.nps-hint');if(!el){el=$('p','','nps-hint');root.append(el)}el.textContent=message}
   function stage(root,mode,seed,complete){
@@ -135,7 +135,8 @@
     }
   }
   function listWeekly(root,back){
-    clear();const panel=create(root,'🎪 Ocho grandes eventos semanales','Ocho aventuras extensas del 1 de noviembre al 25 de diciembre. Cada una se compone de tres desafíos jugables.');
+    clear();const panel=create(root,'🎪 Ocho grandes eventos semanales','Cada semana, una nueva historia ilumina la aldea. Elige tu aventura y supera sus tres desafíos.');
+    panel.classList.add('nps-festivals');
     panel.append(btn('← Volver al calendario',back,'nps-back'));
     const list=$('div','','nps-list');
     dates.forEach((data,i)=>{
@@ -167,12 +168,13 @@
       btn(p?'Continuar aventura':'COMENZAR AVENTURA',()=>chapter(p),'nps-button nps-primary'));
   }
   function listKings(root,back){
-    clear();const panel=create(root,'👑 Especial de los Reyes Magos','Dos experiencias originales: cabalgata el 5 de enero de 2027 y día de Reyes el 6. El recorrido es una simulación navideña, no un GPS real.');
+    clear();const panel=create(root,'👑 Especial de los Reyes Magos','La estrella de Oriente vuelve a brillar. Vive la gran cabalgata del 5 de enero y descubre la mañana mágica del día 6.');
+    panel.classList.add('nps-reyes');
     panel.append(btn('← Calendario',back,'nps-back'));
     const list=$('div','','nps-list');
     kings.forEach(([icon,title,date,story],i)=>{
       const card=$('article','','nps-card');
-      card.append($('h3',icon+' '+title),$('p',story),$('p',readable(date),'nps-count'),
+      card.classList.add('nps-reyes-card');card.append($('div',icon,'nps-card-icon'),$('h3',icon+' '+title),$('p',story),$('p',readable(date),'nps-count'),
         $('p',current('k'+i)===3?'🏆 Completado':state(date,date)==='live'?'▶ Especial abierto':'🔒 Exclusivo de su fecha','nps-label'),
         btn('Abrir especial',()=>openKings(root,back,i)));
       list.append(card);
@@ -181,7 +183,8 @@
   function openKings(root,back,i){
     clear();const [icon,title,date,story,stages]=kings[i],id='k'+i,p=current(id);
     const panel=create(root,icon+' '+title,story);
-    panel.append($('div',i?'🎁 ⭐ 👑 👑 👑':'🐪 ⭐ 👑 👑 👑','nps-kings'),
+    panel.classList.add('nps-reyes');
+    panel.append($('div',i?'🎁 ✨ 🌟 👑 👑 👑':'🐪 🌟 ✨ 👑 👑 👑','nps-kings'),
       $('p',readable(date)+' · hora peninsular española','nps-count'),btn('← Reyes Magos',()=>listKings(root,back),'nps-back'));
     if(p===3){panel.append($('div','🏆','nps-trophy'),$('h3','¡Especial completado!'));return}
     if(state(date,date)!=='live'){panel.append($('p',state(date,date)==='future'?'🔒 Este especial se desbloqueará en su fecha.':'⌛ Este especial ya ha terminado.'));return}
