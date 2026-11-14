@@ -131,12 +131,12 @@
 #np-village-quarter .npv-roof{
  position:absolute;left:1%;right:2%;top:15px;height:129px;
  background:var(--roof);z-index:3;
- clip-path:polygon(50% 0%,100% 77%,96% 91%,50% 30%,4% 91%,0 77%);
+ clip-path:polygon(50% 0%,100% 77%,98% 90%,2% 90%,0 77%);
  filter:drop-shadow(0 6px 0 #0002);
 }
 #np-village-quarter .npv-roof::before{
  content:"";position:absolute;inset:0;background:#ffffff;
- clip-path:polygon(50% 0,100% 75%,98% 83%,50% 17%,2% 83%,0 75%);
+ clip-path:polygon(50% 0,100% 77%,96% 83%,50% 15%,4% 83%,0 77%);
 }
 #np-village-quarter .npv-roof .npv-snow-ridge{
  position:absolute;left:5%;right:5%;bottom:10px;height:12px;
@@ -324,3 +324,24 @@
  #np-village-quarter .npv-door span svg{max-width:52px;max-height:54px}
  #np-village-quarter .npv-decoration svg{width:60px;height:60px}
 }
+
+/* Siluetas diferenciadas: no son cinco variaciones del mismo tejadito. */
+#np-village-quarter .npv-house.arcade .npv-roof{
+ clip-path:polygon(9% 25%,91% 25%,100% 82%,97% 92%,3% 92%,0 82%);
+ border-radius:16px;
+}
+#np-village-quarter .npv-house.arcade .npv-roof::before{
+ clip-path:polygon(9% 25%,91% 25%,94% 37%,6% 37%);
+}
+#np-village-quarter .npv-house.adventures .npv-roof{
+ clip-path:polygon(50% 0,100% 77%,95% 92%,5% 92%,0 77%);
+}
+#np-village-quarter .npv-house.selfie .npv-roof{
+ clip-path:polygon(0 44%,25% 25%,50% 4%,75% 25%,100% 44%,100% 90%,0 90%);
+}
+#np-village-quarter .npv-house.passport .npv-roof{
+ clip-path:polygon(9% 25%,42% 5%,60% 5%,93% 25%,100% 81%,95% 91%,5% 91%,0 81%);
+}
+#np-village-quarter .npv-house.selfie .npv-marquee{transform:rotate(2deg)}
+#np-village-quarter .npv-house.cinema .npv-marquee{transform:rotate(-2deg)}
+#np-village-quarter .npv-house.passport .npv-marquee{border-radius:25px 8px 25px 8px}
