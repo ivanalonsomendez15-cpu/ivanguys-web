@@ -205,3 +205,37 @@
 @media(prefers-reduced-motion:reduce){
  #np-screen .npw-train-engine{transition:none}
 }
+
+/* Estancias jugables: objetos coleccionables dentro de las ilustraciones. */
+#np-screen .npw-interior-art{position:relative}
+#np-screen .npw-room-props{
+ position:absolute;inset:0;z-index:2;pointer-events:none;
+}
+#np-screen .npw-room-prop{
+ position:absolute;display:grid;place-items:center;
+ width:clamp(35px,5.6vw,65px);height:clamp(35px,5.6vw,65px);
+ border:4px solid #fff8;border-radius:50%;background:#fff9de;
+ color:#2d88a7;font-size:clamp(20px,3vw,33px);
+ box-shadow:0 5px 0 #24798f88;cursor:pointer;pointer-events:auto;
+ touch-action:manipulation;animation:npw-secret-glow 3s ease-in-out infinite;
+}
+#np-screen .npw-room-prop:nth-child(1){top:11%;left:10%}
+#np-screen .npw-room-prop:nth-child(2){top:53%;left:53%}
+#np-screen .npw-room-prop:nth-child(3){top:23%;right:7%}
+#np-screen .npw-room-prop.collected{
+ background:#a5e5bc;color:#167e69;animation:none;
+}
+#np-screen .npw-room-prop:focus-visible{outline:4px solid #fee495;outline-offset:4px}
+#np-screen .npw-room-note{
+ margin:12px auto!important;font-weight:900;text-align:center;color:#1d7387;
+ background:#fff3c1;padding:10px;border:5px solid white;border-radius:25px;
+ max-width:600px;box-shadow:0 5px 0 #e5c883;
+}
+@keyframes npw-secret-glow{50%{transform:translateY(-6px);box-shadow:0 9px 16px #ffefa6a6}}
+@media(max-width:650px){
+ #np-screen .npw-room-prop{border-width:3px}
+ #np-screen .npw-room-note{font-size:12px;padding:6px;border-width:3px}
+}
+@media(prefers-reduced-motion:reduce){
+ #np-screen .npw-room-prop{animation:none}
+}
