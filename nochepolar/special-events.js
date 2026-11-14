@@ -143,7 +143,7 @@
       const [icon,title,start,end,story]=data,p=current('w'+i);
       const card=$('article','','nps-card');
       card.append($('div',icon,'nps-card-icon'),$('h3',(i+1)+'. '+title),$('p',story),$('p',readable(start)+' – '+readable(end),'nps-count'),
-        $('p',p===3?'🏆 Completado':state(start,end)==='live'?'▶ Disponible':state(start,end)==='future'?'🔒 Aún no comienza':'⌛ Finalizado','nps-label'),
+        $('p',p===3?(window.NochepolarWorld?.getPreference?.('bonus-weekly-'+i,0)===2?'🏆 Gran evento completado':'⭐ Tres pruebas superadas · gran final pendiente'):state(start,end)==='live'?'▶ Disponible':state(start,end)==='future'?'🔒 Aún no comienza':'⌛ Finalizado','nps-label'),
         btn('Abrir evento',()=>openWeekly(root,back,i)));
       list.append(card);
     });panel.append(list);
@@ -151,8 +151,13 @@
   function openWeekly(root,back,i){
     clear();const [icon,title,start,end,story,stages]=dates[i],id='w'+i,p=current(id);
     const panel=create(root,icon+' '+title,story);
+    window.NochepolarWorld?.eventHeader?.(panel,'weekly',i);
     panel.append($('p',readable(start)+' – '+readable(end),'nps-count'),btn('← Ocho eventos',()=>listWeekly(root,back),'nps-back'));
-    if(p===3){panel.append($('div','🏆','nps-trophy'),$('h3','¡Evento superado!'));return}
+    if(p===3){
+      panel.append($('h3','¡Tres desafíos superados! Completa el gran final.'));
+      window.NochepolarWorld?.bonus?.(panel,'weekly',i,()=>state(start,end)==='live',()=>listWeekly(root,back));
+      return;
+    }
     if(state(start,end)!=='live'){panel.append($('p','Este evento solo se juega durante su semana. Puedes ver su historia, pero no acceder antes o después.'));return}
     function chapter(n){
       if(state(start,end)!=='live'){openWeekly(root,back,i);return}
@@ -175,7 +180,7 @@
     kings.forEach(([icon,title,date,story],i)=>{
       const card=$('article','','nps-card');
       card.classList.add('nps-reyes-card');card.append($('div',icon,'nps-card-icon'),$('h3',icon+' '+title),$('p',story),$('p',readable(date),'nps-count'),
-        $('p',current('k'+i)===3?'🏆 Completado':state(date,date)==='live'?'▶ Especial abierto':'🔒 Exclusivo de su fecha','nps-label'),
+        $('p',current('k'+i)===3?(window.NochepolarWorld?.getPreference?.('bonus-kings-'+i,0)===2?'🏆 Especial completo':'⭐ Tres pruebas · final pendiente'):state(date,date)==='live'?'▶ Especial abierto':'🔒 Exclusivo de su fecha','nps-label'),
         btn('Abrir especial',()=>openKings(root,back,i)));
       list.append(card);
     });panel.append(list);
@@ -184,9 +189,14 @@
     clear();const [icon,title,date,story,stages]=kings[i],id='k'+i,p=current(id);
     const panel=create(root,icon+' '+title,story);
     panel.classList.add('nps-reyes');
+    window.NochepolarWorld?.eventHeader?.(panel,'kings',i);
     panel.append($('div',i?'🎁 ✨ 🌟 👑 👑 👑':'🐪 🌟 ✨ 👑 👑 👑','nps-kings'),
       $('p',readable(date)+' · hora peninsular española','nps-count'),btn('← Reyes Magos',()=>listKings(root,back),'nps-back'));
-    if(p===3){panel.append($('div','🏆','nps-trophy'),$('h3','¡Especial completado!'));return}
+    if(p===3){
+      panel.append($('h3','¡Tres pruebas superadas! Descubre el gran final de Reyes.'));
+      window.NochepolarWorld?.bonus?.(panel,'kings',i,()=>state(date,date)==='live',()=>listKings(root,back));
+      return;
+    }
     if(state(date,date)!=='live'){panel.append($('p',state(date,date)==='future'?'🔒 Este especial se desbloqueará en su fecha.':'⌛ Este especial ya ha terminado.'));return}
     function chapter(n){
       if(state(date,date)!=='live'){openKings(root,back,i);return}
