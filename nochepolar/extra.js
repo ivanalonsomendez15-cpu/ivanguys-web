@@ -187,16 +187,18 @@
   function showWeekly() {
     clearExpedition();enterNative('weekly');
     content.replaceChildren(decorativeScene(),toolbar());
-    const holder=h('div','','np-special-host');content.append(holder);
+    const holder=h('div','','np-special-host');
     window.NochepolarWorld?.eventHeader?.(content,'weekly');
+    content.append(holder);
     if(window.NochepolarSpecials?.weekly)window.NochepolarSpecials.weekly(holder,showCalendar);
     else holder.append(h('p','No se pudo cargar el módulo de eventos. Actualiza la página.'));
   }
   function showKings() {
     clearExpedition();enterNative('kings');
     content.replaceChildren(decorativeScene(),toolbar());
-    const holder=h('div','','np-special-host');content.append(holder);
+    const holder=h('div','','np-special-host');
     window.NochepolarWorld?.eventHeader?.(content,'kings');
+    content.append(holder);
     if(window.NochepolarSpecials?.kings)window.NochepolarSpecials.kings(holder,showCalendar);
     else holder.append(h('p','No se pudo cargar el módulo de Reyes. Actualiza la página.'));
   }
