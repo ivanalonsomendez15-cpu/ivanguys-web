@@ -161,3 +161,100 @@
 @media(prefers-reduced-motion:reduce){
  #np-village-quarter *,#np-village-quarter *::before,#np-village-quarter *::after{animation:none!important;transition:none!important}
 }
+
+
+/* Pulido visual: carteles del mismo lenguaje que los accesos del Santa Tracker,
+   con ilustración integrada y nombres grandes (no fichas con subtítulos diminutos). */
+#np-village-quarter .npv-game-card{
+ border-radius:15px;
+ box-shadow:0 7px 0 var(--npv-shadow),0 13px 17px #1b275d55;
+ overflow:hidden;
+ --npv-angle:0deg;
+}
+#np-village-quarter .npv-card-art{
+ margin:0;flex:1 1 auto;border-radius:0;
+ background:transparent;
+}
+#np-village-quarter .npv-card-art svg{
+ height:100%;width:100%;
+}
+#np-village-quarter .npv-card-bottom{
+ flex:0 0 29%;padding:5px 7px 13px;gap:0;
+}
+#np-village-quarter .npv-card-title{
+ font-size:clamp(25px,2.6vw,35px);line-height:1.08;
+ text-shadow:0 2px 0 #222e585c;
+}
+#np-village-quarter .npv-card-sub{display:none}
+#np-village-quarter .npv-card-cine{--npv-angle:-1deg}
+#np-village-quarter .npv-card-arcade{--npv-angle:1deg}
+#np-village-quarter .npv-card-aventuras{--npv-angle:0deg}
+#np-village-quarter .npv-card-selfie{--npv-angle:-1deg}
+#np-village-quarter .npv-card-pasaporte{--npv-angle:1deg}
+#np-village-quarter .npv-title{
+ top:37px;
+ padding:11px 23px 8px;
+ background:linear-gradient(180deg,#5c3c9d88,#4c2f9180);
+ border:6px solid #f8d48f;
+ border-radius:26px;
+ box-shadow:0 9px 0 #392b7b99,0 18px 30px #28194d59;
+}
+#np-village-quarter .npv-ribbon{
+ background:transparent;border:none;box-shadow:none;
+ padding:0;color:#ffdf89;font-size:clamp(12px,1.4vw,17px);
+ text-shadow:0 2px 0 #402d76;
+}
+#np-village-quarter h2{margin:2px auto 0;font-size:clamp(39px,5.3vw,68px)}
+#np-village-quarter .npv-hanging-garland{
+ top:0;height:16px;z-index:4;
+ border-top:7px solid #efcf81;box-shadow:0 8px 0 #2a6bbb;
+}
+#np-village-quarter .npv-village-stage::after{
+ content:"";position:absolute;left:0;right:0;bottom:0;height:16px;
+ z-index:3;pointer-events:none;
+ background:repeating-linear-gradient(90deg,#fadb89 0 30px,#ef7691 30px 42px,#55cfb3 42px 54px,#99dcef 54px 66px);
+ box-shadow:0 -7px 0 #1f6eb5;
+}
+@media(max-width:900px){
+ #np-village-quarter .npv-game-card{height:260px}
+ #np-village-quarter .npv-card-title{font-size:clamp(23px,3vw,30px)}
+}
+@media(max-width:620px){
+ #np-village-quarter .npv-village-stage{height:1355px}
+ #np-village-quarter .npv-title{
+  top:35px;padding:8px 14px 8px;border-width:4px;
+  border-radius:20px;max-width:90%;
+ }
+ #np-village-quarter .npv-ribbon{
+  font-size:10px;padding:0;letter-spacing:.025em;
+ }
+ #np-village-quarter h2{font-size:clamp(32px,8.8vw,49px)}
+ #np-village-quarter .npv-game-card{
+  height:clamp(194px,56vw,242px);
+  border-radius:13px;
+  box-shadow:0 6px 0 var(--npv-shadow),0 12px 16px #202a6460;
+ }
+ #np-village-quarter .npv-card-art{margin:0}
+ #np-village-quarter .npv-card-bottom{
+  flex:0 0 30%;padding:4px 5px 9px;
+ }
+ #np-village-quarter .npv-card-title{
+  font-size:clamp(22px,5.7vw,29px);
+  line-height:1.04;overflow-wrap:normal;
+ }
+ #np-village-quarter .npv-card-cine{top:176px}
+ #np-village-quarter .npv-card-arcade{top:324px}
+ #np-village-quarter .npv-card-aventuras{top:556px}
+ #np-village-quarter .npv-card-selfie{top:763px}
+ #np-village-quarter .npv-card-pasaporte{top:1050px}
+}
+@media(max-width:385px){
+ #np-village-quarter .npv-village-stage{height:1305px}
+ #np-village-quarter .npv-game-card{height:198px}
+ #np-village-quarter .npv-card-title{font-size:clamp(21px,5.5vw,24px)}
+ #np-village-quarter .npv-card-cine{top:177px}
+ #np-village-quarter .npv-card-arcade{top:307px}
+ #np-village-quarter .npv-card-aventuras{top:533px}
+ #np-village-quarter .npv-card-selfie{top:743px}
+ #np-village-quarter .npv-card-pasaporte{top:1012px}
+}
