@@ -215,6 +215,7 @@
       case 'kings':showKings();break;
       case 'passport':showPassport();break;
       case 'elfo':showWorld('elfo');break;
+      case 'train':showWorld('tren');break;
       case 'reno':showNewGame('reno');break;
       case 'circuito':showNewGame('circuito');break;
       case 'village':clearExpedition();leaveNative();screen.hidden=true;break;
@@ -261,6 +262,7 @@
     clearExpedition();
     enterNative('passport');
     content.replaceChildren(decorativeScene(),toolbar());
+    window.NochepolarWorld?.interior?.(content,'pasaporte',openWorld);
     const done = titles.map((name,i)=>({name,i})).filter(x=>won(x.i));
     content.append(h('h1','🏅 Pasaporte de aventuras'));
     content.append(h('p','Eventos completados en este navegador: '+done.length+' de 55. Cada fecha cuenta una sola vez y las misiones se cierran al terminar el día.','np-intro'));
@@ -341,6 +343,7 @@
     clearExpedition();
     enterNative('calendar');
     content.replaceChildren(decorativeScene(),toolbar());
+    window.NochepolarWorld?.interior?.(content,'aventuras',openWorld);
     content.append(h('h1', '55 días. 55 aventuras. Un gran final.'));
     content.append(h('p', 'Cada fecha descubre una misión distinta. Cuando pasa el día, se cierra para siempre. Los juegos clásicos de Santa Tracker siguen detrás de este portal.', 'np-intro'));
     const specialLinks=h('div','','nps-callouts');
