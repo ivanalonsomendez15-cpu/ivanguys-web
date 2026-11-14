@@ -310,3 +310,17 @@
 @media(prefers-reduced-motion:reduce){
  #np-village-quarter *,#np-village-quarter *::before,#np-village-quarter *::after{animation:none!important;transition:none!important}
 }
+
+/* Los iconos de cada local son dibujos SVG, no caracteres emoji del sistema. */
+#np-village-quarter .npv-door span{
+ width:100%;height:100%;display:grid;place-items:center;overflow:hidden;
+}
+#np-village-quarter .npv-door span svg{
+ display:block;width:94%;height:90%;max-width:68px;max-height:78px;
+ filter:drop-shadow(0 3px 0 #1b648733);
+}
+#np-village-quarter .npv-decoration svg{display:block;width:80px;height:80px}
+@media(max-width:620px){
+ #np-village-quarter .npv-door span svg{max-width:52px;max-height:54px}
+ #np-village-quarter .npv-decoration svg{width:60px;height:60px}
+}
