@@ -80,12 +80,12 @@
   function enterNative(scene) {
     screen.hidden = false;
     screen.classList.add('np-native-mode');
-    ['np-cine','np-arcade','np-calendar','np-gameplay','np-passport','np-adventure','np-weekly','np-kings'].forEach(c=>screen.classList.remove(c));
+    ['np-cine','np-arcade','np-calendar','np-gameplay','np-passport','np-adventure','np-weekly','np-kings','np-world'].forEach(c=>screen.classList.remove(c));
     screen.classList.add('np-'+scene);
     nativeBack.hidden = false;
   }
   function leaveNative() {
-    screen.classList.remove('np-native-mode','np-cine','np-arcade','np-calendar','np-gameplay','np-passport','np-adventure','np-weekly','np-kings');
+    screen.classList.remove('np-native-mode','np-cine','np-arcade','np-calendar','np-gameplay','np-passport','np-adventure','np-weekly','np-kings','np-world');
     nativeBack.hidden = true;
   }
   nativeBack.hidden = true;
@@ -177,7 +177,10 @@
       btn('🎮 Juegos nuevos + clásicos',()=>showCollection('arcade'),'np-hub-link'),
       btn('🏅 Pasaporte',showPassport,'np-hub-link'),
       btn('🎪 8 grandes eventos',showWeekly,'np-hub-link'),
-      btn('👑 Reyes Magos',showKings,'np-hub-link')
+      btn('👑 Reyes Magos',showKings,'np-hub-link'),
+      btn('🚂 Tren Polar',()=>showWorld('tren'),'np-hub-link'),
+      btn('🧝 Mi elfo',()=>showWorld('elfo'),'np-hub-link'),
+      btn('🌦 Clima',()=>showWorld('clima'),'np-hub-link')
     );
     return group;
   }
@@ -185,6 +188,7 @@
     clearExpedition();enterNative('weekly');
     content.replaceChildren(decorativeScene(),toolbar());
     const holder=h('div','','np-special-host');content.append(holder);
+    window.NochepolarWorld?.eventHeader?.(content,'weekly');
     if(window.NochepolarSpecials?.weekly)window.NochepolarSpecials.weekly(holder,showCalendar);
     else holder.append(h('p','No se pudo cargar el módulo de eventos. Actualiza la página.'));
   }
@@ -192,8 +196,30 @@
     clearExpedition();enterNative('kings');
     content.replaceChildren(decorativeScene(),toolbar());
     const holder=h('div','','np-special-host');content.append(holder);
+    window.NochepolarWorld?.eventHeader?.(content,'kings');
     if(window.NochepolarSpecials?.kings)window.NochepolarSpecials.kings(holder,showCalendar);
     else holder.append(h('p','No se pudo cargar el módulo de Reyes. Actualiza la página.'));
+  }
+  function showWorld(kind) {
+    clearExpedition();enterNative('world');
+    content.replaceChildren(decorativeScene(),toolbar());
+    const panel=h('div','','np-world-feature');content.append(panel);
+    window.NochepolarWorld?.feature?.(panel,kind,openWorld,showCalendar);
+  }
+  function openWorld(action){
+    switch(action){
+      case 'calendar':showCalendar();break;
+      case 'cine':showCollection('cine');break;
+      case 'arcade':showCollection('arcade');break;
+      case 'weekly':showWeekly();break;
+      case 'kings':showKings();break;
+      case 'passport':showPassport();break;
+      case 'elfo':showWorld('elfo');break;
+      case 'reno':showNewGame('reno');break;
+      case 'circuito':showNewGame('circuito');break;
+      case 'village':clearExpedition();leaveNative();screen.hidden=true;break;
+      default:showCalendar();
+    }
   }
   function showCollection(kind) {
     clearExpedition();
@@ -204,6 +230,7 @@
       'Clips y escenas animadas del Santa Tracker original. Pulsa para ver cada uno dentro del juego auténtico.':
       'Dos juegos originales añadidos por NOCHEPOLAR, junto con los juegos auténticos de Santa Tracker. No sustituimos ninguno de los originales.',
       'np-intro'));
+    window.NochepolarWorld?.interior?.(content,kind,openWorld);
     if(kind==='cine') {
       const upcoming = h('section','','np-film-coming');
       upcoming.setAttribute('aria-label','Película original en producción');
@@ -240,6 +267,7 @@
     const gallery = h('div','','np-hub-cards');
     for(const x of done)gallery.append(h('div',icons[x.i%icons.length]+'  '+x.name,'np-hub-medal'));
     if(!done.length) gallery.append(h('p','Completa la expedición de hoy para conseguir tu primera insignia.'));
+    window.NochepolarWorld?.passport?.(content,{completedDays:done});
     content.append(gallery);
     content.append(btn('Volver al calendario',showCalendar,'np-back'));
   }
@@ -318,7 +346,7 @@
     const specialLinks=h('div','','nps-callouts');
     specialLinks.append(btn('🎪 OCHO GRANDES EVENTOS SEMANALES',showWeekly,'nps-button'),btn('👑 5 Y 6 DE ENERO · REYES MAGOS',showKings,'nps-button'));
     content.append(specialLinks);
-    content.append(h('p','🎅 24 de diciembre: no se altera el código original de Santa Tracker. El viaje de 19 paradas es una simulación añadida. El seguimiento oficial se consulta en la web de Google cuando esté disponible.','np-intro'));
+    content.append(h('p','🎅 24 de diciembre: gran aventura ilustrada por 19 ciudades y acceso al seguimiento original de Google durante Nochebuena.','np-intro'));
     for (const [month, start, end] of [['NOVIEMBRE', 0, 30], ['DICIEMBRE', 30, 55]]) {
       const heading = h('h2', month);
       content.append(heading);
@@ -345,7 +373,7 @@
     content.append(h('h1', titles[i]));
     content.append(h('p', isoFor(i) + ' · ' + status(i), 'np-day-status'));
     if(i===53){
-      content.append(h('p','🎅 24 de diciembre: expedición ilustrada con 19 paradas, simulada y sin GPS real. No sustituye el seguimiento oficial de Google, que depende del servicio externo.','np-intro'));
+      window.NochepolarWorld?.festive24?.(content);
       if(localDay()==='2026-12-24'){
         content.append(btn('🌍 Consultar el seguimiento oficial de Google',()=>window.open('https://santatracker.google.com/intl/es/','_blank','noopener,noreferrer'),'np-primary'));
         content.append(btn('🎄 Volver a la aldea original',()=>openOriginal(''),'np-hub-link'));
@@ -366,9 +394,14 @@
       box.append(btn('Volver al calendario', showCalendar, 'np-primary'));
     }
     if (window.NochepolarExpedition && typeof window.NochepolarExpedition.play === 'function') {
-      window.NochepolarActive = window.NochepolarExpedition.play({
-        box, day:i, title:titles[i], date:isoFor(i), onComplete:finish
-      });
+      const beginOriginal=()=>{
+        window.NochepolarActive = window.NochepolarExpedition.play({
+          box, day:i, title:titles[i], date:isoFor(i), onComplete:finish
+        });
+      };
+      if(window.NochepolarWorld?.extraDay)
+        window.NochepolarActive=window.NochepolarWorld.extraDay({box,day:i,title:titles[i],next:beginOriginal});
+      else beginOriginal();
       goBack();
       return;
     }
