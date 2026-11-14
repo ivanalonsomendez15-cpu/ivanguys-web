@@ -239,3 +239,29 @@
 @media(prefers-reduced-motion:reduce){
  #np-screen .npw-room-prop{animation:none}
 }
+
+/* Ocho ilustraciones de festival, diferentes entre sí. */
+#np-screen .npw-event-diorama{
+ position:relative;display:block;isolation:isolate;
+ padding:0;min-height:265px;overflow:hidden;
+ background:linear-gradient(155deg,var(--npw-event-color,#4dbabc),#4867ae);
+}
+#np-screen .npw-event-art{
+ position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.9;
+}
+#np-screen .npw-event-art svg{display:block;width:100%;height:100%;object-fit:cover}
+#np-screen .npw-event-diorama .npw-event-icon{
+ position:relative;z-index:1;display:block;text-align:left;
+ font-size:62px;margin:10px 18px;text-shadow:0 6px #2c5792a8;
+}
+#np-screen .npw-event-diorama .npw-event-title{
+ position:absolute;z-index:1;left:0;right:0;bottom:0;
+ padding:12px 16px;min-height:60px;text-align:center;
+ background:linear-gradient(transparent,#254185e8);
+ font-size:clamp(24px,3.6vw,42px);
+}
+@media(max-width:620px){
+ #np-screen .npw-event-diorama{min-height:205px}
+ #np-screen .npw-event-diorama .npw-event-icon{font-size:41px;margin:7px 13px}
+ #np-screen .npw-event-diorama .npw-event-title{font-size:25px}
+}
