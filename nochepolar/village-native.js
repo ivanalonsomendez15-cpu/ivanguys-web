@@ -96,6 +96,17 @@
     {key:'selfie',className:'selfie',name:'BARBERÍA',icon:'✂',label:'Selfie de Papá Noel',notice:'¡Sonríe!',roof:'pink'},
     {key:'pasaporte',className:'passport',name:'PASAPORTE',icon:'✦',label:'Pasaporte de aventuras',notice:'¡Sellos!',roof:'green'}
   ];
+
+  /* Pictogramas vectoriales originales: no dependen de emojis del dispositivo. */
+  const pictos = {
+    cine: '<svg viewBox="0 0 72 72" aria-hidden="true" focusable="false"><rect x="12" y="20" width="48" height="39" rx="6" fill="#f6efc9"/><rect x="12" y="12" width="48" height="17" rx="3" fill="#214a76"/><path d="M20 13l-7 15M39 13l-8 15M56 13l-8 15" stroke="#fff" stroke-width="6"/><path d="M30 34l18 10-18 10Z" fill="#dc4c6a"/></svg>',
+    arcade: '<svg viewBox="0 0 72 72" aria-hidden="true" focusable="false"><path d="M17 29Q13 30 10 40L7 52Q8 61 17 59L29 48H44L57 59Q66 61 65 52L62 40Q59 30 55 29Z" fill="#fff2c4" stroke="#25768d" stroke-width="4"/><path d="M20 36v18M11 45h18" stroke="#3d81a9" stroke-width="5" stroke-linecap="round"/><circle cx="48" cy="39" r="5" fill="#e9576b"/><circle cx="57" cy="47" r="5" fill="#f0c054"/></svg>',
+    aventuras: '<svg viewBox="0 0 72 72" aria-hidden="true" focusable="false"><rect x="12" y="29" width="48" height="33" rx="4" fill="#f15f79"/><rect x="9" y="24" width="54" height="13" rx="4" fill="#f7868c"/><rect x="31" y="24" width="11" height="38" fill="#ffe38b"/><path d="M36 24Q10 18 20 12Q31 6 36 24Q60 7 55 16Q50 24 36 24Z" fill="#ffe38b"/></svg>',
+    selfie: '<svg viewBox="0 0 72 72" aria-hidden="true" focusable="false"><path d="M18 28L37 8L55 27Z" fill="#ed546b"/><circle cx="53" cy="27" r="8" fill="#f8f6d9"/><path d="M16 27Q34 21 56 28" stroke="#fff" stroke-width="9" fill="none" stroke-linecap="round"/><circle cx="36" cy="39" r="19" fill="#ecbd88"/><path d="M19 44Q35 64 53 44Q47 71 34 66Q22 68 19 44Z" fill="#fff"/><circle cx="29" cy="39" r="3" fill="#233b48"/><circle cx="43" cy="39" r="3" fill="#233b48"/><ellipse cx="36" cy="46" rx="7" ry="4" fill="#fff"/></svg>',
+    pasaporte: '<svg viewBox="0 0 72 72" aria-hidden="true" focusable="false"><rect x="18" y="10" width="40" height="54" rx="6" fill="#287a92"/><path d="M26 10v54" stroke="#7bd2bc" stroke-width="4"/><circle cx="40" cy="35" r="12" fill="#f5d88a"/><path d="M40 25v20M31 32h18M32 40h16" stroke="#267b90" stroke-width="3"/><path d="M20 15h35" stroke="#ffffff55" stroke-width="2"/></svg>'
+  };
+  const giftArt = (c) => '<svg viewBox="0 0 90 90" aria-hidden="true" focusable="false"><rect x="11" y="34" width="68" height="44" rx="4" fill="'+c+'"/><rect x="8" y="26" width="74" height="16" rx="4" fill="'+c+'"/><path d="M39 27V79H52V27" fill="#ffe084"/><path d="M45 27Q15 2 13 20Q15 32 45 27Q74 0 77 20Q73 33 45 27" fill="#ffe084"/></svg>';
+
   const house = (h) => [
     '<button type="button" class="npv-house ',h.className,'" data-np="',h.key,'" aria-label="Entrar a ',h.label,'">',
     '<span class="npv-ground-shadow" aria-hidden="true"></span>',
@@ -108,7 +119,7 @@
     '<span class="npv-window npv-window-right" aria-hidden="true"><i></i></span>',
     '<span class="npv-festoon" aria-hidden="true">●　●　●　●　●　●</span>',
     '<span class="npv-awning" aria-hidden="true"></span>',
-    '<span class="npv-door" aria-hidden="true"><span>',h.icon,'</span></span>',
+    '<span class="npv-door" aria-hidden="true"><span>',pictos[h.key],'</span></span>',
     '<span class="npv-marquee">',h.name,'</span>',
     '</span>',
     '<span class="npv-step" aria-hidden="true"></span>',
@@ -120,13 +131,13 @@
   quarter.id = 'np-village-quarter';
   quarter.setAttribute('aria-label', 'Barrio Nochepolar: otra parte de la misma aldea');
   quarter.innerHTML = [
-    '<div class="npv-top-bridge" aria-hidden="true"><span class="npv-top-ribbon">❄　🎁　✦　🎄　✦　🎁　❄</span></div>',
+    '<div class="npv-top-bridge" aria-hidden="true"><span class="npv-top-ribbon">❄　✦　✧　❄　✧　✦　❄</span></div>',
     '<div class="npv-title"><span class="npv-ribbon">UN NUEVO RINCÓN DE LA ALDEA</span>',
     '<h2>¡El Barrio Nochepolar!</h2><p>El camino continúa... ¡Hay mucho que descubrir!</p></div>',
     '<div class="npv-village-stage">',
     scenery,
-    '<div class="npv-decoration npv-deco-left" aria-hidden="true">🎁<span>❄</span></div>',
-    '<div class="npv-decoration npv-deco-right" aria-hidden="true">🧸<span>✦</span></div>',
+    '<div class="npv-decoration npv-deco-left" aria-hidden="true">',giftArt('#e65f6f'),'<span>❄</span></div>',
+    '<div class="npv-decoration npv-deco-right" aria-hidden="true">',giftArt('#3cb1ad'),'<span>✦</span></div>',
     '<div class="npv-town">',houses.map(house).join(''),'</div>',
     '</div>',
     '<p class="npv-credit">NOCHEPOLAR · Nuevas aventuras para esta aldea</p>'
