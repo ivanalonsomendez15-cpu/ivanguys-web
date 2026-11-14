@@ -3,6 +3,8 @@
  */
 (() => {
   'use strict';
+  // Modo de recuperación: conserva íntegra la aldea original sin ampliar su escena.
+  try { if (window.parent !== window && new URLSearchParams(window.parent.location.search).has('np_base')) return; } catch (e) {}
   if (document.querySelector('#np-village-quarter')) return;
   const main = document.querySelector('#modules main');
   if (!main) return;
