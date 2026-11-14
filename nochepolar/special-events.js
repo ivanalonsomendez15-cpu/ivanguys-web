@@ -142,7 +142,7 @@
     dates.forEach((data,i)=>{
       const [icon,title,start,end,story]=data,p=current('w'+i);
       const card=$('article','','nps-card');
-      card.append($('h3',icon+' '+(i+1)+'. '+title),$('p',story),$('p',readable(start)+' – '+readable(end),'nps-count'),
+      card.append($('div',icon,'nps-card-icon'),$('h3',(i+1)+'. '+title),$('p',story),$('p',readable(start)+' – '+readable(end),'nps-count'),
         $('p',p===3?'🏆 Completado':state(start,end)==='live'?'▶ Disponible':state(start,end)==='future'?'🔒 Aún no comienza':'⌛ Finalizado','nps-label'),
         btn('Abrir evento',()=>openWeekly(root,back,i)));
       list.append(card);
