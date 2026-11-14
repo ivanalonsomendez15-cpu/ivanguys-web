@@ -1,0 +1,207 @@
+/* NOCHEPOLAR · nuevas estancias y juegos con el lenguaje gráfico de la aldea:
+   colores saturados, tipografía Lobster, carteles flotantes y animaciones ligeras. */
+#np-screen.np-native-mode.np-world #np-content{
+ background:linear-gradient(175deg,#65cfec 0%,#b5ecf4 58%,#eefcef 59%,#fff9df 100%)!important;
+}
+#np-screen .npw-feature,#np-screen .npw-interior,#np-screen .npw-bonus,#np-screen .npw-24{
+ color:#235a75;font-family:"Google Sans",Roboto,Arial,sans-serif;
+ width:min(1050px,100%);margin:16px auto 35px;position:relative;z-index:2;
+}
+#np-screen .npw-head{text-align:center;max-width:950px;margin:12px auto 22px}
+#np-screen .npw-head-icon{
+ font-size:clamp(45px,9vw,85px);line-height:1.2;
+ filter:drop-shadow(0 5px 0 #2788ac55);
+}
+#np-screen .npw-head h2{
+ margin:4px auto 8px!important;color:#fff!important;
+ font-family:Lobster,"Google Sans",sans-serif!important;font-weight:500!important;
+ font-size:clamp(34px,5vw,66px)!important;
+ text-align:center!important;text-shadow:0 5px 0 #257a9b,0 11px 20px #1b648c40!important;
+}
+#np-screen .npw-head-desc{font-weight:750;max-width:700px;margin:8px auto 18px;color:#175e7d}
+#np-screen .npw-interior{
+ padding:12px;border:0;box-shadow:none;background:transparent;
+}
+#np-screen .npw-interior-art{
+ width:100%;max-width:1020px;aspect-ratio:900/330;
+ border:8px solid #fff;border-radius:25px;
+ box-shadow:0 9px 0 #2e899c88,0 19px 32px #2c699542;
+ overflow:hidden;margin:12px auto;
+}
+#np-screen .npw-interior-art svg{width:100%;height:100%;display:block}
+#np-screen .npw-interior-actions,#np-screen .npw-options,#np-screen .npw-puzzle-row{
+ display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:12px;margin:18px auto;
+}
+#np-screen .npw-btn,#np-screen .npw-choice,#np-screen .npw-stop{
+ appearance:none;cursor:pointer;padding:12px 18px;min-height:46px;
+ border:4px solid white;border-radius:30px;color:#1c6881;background:#fff;
+ font-family:"Google Sans",Roboto,Arial,sans-serif;font-weight:950;font-size:15px;
+ box-shadow:0 5px 0 #8ec6ca;touch-action:manipulation;
+}
+#np-screen .npw-btn:hover,#np-screen .npw-stop:hover,#np-screen .npw-choice:hover{
+ background:#fff1b5;transform:translateY(-2px);
+}
+#np-screen .npw-btn:focus-visible,#np-screen .npw-choice:focus-visible,#np-screen .npw-stop:focus-visible{
+ outline:4px solid #ffe16c;outline-offset:4px;
+}
+#np-screen .npw-btn.npw-red{
+ background:#ec5878;color:white;box-shadow:0 6px 0 #ae3561;
+}
+#np-screen .npw-btn.npw-red:hover{background:#f46c88}
+#np-screen .npw-progress{font-size:16px;font-weight:900;color:#166b87;text-align:center}
+#np-screen .npw-code{
+ padding:18px;margin:17px auto;background:#fff4ca;border:4px solid white;
+ border-radius:18px;box-shadow:0 6px 0 #dec287;max-width:800px;
+ text-align:center;color:#765131;font-weight:900;font-size:clamp(17px,2.9vw,27px);
+}
+#np-screen .npw-daily{
+ background:linear-gradient(155deg,#b2eced,#eaffed 68%,#fff3d1);
+ border:8px solid white;border-radius:26px;
+ box-shadow:0 8px 0 #50aec4,0 20px 30px #27718d38;
+ padding:24px 16px;margin:7px auto;max-width:980px;
+}
+#np-screen .npw-daily-field{text-align:center;margin:12px auto}
+#np-screen .npw-puzzle-row .npw-btn{
+ min-width:65px;min-height:66px;font-size:clamp(20px,3.3vw,33px);
+ box-shadow:0 5px 0 #57a4b7;
+}
+#np-screen .npw-bonus{
+ margin:17px auto;padding:18px;border:7px solid white;border-radius:24px;
+ background:linear-gradient(140deg,#e4faff,#f8e8fa);
+ box-shadow:0 7px 0 #65a6c9a0;text-align:center;
+}
+#np-screen .npw-bonus h3{font-size:24px;font-weight:900;color:#3474a6;margin:16px auto}
+#np-screen .npw-win{
+ padding:25px 10px;font-family:Lobster,"Google Sans",sans-serif;
+ font-size:clamp(32px,5vw,50px);color:#d68c35;text-align:center;
+}
+#np-screen .npw-note{font-size:14px!important;font-weight:720;color:#47667d;text-align:center;margin:9px auto 17px}
+#np-screen .npw-event-diorama{
+ display:flex;align-items:center;justify-content:center;gap:18px;
+ padding:15px 25px;max-width:930px;margin:10px auto 25px;
+ background:linear-gradient(135deg,var(--npw-event-color,#38b7c3),#3f7ca8);
+ color:white;border:7px solid white;border-radius:24px;
+ box-shadow:0 7px 0 #286e9599;
+}
+#np-screen .npw-event-icon{font-size:70px;line-height:1.2}
+#np-screen .npw-event-title{
+ font:500 clamp(24px,4vw,44px)/1.2 Lobster,"Google Sans",Arial,sans-serif;
+ text-shadow:0 3px 0 #24628788;
+}
+#np-screen .npw-train-scene{
+ position:relative;overflow:hidden;min-height:255px;border:8px solid white;
+ border-radius:25px;margin:15px auto 22px;
+ background:linear-gradient(#60c8ea,#b7eefa 67%,#ebf9f1 68%);
+ box-shadow:0 9px 0 #398caa;
+}
+#np-screen .npw-scenery{
+ display:flex;position:absolute;left:5%;right:5%;bottom:78px;
+ justify-content:space-between;font-size:clamp(36px,7vw,65px);
+}
+#np-screen .npw-scenery-ground{
+ position:absolute;left:0;right:0;bottom:0;height:75px;background:#f3f7e8;
+}
+#np-screen .npw-tracks{
+ position:absolute;left:0;right:0;bottom:25px;height:17px;
+ background:repeating-linear-gradient(90deg,#85625c 0 19px,#e9dfc6 19px 28px);
+ border-top:8px solid #6d7a8d;border-bottom:8px solid #6d7a8d;
+}
+#np-screen .npw-train-engine{
+ position:absolute;left:10%;bottom:33px;font-size:75px;
+ transition:left .8s ease-in-out;white-space:nowrap;
+ filter:drop-shadow(0 8px 0 #527f8a66);
+}
+#np-screen .npw-train-engine span{font-size:35px;margin-left:-5px}
+#np-screen .npw-station{
+ color:#197b91!important;font-family:Lobster,"Google Sans",sans-serif;
+ font-size:clamp(28px,4vw,44px);text-align:center;margin:7px auto;
+}
+#np-screen .npw-stops{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:20px auto 24px}
+#np-screen .npw-stop{border-radius:19px;min-width:0;font-size:13px}
+#np-screen .npw-stop.is-current{
+ background:#ffe4a6;color:#86571f;box-shadow:0 5px 0 #d2a25b;
+}
+#np-screen .npw-elf-preview{
+ max-width:390px;height:350px;margin:12px auto 18px;padding:15px;
+ border:8px solid white;border-radius:25px;
+ background:linear-gradient(#7ad4ed,#c7eafb 70%,#e8fbf1 71%);
+ box-shadow:0 8px 0 #68b3c5;text-align:center;
+}
+#np-screen .npw-elf-preview svg{display:block;width:100%;height:100%}
+#np-screen .npw-avatar-options{
+ max-width:850px;margin:12px auto;
+ display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;
+}
+#np-screen .npw-field{text-align:center;border:5px solid white;border-radius:20px;background:#dcf8ed;padding:15px 6px}
+#np-screen .npw-field h3{font-weight:900;font-size:18px;color:#207f82;margin:6px auto}
+#np-screen .npw-options{gap:6px;margin:7px auto}
+#np-screen .npw-choice{font-size:25px;min-width:48px;padding:6px;min-height:49px}
+#np-screen .npw-choice.chosen,#np-screen .npw-options .npw-btn.chosen{
+ background:#ffe4aa;border-color:#edb451;box-shadow:0 5px 0 #c6a369;
+}
+#np-screen .npw-weather-scene{
+ display:grid;place-items:center;max-width:780px;min-height:180px;padding:22px 12px;margin:14px auto;
+ border:8px solid white;border-radius:25px;text-align:center;
+ font-weight:900;font-size:clamp(22px,3.5vw,32px);
+ background:linear-gradient(#5cc5e6,#d9f6f0);color:#1b6f8d;
+ box-shadow:0 8px 0 #4697be;
+}
+#np-screen .npw-weather-scene.climate-night{
+ background:linear-gradient(#31458d,#8860b6);color:#fffad9;
+}
+#np-screen .npw-weather-scene.climate-snow{
+ background:repeating-linear-gradient(130deg,#d7f9ff 0 38px,#c3eafa 39px 80px);
+}
+#np-screen .npw-weather-scene.climate-aurora{
+ background:linear-gradient(110deg,#27477e,#3cbba3,#8c6aca);color:#fff;
+}
+#np-screen .npw-passport-stats{
+ display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px;max-width:950px;margin:20px auto;
+}
+#np-screen .npw-stat{
+ text-align:center;border:6px solid white;background:#f6e0a3;color:#78523f;
+ border-radius:22px;box-shadow:0 6px 0 #cbab6e;padding:17px 9px;
+}
+#np-screen .npw-stat strong{display:block;font-size:clamp(24px,3vw,38px)}
+#np-screen .npw-stat p{margin:3px auto;font-size:13px;font-weight:900}
+#np-screen .npw-album{
+ display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:25px auto;
+}
+#np-screen .npw-sticker{
+ display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:130px;gap:6px;
+ padding:12px;border:5px dashed #adc2c5;border-radius:20px;background:#e7e8db;
+ color:#8b9694;filter:saturate(.45);text-align:center;
+}
+#np-screen .npw-sticker.earned{
+ filter:none;border:5px solid white;color:#1e7e7b;background:linear-gradient(145deg,#fff6bc,#b8edd9);
+ box-shadow:0 5px 0 #a5c8af;
+}
+#np-screen .npw-sticker span{font-size:43px}
+#np-screen .npw-sticker p{font-size:12px;font-weight:850;margin:0}
+#np-screen .npw-route-preview{
+ display:flex;flex-wrap:wrap;gap:7px;justify-content:center;
+ background:#c0eaf2;border:6px solid white;border-radius:23px;padding:17px;
+ box-shadow:0 7px 0 #5fa6bd;
+}
+#np-screen .npw-stop-city{
+ background:#fff;border-radius:100px;padding:9px 13px;color:#247692;font-weight:850;
+ font-size:13px;box-shadow:0 3px 0 #95c8d8;
+}
+@media(max-width:720px){
+ #np-screen .npw-interior-art{border-width:4px;border-radius:15px}
+ #np-screen .npw-event-diorama{padding:12px;gap:9px;border-width:4px}
+ #np-screen .npw-event-icon{font-size:43px}
+ #np-screen .npw-stops{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+ #np-screen .npw-station{font-size:27px}
+ #np-screen .npw-avatar-options{grid-template-columns:1fr;gap:8px}
+ #np-screen .npw-elf-preview{height:290px}
+ #np-screen .npw-passport-stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+ #np-screen .npw-album{grid-template-columns:repeat(2,minmax(0,1fr))}
+ #np-screen .npw-daily{padding:12px 6px;border-width:5px}
+ #np-screen .npw-puzzle-row .npw-btn{min-width:55px;min-height:56px;padding:8px}
+ #np-screen .npw-train-engine{font-size:58px}
+ #np-screen .npw-train-scene{min-height:205px;border-width:4px}
+}
+@media(prefers-reduced-motion:reduce){
+ #np-screen .npw-train-engine{transition:none}
+}
