@@ -184,7 +184,38 @@
     );
     return group;
   }
+  // La aldea ya está abierta: los complementos se descargan solo al entrar en ellos.
+  const featurePresent = {
+    world: () => !!window.NochepolarWorld,
+    special: () => !!window.NochepolarSpecials,
+    expedition: () => !!window.NochepolarExpedition,
+    arcade: () => !!window.NochepolarArcade
+  };
+  function requireFeatures(names, again) {
+    const missing=names.filter(n=>!featurePresent[n]?.());
+    if(!missing.length)return false;
+    enterNative('world');
+    clearExpedition();
+    content.replaceChildren(decorativeScene(),toolbar());
+    const note=h('p','Preparando la aventura seleccionada…','np-intro');
+    content.append(note);
+    if(typeof window.__npLoadFeature!=='function'){
+      note.textContent='No se ha iniciado el cargador de juegos. Prueba a actualizar la página.';
+      return true;
+    }
+    Promise.all(missing.map(name=>window.__npLoadFeature(name))).then(()=>{
+      if(!screen.hidden&&content.contains(note))again();
+    }).catch(error=>{
+      if(!screen.hidden&&content.contains(note)){
+        note.textContent='No se ha podido cargar esta parte de la aldea. Puedes intentarlo de nuevo.';
+        content.append(btn('Reintentar',again,'np-primary'));
+        console.warn('NOCHEPOLAR feature failed',error);
+      }
+    });
+    return true;
+  }
   function showWeekly() {
+    if(requireFeatures(['world','special'],showWeekly))return;
     clearExpedition();enterNative('weekly');
     content.replaceChildren(decorativeScene(),toolbar());
     const holder=h('div','','np-special-host');
@@ -194,6 +225,7 @@
     else holder.append(h('p','No se pudo cargar el módulo de eventos. Actualiza la página.'));
   }
   function showKings() {
+    if(requireFeatures(['world','special'],showKings))return;
     clearExpedition();enterNative('kings');
     content.replaceChildren(decorativeScene(),toolbar());
     const holder=h('div','','np-special-host');
@@ -203,6 +235,7 @@
     else holder.append(h('p','No se pudo cargar el módulo de Reyes. Actualiza la página.'));
   }
   function showWorld(kind) {
+    if(requireFeatures(['world'],()=>showWorld(kind)))return;
     clearExpedition();enterNative('world');
     content.replaceChildren(decorativeScene(),toolbar());
     const panel=h('div','','np-world-feature');content.append(panel);
@@ -225,6 +258,7 @@
     }
   }
   function showCollection(kind) {
+    if(requireFeatures(['world'],()=>showCollection(kind)))return;
     clearExpedition();
     enterNative(kind==='cine'?'cine':'arcade');
     content.replaceChildren(decorativeScene(),toolbar());
@@ -261,6 +295,7 @@
     content.append(btn('Volver al calendario',showCalendar,'np-back'));
   }
   function showPassport() {
+    if(requireFeatures(['world'],showPassport))return;
     clearExpedition();
     enterNative('passport');
     content.replaceChildren(decorativeScene(),toolbar());
@@ -277,6 +312,7 @@
   }
 
   function showNewGame(which) {
+    if(requireFeatures(['arcade'],()=>showNewGame(which)))return;
     clearExpedition();
     enterNative('gameplay');
     content.replaceChildren();
@@ -342,6 +378,7 @@
   );
   host.append(shortcuts);
   function showCalendar() {
+    if(requireFeatures(['world'],showCalendar))return;
     clearExpedition();
     enterNative('calendar');
     content.replaceChildren(decorativeScene(),toolbar());
@@ -371,6 +408,7 @@
     content.append(h('p', 'Completadas: ' + titles.filter((_,i) => won(i)).length + '/55 · Zona horaria: España peninsular', 'np-count'));
   }
   function showDay(i) {
+    if(requireFeatures(['world','expedition'],()=>showDay(i)))return;
     clearExpedition();
     enterNative('adventure');
     content.replaceChildren(decorativeScene(),toolbar());
