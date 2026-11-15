@@ -23,11 +23,10 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
-
       - name: Install Android 35 SDK
         run: |
+          echo "ANDROID_HOME=$ANDROID_HOME"
+          which sdkmanager
           yes | sdkmanager --licenses >/dev/null || true
           sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
 
@@ -35,6 +34,7 @@ jobs:
         run: |
           cat escudo-build/project.zip.b64.part* > /tmp/project.b64
           base64 --decode /tmp/project.b64 > /tmp/escudo.zip
+          unzip -t /tmp/escudo.zip
           mkdir -p escudo-src
           unzip -q /tmp/escudo.zip -d escudo-src
           chmod +x escudo-src/gradlew
