@@ -67,8 +67,8 @@ function note(message){
   });
  };
  notification.append(quick);
- var simple=document.createElement('a');simple.textContent='Aldea básica';
- var url=new URL(location.href);url.searchParams.set('np_base','1');simple.href=url.toString();
+ var simple=document.createElement('a');simple.textContent='⚡ Modo rápido';
+ simple.href=base+'rapido.html';
  simple.style.cssText='display:inline-block;color:#174a69;background:#fff;padding:11px 14px;border-radius:50px;margin:3px;text-decoration:none;font-weight:900';
  notification.append(simple);
 }
