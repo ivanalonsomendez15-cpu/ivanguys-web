@@ -613,6 +613,16 @@
       case 'pasaporte': showPassport();break;
     }
   });
+  // Entrada rápida independiente del tiempo que tarde el motor original.
+  window.NochepolarOpen={
+    calendar:showCalendar,
+    weekly:showWeekly,
+    kings:showKings,
+    passport:showPassport,
+    train:()=>showWorld('tren'),
+    elf:()=>showWorld('elfo'),
+    climate:()=>showWorld('clima')
+  };
   // Permite abrir el portal sin alterar ninguna escena original.
   if (new URLSearchParams(location.search).get('nochepolar') === '1') {
     screen.hidden = false; showCalendar();
