@@ -1,10 +1,18 @@
 {
   "status": "ok",
-  "lastUpdated": "2026-11-17T11:05:26.950794+00:00",
+  "lastUpdated": "2026-11-17T19:46:24.996691+00:00",
   "channelTitle": "ivanguys",
   "subscribers": 674,
-  "videoCount": 185,
+  "videoCount": 186,
   "videos": [
+    {
+      "id": "JpSmdOX32ig",
+      "title": "Link niño está bien tierno",
+      "url": "https://www.youtube.com/watch?v=JpSmdOX32ig",
+      "thumbnail": "https://i3.ytimg.com/vi/JpSmdOX32ig/hqdefault.jpg",
+      "published": "2026-11-17T15:30:19+00:00",
+      "type": "video"
+    },
     {
       "id": "DODyGyd_SUE",
       "title": "El REMAKE de OCARINA OF TIME hace esto con los dedos de LINK",
@@ -116,14 +124,6 @@
       "thumbnail": "https://i4.ytimg.com/vi/sjdfOMw4ulg/hqdefault.jpg",
       "published": "2026-10-15T14:00:16+00:00",
       "type": "video"
-    },
-    {
-      "id": "reagHQ33vCg",
-      "title": "#humor #memes #shorts",
-      "url": "https://www.youtube.com/watch?v=reagHQ33vCg",
-      "thumbnail": "https://i3.ytimg.com/vi/reagHQ33vCg/hqdefault.jpg",
-      "published": "2026-10-14T14:00:23+00:00",
-      "type": "short"
     }
   ]
 }
