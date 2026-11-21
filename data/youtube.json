@@ -1,10 +1,18 @@
 {
   "status": "ok",
-  "lastUpdated": "2026-11-21T11:43:24.552569+00:00",
+  "lastUpdated": "2026-11-21T19:07:11.270080+00:00",
   "channelTitle": "ivanguys",
   "subscribers": 675,
-  "videoCount": 189,
+  "videoCount": 190,
   "videos": [
+    {
+      "id": "_mfbTZWvaHI",
+      "title": "Que 🥚🥚|| Que vuelva Vinicius Jr a bailar 😳",
+      "url": "https://www.youtube.com/watch?v=_mfbTZWvaHI",
+      "thumbnail": "https://i4.ytimg.com/vi/_mfbTZWvaHI/hqdefault.jpg",
+      "published": "2026-11-21T17:00:31+00:00",
+      "type": "video"
+    },
     {
       "id": "IJ6I9Gr3GpA",
       "title": "“AURA” #humor #mindset #factos #aura #edits #fyp #shorts #reels #viral",
@@ -115,14 +123,6 @@
       "url": "https://www.youtube.com/watch?v=tAgrjRB3zxU",
       "thumbnail": "https://i1.ytimg.com/vi/tAgrjRB3zxU/hqdefault.jpg",
       "published": "2026-10-20T22:00:23+00:00",
-      "type": "video"
-    },
-    {
-      "id": "KLCsVixNpKY",
-      "title": "también te pasa🤔",
-      "url": "https://www.youtube.com/watch?v=KLCsVixNpKY",
-      "thumbnail": "https://i4.ytimg.com/vi/KLCsVixNpKY/hqdefault.jpg",
-      "published": "2026-10-18T14:00:29+00:00",
       "type": "video"
     }
   ]
