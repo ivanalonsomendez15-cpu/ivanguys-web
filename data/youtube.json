@@ -1,10 +1,18 @@
 {
   "status": "ok",
-  "lastUpdated": "2026-11-22T14:52:12.683925+00:00",
+  "lastUpdated": "2026-11-22T21:01:09.946559+00:00",
   "channelTitle": "ivanguys",
   "subscribers": 675,
-  "videoCount": 190,
+  "videoCount": 191,
   "videos": [
+    {
+      "id": "b7ROGTQ9tMg",
+      "title": "GTA 6 en 30 segundos: ¡VAYA ESPECTÁCULO! 🔥",
+      "url": "https://www.youtube.com/watch?v=b7ROGTQ9tMg",
+      "thumbnail": "https://i3.ytimg.com/vi/b7ROGTQ9tMg/hqdefault.jpg",
+      "published": "2026-11-22T17:30:18+00:00",
+      "type": "video"
+    },
     {
       "id": "_mfbTZWvaHI",
       "title": "Que 🥚🥚|| Que vuelva Vinicius Jr a bailar 😳",
@@ -115,14 +123,6 @@
       "url": "https://www.youtube.com/watch?v=1UGfnb1Dq7o",
       "thumbnail": "https://i2.ytimg.com/vi/1UGfnb1Dq7o/hqdefault.jpg",
       "published": "2026-10-25T23:00:14+00:00",
-      "type": "video"
-    },
-    {
-      "id": "tAgrjRB3zxU",
-      "title": "FALTAN 15 DÍAS... 💚🗡️ | ZELDA OCARINA OF TIME REMAKE",
-      "url": "https://www.youtube.com/watch?v=tAgrjRB3zxU",
-      "thumbnail": "https://i1.ytimg.com/vi/tAgrjRB3zxU/hqdefault.jpg",
-      "published": "2026-10-20T22:00:23+00:00",
       "type": "video"
     }
   ]
