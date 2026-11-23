@@ -1,10 +1,18 @@
 {
   "status": "ok",
-  "lastUpdated": "2026-11-23T09:43:08.141653+00:00",
+  "lastUpdated": "2026-11-23T21:40:35.415468+00:00",
   "channelTitle": "ivanguys",
-  "subscribers": 675,
-  "videoCount": 191,
+  "subscribers": 674,
+  "videoCount": 192,
   "videos": [
+    {
+      "id": "gjqCo4aFpoE",
+      "title": "GTA 6: LA TENSIÓN NO DEJA DE SUBIR 😱",
+      "url": "https://www.youtube.com/watch?v=gjqCo4aFpoE",
+      "thumbnail": "https://i4.ytimg.com/vi/gjqCo4aFpoE/hqdefault.jpg",
+      "published": "2026-11-23T18:00:04+00:00",
+      "type": "video"
+    },
     {
       "id": "b7ROGTQ9tMg",
       "title": "GTA 6 en 30 segundos: ¡VAYA ESPECTÁCULO! 🔥",
@@ -116,14 +124,6 @@
       "thumbnail": "https://i1.ytimg.com/vi/tjpny3afltc/hqdefault.jpg",
       "published": "2026-10-30T09:00:19+00:00",
       "type": "short"
-    },
-    {
-      "id": "1UGfnb1Dq7o",
-      "title": "SOLO FALTAN 10 DÍAS. 💀🗡️ | ZELDA OCARINA OF TIME REMAKE",
-      "url": "https://www.youtube.com/watch?v=1UGfnb1Dq7o",
-      "thumbnail": "https://i2.ytimg.com/vi/1UGfnb1Dq7o/hqdefault.jpg",
-      "published": "2026-10-25T23:00:14+00:00",
-      "type": "video"
     }
   ]
 }
