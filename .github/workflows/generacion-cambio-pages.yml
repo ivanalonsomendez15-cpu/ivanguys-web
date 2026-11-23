@@ -1,0 +1,33 @@
+name: Publicar Generación Cambio
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/generacion-cambio/**'
+      - '.github/workflows/generacion-cambio-pages.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: generacion-cambio-pages
+  cancel-in-progress: true
+jobs:
+  publicar:
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar código
+        uses: actions/checkout@v4
+      - name: Configurar GitHub Pages
+        uses: actions/configure-pages@v5
+      - name: Preparar sitio
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './docs'
+      - name: Publicar
+        id: deploy
+        uses: actions/deploy-pages@v4
