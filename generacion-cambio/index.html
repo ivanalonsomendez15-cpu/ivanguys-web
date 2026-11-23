@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>GENERACIÓN CAMBIO · Fase 1 · Edición definitiva de exploración</title>
+<title>GENERACIÓN CAMBIO · Fase 1 · V4 · Mundo Vivo</title>
 <meta name="theme-color" content="#071933"><meta name="description" content="Aventura tridimensional interactiva: descubre seis territorios y recorre el planeta de Generación Cambio, 6º Primaria CP Carmen Ruiz-Tilve.">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Nunito:wght@500;600;700;800;900&display=swap');
@@ -34,6 +34,18 @@
 @media(max-width:980px){#minimap{width:112px;height:112px}.play .badge{top:211px}}
 @media(max-width:660px){#minimap{top:90px;right:12px;width:100px;height:100px}.play .badge{display:none}.play .playhud{max-width:calc(100% - 132px);padding:9px;top:91px;left:11px;min-width:0}.playhud small{font-size:9px}.playhud strong{font-size:10px}.pips{gap:4px}.pips i{width:12px}#hint{bottom:174px;font-size:9px}.play #hint{bottom:167px;max-width:58vw}#graphicSettings{bottom:182px;left:13px}.play #dpad{bottom:93px}}
 @media(max-width:390px){.play .worlds{width:54vw}.play .world{font-size:7px}.playhud small{display:none}}
+
+/* V4: cleaner gameplay HUD, more canvas visible, softer translucent interface */
+.play .worlds{width:min(58vw,590px);gap:6px;padding:7px;bottom:12px}
+.play .world{min-height:54px}
+.play #hint{bottom:97px;opacity:.88}
+.play .veil{opacity:.18}
+.play .playhud{background:rgba(4,18,36,.74)}
+#graphicSettings button{transition:background .18s,transform .18s}
+#graphicSettings button:hover{transform:translateY(-2px);background:#255d74}
+@media(max-width:980px){.play .worlds{width:min(62vw,555px)}}
+@media(max-width:660px){.play .worlds{width:57vw;gap:4px}.play #hint{bottom:163px}.play .veil{opacity:.25}}
+
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
 </head>
@@ -109,12 +121,12 @@ document.querySelectorAll('[data-key]').forEach(btn=>{const code=btn.dataset.key
 // --- THREE-DIMENSIONAL ENGINE ---
 let renderer;
 try{renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,powerPreference:'high-performance'});}catch(e){$('#fail').style.display='flex';throw e;}
-renderer.setPixelRatio(Math.min(window.devicePixelRatio,1.6));renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.12;renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+renderer.setPixelRatio(Math.min(window.devicePixelRatio,1.6));renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.2;renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
 const viewport=$('#viewport');viewport.appendChild(renderer.domElement);
-const scene=new THREE.Scene();scene.fog=new THREE.FogExp2(0x90b8ce,.007);
+const scene=new THREE.Scene();scene.fog=new THREE.FogExp2(0x9dbdcc,.0065);
 const camera=new THREE.PerspectiveCamera(52,1,.1,380);camera.position.set(15,13,40);
 scene.add(new THREE.HemisphereLight(0xf3ffff,0x345271,2.55));
-const sunshine=new THREE.DirectionalLight(0xffe5b7,3.5);sunshine.position.set(-40,55,26);sunshine.castShadow=true;sunshine.shadow.mapSize.set(2048,2048);sunshine.shadow.camera.near=2;sunshine.shadow.camera.far=160;sunshine.shadow.camera.left=-72;sunshine.shadow.camera.right=72;sunshine.shadow.camera.top=72;sunshine.shadow.camera.bottom=-72;sunshine.shadow.bias=-.0002;scene.add(sunshine);
+const sunshine=new THREE.DirectionalLight(0xffdfba,3.8);sunshine.position.set(-40,55,26);sunshine.castShadow=true;sunshine.shadow.mapSize.set(2048,2048);sunshine.shadow.camera.near=2;sunshine.shadow.camera.far=160;sunshine.shadow.camera.left=-72;sunshine.shadow.camera.right=72;sunshine.shadow.camera.top=72;sunshine.shadow.camera.bottom=-72;sunshine.shadow.bias=-.0002;scene.add(sunshine);
 const fill=new THREE.PointLight(0x59f6ff,22,80,2);fill.position.set(8,14,-8);scene.add(fill);
 const purple=new THREE.PointLight(0x955eff,11,65,2);purple.position.set(-25,15,-31);scene.add(purple);
 const material=(c,r=.85,m=.02)=>new THREE.MeshStandardMaterial({color:c,roughness:r,metalness:m});
@@ -245,9 +257,9 @@ const charFallback=new THREE.Group();characterContainer.add(charFallback);
 const suit=material(0x2d80b5,.35,.17);add(new THREE.CapsuleGeometry(.48,1.1,8,12),suit,charFallback,0,1.3,0);add(new THREE.SphereGeometry(.42,20,16),material(0xe9ac8a),charFallback,0,2.45,0);add(new THREE.SphereGeometry(.52,20,16),new THREE.MeshPhysicalMaterial({color:0xa7edff,transparent:true,opacity:.29,metalness:.18,roughness:.08}),charFallback,0,2.47,0);add(new THREE.BoxGeometry(.72,.95,.37),material(0x154e82,.4,.3),charFallback,0,1.3,-.47);
 const legs=[];for(const x of [-.24,.24]){const limb=add(new THREE.CapsuleGeometry(.15,.84,6,9),material(0x1e5887,.43,.18),charFallback,x,.6,0);legs.push(limb);const arm=add(new THREE.CapsuleGeometry(.13,.83,6,10),suit,charFallback,x*2.15,1.45,0);arm.rotation.z=x<0?.25:-.25;}
 let characterMixer=null,idleAction=null,walkAction=null,runAction=null,characterIsLoaded=false;
-const loader=new GLTFLoader();const characterUrl='https://threejs.org/examples/models/gltf/Xbot.glb';
+const loader=new GLTFLoader();const characterUrl='https://threejs.org/examples/models/gltf/Soldier.glb';
 loader.load(characterUrl,gltf=>{
- const obj=gltf.scene;const box=new THREE.Box3().setFromObject(obj),size=new THREE.Vector3();box.getSize(size);obj.scale.setScalar(2.8/Math.max(size.y,.001));obj.updateMatrixWorld(true);const box2=new THREE.Box3().setFromObject(obj);obj.position.y-=box2.min.y;
+ const obj=gltf.scene;obj.traverse(node=>{if(node.isMesh&&node.material){node.castShadow=true;node.receiveShadow=true;node.material.roughness=node.material.roughness??.67;}});const box=new THREE.Box3().setFromObject(obj),size=new THREE.Vector3();box.getSize(size);obj.scale.setScalar(2.8/Math.max(size.y,.001));obj.updateMatrixWorld(true);const box2=new THREE.Box3().setFromObject(obj);obj.position.y-=box2.min.y;
  obj.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true}});characterContainer.add(obj);charFallback.visible=false;characterIsLoaded=true;
  characterMixer=new THREE.AnimationMixer(obj);const clip=(name)=>gltf.animations.find(a=>a.name.toLowerCase().includes(name));
  const idle=clip('idle')||gltf.animations[0],walk=clip('walking')||clip('walk')||gltf.animations[1],run=clip('running')||clip('run')||gltf.animations[2];
@@ -270,6 +282,85 @@ for(let i=0;i<9;i++){const a=i*Math.PI*2/9;bench(Math.cos(a)*15,Math.sin(a)*15,a
 const flowerGeo=new THREE.DodecahedronGeometry(.11,1),flowerColors=[0xf9d5a2,0xff96ae,0xbb9cff,0xffeb79];
 const flowers=flowerColors.map(color=>{const m=new THREE.InstancedMesh(flowerGeo,new THREE.MeshStandardMaterial({color,roughness:.7}),350);scene.add(m);m.castShadow=false;return m});
 for(let i=0;i<1400;i++){const a=Math.random()*Math.PI*2,r=9+Math.random()*56,x=Math.cos(a)*r,z=Math.sin(a)*r,f=flowers[i%4],idx=(i/4)|0;dummy.position.set(x,h(x,z)+.2,z);const sc=.5+Math.random()*.9;dummy.scale.setScalar(sc);dummy.rotation.set(0,Math.random()*6.28,0);dummy.updateMatrix();f.setMatrixAt(idx,dummy.matrix)}flowers.forEach(f=>f.instanceMatrix.needsUpdate=true);
+
+// V4: Naturalistic hero vegetation. Leaf cards are batched in InstancedMesh; detailed foreground trees stay inexpensive.
+// Each leaf-atlas is generated as a transparent texture at runtime, so this single HTML can display rich foliage without external image assets.
+const leafBillboards=[];
+function botanicalAtlas(variant){
+ const cv=document.createElement('canvas');cv.width=cv.height=512;const ctx=cv.getContext('2d');
+ const greens=[['#164c2e','#307f49','#6dbb60','#b4d78a'],['#234c3d','#4a9a65','#78ba84','#bad6ab'],['#1b5f45','#278e65','#66c590','#a6e5a3']][variant];
+ const rng=(seed)=>{let k=seed|0;return()=>((k=(Math.imul(k,1664525)+1013904223)|0)>>>0)/4294967296};const rand=rng(109+variant*47);
+ ctx.lineCap='round';
+ function leaf(x,y,size,angle,color){ctx.save();ctx.translate(x,y);ctx.rotate(angle);ctx.fillStyle=color;ctx.beginPath();ctx.moveTo(0,0);ctx.bezierCurveTo(-size*.58,-size*.22,-size*.62,-size*.82,0,-size*1.28);ctx.bezierCurveTo(size*.65,-size*.82,size*.5,-size*.25,0,0);ctx.closePath();ctx.fill();ctx.strokeStyle='rgba(218,245,202,.26)';ctx.lineWidth=Math.max(.8,size*.035);ctx.beginPath();ctx.moveTo(0,-size*1.13);ctx.lineTo(0,-size*.08);ctx.stroke();ctx.restore();}
+ for(let b=0;b<32;b++){const x=256+(rand()-.5)*160,y=298+(rand()-.5)*100;const tipX=x+(rand()-.5)*260,tipY=y-110-rand()*120;
+  ctx.strokeStyle='rgba(83,73,42,.67)';ctx.lineWidth=1.5+rand()*2.1;ctx.beginPath();ctx.moveTo(x,y);ctx.quadraticCurveTo((x+tipX)/2-10,(y+tipY)/2,tipX,tipY);ctx.stroke();
+  for(let l=0;l<7;l++){const t=.19+l*.115;const lx=x+(tipX-x)*t+(rand()-.5)*18,ly=y+(tipY-y)*t+(rand()-.5)*12;
+   const sz=14+rand()*16;leaf(lx,ly,sz,(rand()-.5)*3.6,greens[Math.floor(rand()*greens.length)]);
+  }
+ }
+ const texture=new THREE.CanvasTexture(cv);texture.colorSpace=THREE.SRGBColorSpace;texture.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());return texture;
+}
+const botanicalGeo=new THREE.PlaneGeometry(2.6,2.6);botanicalGeo.translate(0,1.12,0);
+const atlasMaterials=Array.from({length:3},(_,i)=>new THREE.MeshStandardMaterial({map:botanicalAtlas(i),transparent:true,alphaTest:.27,side:THREE.DoubleSide,roughness:.97,metalness:0,depthWrite:true}));
+const atlasCount=Array.from({length:3},()=>0);
+for(let i=0;i<3;i++){const foliage=new THREE.InstancedMesh(botanicalGeo,atlasMaterials[i],2100);foliage.count=0;foliage.castShadow=false;foliage.receiveShadow=false;foliage.frustumCulled=false;scene.add(foliage);leafBillboards.push(foliage);}
+const twigMat=material(0x5e4a32,1);
+const twigGeo=new THREE.CylinderGeometry(.035,.072,1,6);
+function forestHeroTree(x,z,size,variant){
+ const y=h(x,z);const group=new THREE.Group();group.position.set(x,y,z);scene.add(group);
+ const trunk=new THREE.Mesh(new THREE.CylinderGeometry(.20*size,.37*size,3.5*size,10),treeBark);trunk.position.y=1.75*size;trunk.castShadow=true;group.add(trunk);
+ // Short branches carry the leaf clusters rather than a single low-poly crown.
+ for(let j=0;j<11;j++){
+  const angle=j*2.399+variant*.4;const ry=2.45*size+(j%4)*.44*size;const length=(1.35+(j%4)*.15)*size;
+  const twig=new THREE.Mesh(twigGeo,twigMat);twig.scale.set(size, length, size);twig.position.set(Math.sin(angle)*length*.31,ry,Math.cos(angle)*length*.31);twig.rotation.set(Math.cos(angle)*.64,0,-Math.sin(angle)*.64);twig.castShadow=false;group.add(twig);
+ }
+ for(let j=0;j<45;j++){
+  const typ=(j+variant)%3;const mesh=leafBillboards[typ],idx=atlasCount[typ]++;if(idx>=2100)continue;
+  const az=j*2.39996+variant*1.3,rad=(.4+Math.sqrt((j%45)/45)*2.05)*size,yy=3.55*size+Math.sin(j*3.11)*.75*size;
+  dummy.position.set(x+Math.sin(az)*rad,y+yy,z+Math.cos(az)*rad);
+  dummy.rotation.set((j%5)*.18,az+j*.16,(j%7)*.12);
+  const sz=(.63+(j%5)*.105)*size;dummy.scale.set(sz,sz,sz);dummy.updateMatrix();mesh.setMatrixAt(idx,dummy.matrix);
+ }
+ return group;
+}
+const treeLocs=[];
+// Along the six routes, preserve passages and visibility by placing detailed trees beside them.
+for(let i=0;i<90;i++){
+ const a=(i*2.39996)%6.283,r=17+(i*9.31)%47,x=Math.cos(a)*r,z=Math.sin(a)*r;
+ if(LEVELS.some(l=>Math.hypot(x-l.x,z-l.z)<9.4))continue;
+ if(LEVELS.some(l=>{const along=(x*l.x+z*l.z)/(l.x*l.x+l.z*l.z);if(along<0||along>1)return false;return Math.hypot(x-l.x*along,z-l.z*along)<4.8;}))continue;
+ const size=.65+(i%7)*.12;
+ forestHeroTree(x,z,size,i%3);treeLocs.push([x,z]);
+}
+leafBillboards.forEach((m,i)=>{m.count=Math.min(2100,atlasCount[i]);m.instanceMatrix.needsUpdate=true;});
+
+// Rounded eroded rocks: no faceted spheres. Vertex displacement gives each stone unique silhouette.
+const heroBoulders=new THREE.Group();scene.add(heroBoulders);
+const boulderMat=new THREE.MeshStandardMaterial({map:stoneTex,color:0xd2d0c8,roughness:1,metalness:0,bumpMap:stoneTex,bumpScale:.13});
+function boulderGeo(seed){const geo=new THREE.IcosahedronGeometry(1,3);const pos=geo.attributes.position;for(let i=0;i<pos.count;i++){
+ const x=pos.getX(i),y=pos.getY(i),z=pos.getZ(i),f=1+.11*Math.sin(x*7.3+y*8.7+seed)+.12*Math.cos(z*11.4-x*5.5+seed*1.4)+.05*Math.sin(y*18.5+z*14.2);pos.setXYZ(i,x*f,y*f*.78,z*f*.93);
+}geo.computeVertexNormals();return geo;}
+const boulderGeos=[boulderGeo(.2),boulderGeo(1.8),boulderGeo(3.6)];
+for(let i=0;i<115;i++){const a=i*2.3999,r=7+(i*11.23)%61,x=Math.cos(a)*r,z=Math.sin(a)*r;
+ if(LEVELS.some(w=>Math.hypot(x-w.x,z-w.z)<6.5))continue;
+ const s=.35+(i%9)*.14, rock=new THREE.Mesh(boulderGeos[i%3],boulderMat);
+ rock.position.set(x,h(x,z)+s*.21,z);rock.scale.set(s*1.4,s*.78,s);rock.rotation.y=a;rock.castShadow=rock.receiveShadow=true;heroBoulders.add(rock);
+}
+
+// Floating dust/motes catch sunlight and create subtle atmospheric depth near the character.
+const fireflies=new THREE.Group();scene.add(fireflies);
+const moteGeo=new THREE.SphereGeometry(.055,7,6),moteColors=[0xffedb8,0xb0ffee,0xcacaff];
+for(let i=0;i<140;i++){
+ const a=i*2.3999,r=7+(i*13.7)%56,x=Math.cos(a)*r,z=Math.sin(a)*r;
+ const p=new THREE.Mesh(moteGeo,new THREE.MeshBasicMaterial({color:moteColors[i%3],transparent:true,opacity:.45}));
+ p.position.set(x,h(x,z)+1+(i%13)*.32,z);p.userData={y:p.position.y,phase:i*.57};fireflies.add(p);
+}
+// Realistic-style winding pale gravel edges around the central landing site.
+const edgeMaterial=new THREE.MeshStandardMaterial({color:0xbfb9a6,roughness:.96,metalness:0,map:stoneTex,bumpMap:stoneTex,bumpScale:.09});
+for(const rad of [6.8,7.9,10.2]){
+ const pathRing=new THREE.Mesh(new THREE.TorusGeometry(rad,.11,7,110),edgeMaterial);pathRing.rotation.x=Math.PI/2;pathRing.position.set(0,h(rad,0)+.05,0);pathRing.castShadow=false;pathRing.receiveShadow=true;scene.add(pathRing);
+}
+
 // Portal plinths have physical stone steps and small neon details; no extra on-screen instructions.
 portalObjects.forEach((p,i)=>{
  const g=p.group;for(let step=0;step<3;step++){
@@ -285,8 +376,10 @@ renderer.domElement.addEventListener('pointermove',e=>{const old=pressed.get(e.p
 function finishPointer(e){pressed.delete(e.pointerId);prevPinch=0;}renderer.domElement.addEventListener('pointerup',finishPointer);renderer.domElement.addEventListener('pointercancel',finishPointer);
 renderer.domElement.addEventListener('wheel',e=>{e.preventDefault();distance=THREE.MathUtils.clamp(distance+e.deltaY*.012,5,19)},{passive:false});
 let qualityMode=0;
+function applyQuality(){const pixelRatios=[1.5,1,Math.min(window.devicePixelRatio,2)][qualityMode];renderer.setPixelRatio(Math.min(window.devicePixelRatio,pixelRatios));sunshine.shadow.mapSize.set(qualityMode===1?1024:qualityMode===2?3072:2048,qualityMode===1?1024:qualityMode===2?3072:2048);sunshine.shadow.map?.dispose();sunshine.shadow.map=null;leafBillboards.forEach(mesh=>mesh.visible=qualityMode!==1);heroBoulders.visible=qualityMode!==1;fireflies.visible=qualityMode!==1;renderer.shadowMap.needsUpdate=true;resize();}
+
 $('#resetCam').addEventListener('click',()=>{yaw=0;pitch=.14;distance=10;toast('CÁMARA CENTRADA')});
-$('#qualityBtn').addEventListener('click',()=>{qualityMode=(qualityMode+1)%3;renderer.setPixelRatio(Math.min(window.devicePixelRatio,[1.55,1,2][qualityMode]));$('#qualityBtn').textContent='GRÁFICOS: '+['AUTO','LIGERO','ALTO'][qualityMode];resize();});
+$('#qualityBtn').addEventListener('click',()=>{qualityMode=(qualityMode+1)%3;applyQuality();$('#qualityBtn').textContent='GRÁFICOS: '+['AUTO','LIGERO','ALTO'][qualityMode];});
 const minimap=$('#minimap'),mini=minimap.getContext('2d');
 function drawMinimap(){if(!playing)return;
  const w=180,h=180;mini.clearRect(0,0,w,h);mini.save();mini.beginPath();mini.arc(90,90,88,0,Math.PI*2);mini.clip();mini.fillStyle='rgba(4,29,45,.95)';mini.fillRect(0,0,w,h);
@@ -297,9 +390,9 @@ function drawMinimap(){if(!playing)return;
 }
 function resize(){const width=viewport.clientWidth,height=viewport.clientHeight;renderer.setSize(width,height,false);camera.aspect=width/height;camera.fov=width<700?65:52;camera.updateProjectionMatrix();}window.addEventListener('resize',resize);resize();
 const direction=new THREE.Vector3(),target=new THREE.Vector3(),focus=new THREE.Vector3(),clock=new THREE.Clock();let t=0,jumpHeight=0,jumpSpeed=0,spaceWasDown=false;let miniLast=0;
-function animate(){requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.05);if(!paused){t+=dt;characterMixer?.update(dt);water.material.uniforms.time.value=t;spire.rotation.y+=dt*.35;for(const rot of turbines)rot.rotation.z+=dt*1.5;for(const c of clouds)c.position.x+=dt*.15;for(const f of floating)f.position.y=f.userData.baseY+Math.sin(t*.6+f.position.x)*.35;for(const obj of portalObjects){obj.ring.rotation.y+=dt*.28;obj.rim.rotation.x+=dt*.23;for(const p of obj.pts)p.position.y=p.userData.baseY+Math.sin(t*2+p.userData.phase)*.18;}for(const s of sparks)s.position.y=s.userData.baseY+Math.sin(t*1.7+s.userData.phase)*.22;drone.rotation.y=Math.sin(t*1.3)*.2;}
+function animate(){requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.05);if(!paused){t+=dt;characterMixer?.update(dt);water.material.uniforms.time.value=t;spire.rotation.y+=dt*.35;for(const rot of turbines)rot.rotation.z+=dt*1.5;for(const c of clouds)c.position.x+=dt*.15;for(const f of floating)f.position.y=f.userData.baseY+Math.sin(t*.6+f.position.x)*.35;for(const obj of portalObjects){obj.ring.rotation.y+=dt*.28;obj.rim.rotation.x+=dt*.23;for(const p of obj.pts)p.position.y=p.userData.baseY+Math.sin(t*2+p.userData.phase)*.18;}for(const s of sparks)s.position.y=s.userData.baseY+Math.sin(t*1.7+s.userData.phase)*.22;for(const p of fireflies.children)p.position.y=p.userData.y+Math.sin(t*1.12+p.userData.phase)*.17;drone.rotation.y=Math.sin(t*1.3)*.2;}
  const modalOpen=modal.classList.contains('show');let moving=false,running=false;
- if(playing&&!modalOpen){const dx=(Number(keys.has('KeyD')||keys.has('ArrowRight'))-Number(keys.has('KeyA')||keys.has('ArrowLeft'))),dz=(Number(keys.has('KeyS')||keys.has('ArrowDown'))-Number(keys.has('KeyW')||keys.has('ArrowUp')));direction.set(dx,0,dz);moving=direction.lengthSq()>0;running=keys.has('ShiftLeft')||keys.has('ShiftRight');if(moving){direction.normalize().applyAxisAngle(new THREE.Vector3(0,1,0),yaw);const speed=running?12:7.6;target.copy(player.position).addScaledVector(direction,dt*speed);target.x=THREE.MathUtils.clamp(target.x,-68,68);target.z=THREE.MathUtils.clamp(target.z,-68,68);player.position.x=target.x;player.position.z=target.z;player.rotation.y=Math.atan2(direction.x,direction.z);}
+ if(playing&&!modalOpen){const dx=(Number(keys.has('KeyD')||keys.has('ArrowRight'))-Number(keys.has('KeyA')||keys.has('ArrowLeft'))),dz=(Number(keys.has('KeyS')||keys.has('ArrowDown'))-Number(keys.has('KeyW')||keys.has('ArrowUp')));direction.set(dx,0,dz);moving=direction.lengthSq()>0;running=keys.has('ShiftLeft')||keys.has('ShiftRight');if(moving){direction.normalize().applyAxisAngle(new THREE.Vector3(0,1,0),yaw);const speed=running?12:7.6;target.copy(player.position).addScaledVector(direction,dt*speed);const walkRadius=69;const rr=Math.hypot(target.x,target.z);if(rr>walkRadius){target.x*=walkRadius/rr;target.z*=walkRadius/rr;}player.position.x=target.x;player.position.z=target.z;player.rotation.y=Math.atan2(direction.x,direction.z);}
  // Jump is a small introductory movement mechanic; the player lands on the height-mapped ground.
  const spaceDown=keys.has('Space');if(spaceDown&&!spaceWasDown&&jumpHeight===0)jumpSpeed=6.8;spaceWasDown=spaceDown;
  if(jumpSpeed!==0||jumpHeight>0){jumpHeight+=jumpSpeed*dt;jumpSpeed-=18*dt;if(jumpHeight<=0){jumpHeight=0;jumpSpeed=0;}}
