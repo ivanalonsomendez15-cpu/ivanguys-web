@@ -9,7 +9,6 @@
 <title>GOLPE FRANCO NEXT — Descargas, guía y versiones</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preconnect" href="https://images.pexels.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{--ink:#0a0e0d;--panel:#141a18;--panel2:#1e2823;--edge:#354239;--soft:#9cab9e;--white:#f3f7ee;--lime:#d8ff60;--gold:#f4c76a;font-family:'DM Sans',sans-serif;color:var(--white);background:var(--ink);color-scheme:dark}
@@ -39,7 +38,7 @@ header{z-index:25;position:sticky;top:0;background:#0a0e0dea;backdrop-filter:blu
 .navdownload{background:var(--lime);color:#121a11;padding:14px 19px;font-size:10px;font-weight:900;letter-spacing:1px}
 .navtoggle{display:none;background:none;border:0;color:var(--white);font-size:26px}
 .hero{min-height:690px;position:relative;overflow:hidden;isolation:isolate;display:flex;align-items:center}
-.hero-art{position:absolute;inset:0;z-index:-2;background:url('https://images.pexels.com/photos/28827841/pexels-photo-28827841.jpeg?auto=compress&cs=tinysrgb&w=1800') center 46%/cover no-repeat,radial-gradient(circle at 63% 40%,#416148,#18251e 55%,#07100c)}
+.hero-art{position:absolute;inset:0;z-index:-2;background:radial-gradient(circle at 70% 55%,#385b2b 0%,transparent 34%),repeating-linear-gradient(90deg,#91bd3415 0px,#91bd3415 3px,transparent 3px,transparent 140px),linear-gradient(115deg,#06140d,#153422 58%,#0c1714 100%)}
 .hero-art:after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,#08110cf5 0%,#09120de8 35%,#08120d8c 67%,#07100ca6 100%),linear-gradient(0deg,#080e0c 3%,transparent 53%,#07100c40 100%)}
 .hero:after{content:'';position:absolute;z-index:-1;bottom:-10%;right:12%;width:550px;height:550px;background:radial-gradient(circle,#baff3a20,transparent 67%);pointer-events:none}
 .hero-inner{position:relative;padding-top:84px;padding-bottom:96px}
@@ -93,37 +92,6 @@ h1,h2,h3,.numbers,.bigversion{font-family:'Barlow Condensed',sans-serif}
 .comparetable th,.comparetable td{text-align:left;border-bottom:1px solid #303d31;padding:15px 19px}
 .comparetable th{color:#c7f987;background:#223325;font-size:11px;letter-spacing:1px}
 .comparetable td{color:#bfd0c0}
-.media-section{background:#151b18;border-block:1px solid #324234}
-.feature-media{display:grid;grid-template-columns:1.25fr .75fr;gap:17px}
-.video-stage{position:relative;min-height:415px;overflow:hidden;background:#081511}
-.video-stage::before{content:'';position:absolute;inset:0;background:linear-gradient(0deg,#06100ef2,transparent 57%),url('https://images.pexels.com/photos/31160095/pexels-photo-31160095.jpeg?auto=compress&cs=tinysrgb&w=1400') center/cover no-repeat;filter:saturate(.85)}
-.video-stage .video-content{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:space-between;padding:28px}
-.bigplay{width:87px;height:87px;border:1px solid #d9ffb7;background:#c6ff4aeb;color:#16210c;display:grid;place-items:center;border-radius:50%;font-size:35px;align-self:center;box-shadow:0 0 0 14px #c7ff3722}
-.bigplay:hover{transform:scale(1.05)}
-.media-label{align-self:start;background:#121b16e6;border:1px solid #8ca2796e;color:#d9f9ce;padding:10px 13px;font-size:10px;letter-spacing:1px;font-weight:800}
-.video-content h3{font-size:clamp(46px,5vw,69px);font-weight:900;margin:0;line-height:.91}
-.video-content .caption{color:#c8e0c6;font-size:12px;margin:12px 0 0}
-.gallery-stack{display:grid;grid-template-rows:1fr 1fr;gap:17px}
-.galleryitem{position:relative;min-height:198px;overflow:hidden;background:#2b4530}
-.galleryitem img{width:100%;height:100%;position:absolute;inset:0;object-fit:cover;filter:saturate(.85)}
-.galleryitem:after{content:'';position:absolute;inset:0;background:linear-gradient(0deg,#08120dda,transparent 68%)}
-.galleryitem .photo-caption{position:absolute;z-index:1;bottom:17px;left:19px;right:18px}
-.photo-caption strong{font:900 29px 'Barlow Condensed',sans-serif}
-.photo-caption small{display:block;color:#d6e6d0;font-size:10px;margin-top:2px}
-.media-disclaimer{color:#adc1ad;font-size:11px;line-height:1.7;margin-top:18px;border-left:3px solid var(--lime);padding-left:15px}
-.play-section{padding-top:92px}
-.pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-.pillar{border:1px solid #314437;background:linear-gradient(135deg,#142019,#111714);overflow:hidden}
-.pillar img{display:block;width:100%;height:200px;object-fit:cover;filter:saturate(.82)}
-.pillar .info{padding:25px}
-.pillar .step{font-size:10px;letter-spacing:2px;color:var(--lime);font-weight:900}
-.pillar h3{font-size:35px;font-weight:900;line-height:.95;margin:15px 0 11px}
-.pillar p{color:#aabcae;font-size:12px;line-height:1.8;margin:0}
-.pillar .source{display:block;margin-top:15px;color:#b8d7a6;font-size:10px;text-decoration:underline}
-.gallery-game{margin-top:18px;padding:27px;border:1px dashed #4c6251;background:#152019;display:flex;justify-content:space-between;gap:25px;align-items:center}
-.gallery-game strong{font-size:15px}
-.gallery-game p{font-size:12px;color:#a8bba9;line-height:1.6;max-width:750px;margin:8px 0 0}
-.gallery-game .small-flag{font-size:10px;letter-spacing:1.6px;color:var(--gold);font-weight:800;white-space:nowrap}
 .guide{background:#e0fa9e;color:#132011;padding:99px 0}
 .guide .secnum{color:#3f5c27}
 .guide .sechead h2 em{color:#60822e}
@@ -182,6 +150,20 @@ dialog::backdrop{background:#000c;backdrop-filter:blur(6px)}
 @media(max-width:980px){.navlinks{gap:15px}.navlinks a{font-size:10px}.section{padding:78px 0}.hero{min-height:630px}.feature-media{grid-template-columns:1fr}.gallery-stack{grid-template-columns:1fr 1fr;grid-template-rows:none}.guide-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:690px){.container{padding:0 18px}.nav{height:67px}.gf{width:40px;height:40px;font-size:26px}.identity strong{font-size:18px}.identity small{font-size:8px}.navlinks{display:none;position:absolute;left:0;right:0;top:67px;background:#111c16;flex-direction:column;align-items:stretch;padding:17px 23px;border-bottom:1px solid #4f6855}.navlinks.open{display:flex}.navtoggle{display:block}.navdownload{margin-left:auto;padding:11px;font-size:9px}.topline{font-size:9px;padding:0 8px}.hero{min-height:640px}.hero-inner{padding-top:75px;padding-bottom:90px}.hero h1{font-size:clamp(78px,15vw,112px);margin:32px 0 24px}.hero-intro{font-size:13px}.hero-attribution{left:18px;right:auto;font-size:9px}.strip .container{padding:10px 18px;justify-content:start;overflow-x:auto}.sechead{display:block}.sechead p{margin-top:22px}.download-layout{grid-template-columns:1fr}.edition{min-height:335px;padding:23px}.edition h3{font-size:65px}.comparetable th,.comparetable td{padding:12px 8px;font-size:10px}.video-stage{min-height:320px}.video-content h3{font-size:47px}.galleryitem{min-height:175px}.pillar img{height:170px}.pillars{grid-template-columns:1fr}.guide-grid{grid-template-columns:1fr}.guide-card{min-height:170px}.faq-grid{grid-template-columns:1fr;gap:25px}.release-row{grid-template-columns:72px minmax(0,1fr) 25px;gap:10px}.release-row .number{font-size:32px}.release-row .statusline{grid-column:2;grid-row:2;text-align:left}.release-row .arrow{grid-column:3;grid-row:1/span 2}.versions-ui{align-items:stretch}.search{width:100%}.gallery-game{display:block}.gallery-game .small-flag{display:block;margin-top:13px}.section{padding:66px 0}.footer .big{font-size:48px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn{transition:none}}
+
+/* Descargas primero: diseño concentrado en la descarga real */
+.hero{min-height:365px}
+.hero-inner{padding-top:45px;padding-bottom:42px}
+.hero h1{font-size:clamp(66px,8vw,110px);margin:18px 0;line-height:.8;letter-spacing:-.5px}
+.hero-intro{font-size:13px;line-height:1.65;max-width:640px}
+.hero-controls{margin-top:20px}
+.hero-spec{margin-top:20px}
+#descargas.section{padding-top:56px;padding-bottom:64px}
+#descargas .sechead h2{font-size:clamp(45px,5vw,68px)}
+.edition{min-height:325px}
+.guide{padding:68px 0}
+#versiones.section,#faq.section{padding:72px 0}
+@media(max-width:690px){.hero{min-height:330px}.hero-inner{padding-top:38px;padding-bottom:37px}.hero h1{font-size:clamp(51px,11.7vw,75px);line-height:.9;margin:18px 0}.hero-controls{gap:8px}.hero-spec{font-size:9px;gap:6px}.edition{min-height:310px}#descargas.section{padding-top:47px}}
 </style>
 </head>
 <body>
@@ -189,27 +171,27 @@ dialog::backdrop{background:#000c;backdrop-filter:blur(6px)}
 <header>
   <div class="container nav">
     <a class="identity" href="#inicio" aria-label="Ir al inicio"><span class="gf">GF</span><span><strong>GOLPE FRANCO NEXT</strong><small>THE RELEASE CENTER</small></span></a>
-    <nav id="navlinks" class="navlinks" aria-label="Navegación"><a href="#descargas">DESCARGAR</a><a href="#galeria">PRESENTACIÓN</a><a href="#guia">GUÍA</a><a href="#versiones">VERSIONES</a><a href="#faq">PREGUNTAS</a></nav>
+    <nav id="navlinks" class="navlinks" aria-label="Navegación"><a href="#descargas">DESCARGAR</a><a <a href="#guia">GUÍA</a><a href="#versiones">VERSIONES</a><a href="#faq">PREGUNTAS</a></nav>
     <a href="#descargas" class="navdownload">VER DESCARGAS ↗</a>
     <button type="button" id="menuToggle" class="navtoggle" aria-label="Abrir menú" aria-expanded="false">☰</button>
   </div>
 </header>
 <main>
 <section class="hero" id="inicio">
-  <div class="hero-art" role="img" aria-label="Fotografía ilustrativa de un estadio real iluminado"></div>
+  <div class="hero-art" aria-hidden="true"></div>
   <div class="container hero-inner">
-    <div class="eyebrow"><span class="dot"></span> EL FÚTBOL, EN DESARROLLO</div>
-    <h1><span>GOLPE</span><span class="slant">FRANCO</span><span>NEXT.</span></h1>
-    <p class="hero-intro">Tu juego de fútbol 3D, gratis y en evolución. Descubre la última versión, elige entre la edición ligera y el paquete de alta resolución, consulta cada cambio y aprende a jugar. <strong>Todo en una sola web.</strong></p>
-    <div class="hero-controls"><a class="btn btn-lime" href="#descargas">ELEGIR VERSIÓN ↓</a><a class="btn btn-stroke" href="#galeria">VER PRESENTACIÓN ▶</a></div>
+    <div class="eyebrow"><span class="dot"></span> CENTRO DE DESCARGAS · V136</div>
+    <h1><span>GOLPE FRANCO</span><span class="slant">NEXT.</span></h1>
+    <p class="hero-intro">Tu juego de fútbol 3D, gratis y en evolución. Dos ediciones: <strong>Master 8K</strong> y <strong>HTML autónomo</strong>. Descargas, historial y ayuda en la misma dirección.</p>
+    <div class="hero-controls"><a class="btn btn-lime" href="#descargas">ELEGIR VERSIÓN ↓</a><a class="btn btn-stroke" href="#versiones">VER HISTORIAL ↓</a></div>
     <div class="hero-spec"><span>WEBGL 3D</span><i></i><span>PC / CONTROLES MÓVILES</span><i></i><span>GRATIS</span><i></i><span>V136 REGISTRADA</span></div>
   </div>
-  <div class="hero-attribution">FOTO PUBLICITARIA ILUSTRATIVA · NO ES UNA CAPTURA DEL JUEGO</div>
+  
 </section>
 <div class="strip"><div class="container"><b>GOLPE FRANCO NEXT / BUILD <span id="currentTag">V136</span></b><em>ÚNICA WEB · VERSIONES ACUMULATIVAS</em><em>ENLACES ACTIVADOS SOLO CON ARCHIVOS REALES</em></div></div>
 <section class="section" id="descargas">
   <div class="container">
-    <div class="sechead"><div><div class="secnum">01 — ESCOGE TU EDICIÓN</div><h2>DOS FORMAS.<br><em>EL MISMO JUEGO.</em></h2></div><p>Descarga solo lo que necesitas. La versión HTML funciona sin los atlas 8K; la edición completa incorpora los recursos de alta resolución. Su disponibilidad se verifica por separado.</p></div>
+    <div class="sechead"><div><div class="secnum">01 — DESCARGAS DEL JUEGO</div><h2>ELIGE Y<br><em>DESCARGA.</em></h2></div><p>Elige la edición que prefieras. El botón de cada una se activará al existir un archivo público verificable.</p></div>
     <div class="download-layout">
       <article class="edition ultra" id="ultraCard">
         <span class="k">MÁXIMOS RECURSOS · EDICIÓN COMPLETA</span>
@@ -237,39 +219,9 @@ dialog::backdrop{background:#000c;backdrop-filter:blur(6px)}
     </table>
   </div>
 </section>
-<section class="section media-section" id="galeria">
-  <div class="container">
-    <div class="sechead"><div><div class="secnum">02 — PRESENTACIÓN VISUAL</div><h2>IMAGINA<br><em>LA ATMÓSFERA.</em></h2></div><p>Fotografía y vídeo reales de fútbol como inspiración visual del proyecto. No confundimos las referencias publicitarias con el aspecto del juego descargable.</p></div>
-    <div class="feature-media">
-      <div class="video-stage">
-        <div class="video-content">
-          <span class="media-label">VIDEO EXTERNO ILUSTRATIVO · NO ES GAMEPLAY</span>
-          <button id="openTrailer" class="bigplay" aria-label="Ver vídeo de ambiente futbolístico">▶</button>
-          <div><h3>UNA NOCHE.<br>UN PARTIDO.</h3><p class="caption">Mira una referencia de ambiente futbolístico. No es un tráiler grabado de GOLPE FRANCO.</p></div>
-        </div>
-      </div>
-      <div class="gallery-stack">
-        <div class="galleryitem"><img loading="lazy" alt="Foto de un estadio iluminado, imagen de referencia y no captura de GOLPE FRANCO" src="https://images.pexels.com/photos/38698665/pexels-photo-38698665.jpeg?auto=compress&cs=tinysrgb&w=900"><div class="photo-caption"><strong>ESTADIO</strong><small>Fotografía ilustrativa · no es el juego</small></div></div>
-        <div class="galleryitem"><img loading="lazy" alt="Vista aérea de un campo de fútbol real usado como referencia visual" src="https://images.pexels.com/photos/3507477/pexels-photo-3507477.jpeg?auto=compress&cs=tinysrgb&w=900"><div class="photo-caption"><strong>CÉSPED & LUZ</strong><small>Fotografía ilustrativa · no es el juego</small></div></div>
-      </div>
-    </div>
-    <p class="media-disclaimer"><strong>Nota visual:</strong> las imágenes y el vídeo de esta sección son referencias del fútbol real facilitadas por terceros. No representan escenas generadas por GOLPE FRANCO NEXT. Añadiremos capturas y clips auténticos cuando haya una partida grabada y verificada.</p>
-  </div>
-</section>
-<section class="section play-section" id="graficos">
-  <div class="container">
-    <div class="sechead"><div><div class="secnum">03 — DESARROLLO DEL JUEGO</div><h2>LO QUE<br><em>ESTAMOS MEJORANDO.</em></h2></div><p>Los objetivos técnicos van más allá del tamaño de descarga. Aquí distinguimos lo trabajado de lo que aún queda por comprobar.</p></div>
-    <div class="pillars">
-      <article class="pillar"><img loading="lazy" alt="Campo de fútbol real, referencia visual" src="https://images.pexels.com/photos/28827841/pexels-photo-28827841.jpeg?auto=compress&cs=tinysrgb&w=750"><div class="info"><span class="step">01 / PERSONAJES</span><h3>FUTBOLISTAS 3D</h3><p>Geometría facial, niveles de detalle, cabello y equipaciones. Son mejoras declaradas en el código, no prueba de fotorrealismo.</p><a class="source" href="#versiones">VER CAMBIOS REALES ↗</a></div></article>
-      <article class="pillar"><img loading="lazy" alt="Gradas reales bajo iluminación de noche, referencia visual" src="https://images.pexels.com/photos/31160095/pexels-photo-31160095.jpeg?auto=compress&cs=tinysrgb&w=750"><div class="info"><span class="step">02 / MOVIMIENTO</span><h3>ANIMACIONES Y FÍSICA</h3><p>Transiciones de movimiento, giros y poses de los jugadores. La calidad real debe comprobarse durante una partida.</p><a class="source" href="#guia">CÓMO PROBAR EL JUEGO ↗</a></div></article>
-      <article class="pillar"><img loading="lazy" alt="Campo de fútbol visto desde arriba, imagen ilustrativa" src="https://images.pexels.com/photos/3507477/pexels-photo-3507477.jpeg?auto=compress&cs=tinysrgb&w=750"><div class="info"><span class="step">03 / ILUMINACIÓN</span><h3>RENDERIZADO 3D</h3><p>Shaders, materiales, césped y sombras. Se han corregido fallos previos, pero no hay validación completa en todas las GPUs.</p><a class="source" href="#faq">VER PROBLEMAS CONOCIDOS ↗</a></div></article>
-    </div>
-    <div class="gallery-game"><div><strong>¿DÓNDE ESTÁN LAS CAPTURAS REALES DEL JUEGO?</strong><p>No vamos a publicar fotografías de un juego distinto como si fueran pantallas de GOLPE FRANCO. Las capturas auténticas aparecerán cuando haya partidas comprobadas. Hasta entonces, las imágenes de arriba son referencias ilustrativas.</p></div><span class="small-flag">GAMEPLAY REAL: PENDIENTE</span></div>
-  </div>
-</section>
 <section class="guide" id="guia">
   <div class="container">
-    <div class="sechead"><div><div class="secnum">04 — MINI GUÍA</div><h2>TU PRIMER<br><em>PARTIDO.</em></h2></div><p>Una guía de inicio rápida para elegir edición, abrir el juego y saber dónde mirar si algo falla.</p></div>
+    <div class="sechead"><div><div class="secnum">02 — MINI GUÍA</div><h2>TU PRIMER<br><em>PARTIDO.</em></h2></div><p>Una guía de inicio rápida para elegir edición, abrir el juego y saber dónde mirar si algo falla.</p></div>
     <div class="guide-grid">
       <div class="guide-card"><div class="n">01.</div><h3>ELIGE TU EDICIÓN</h3><p>Si tienes poco almacenamiento, usa el HTML. Si quieres todos los recursos 8K, elige Master.</p></div>
       <div class="guide-card"><div class="n">02.</div><h3>ABRE EL JUEGO</h3><p>El HTML se abre con un navegador compatible con WebGL2. En Master, extrae primero el ZIP y sigue su lanzador incluido.</p></div>
@@ -281,7 +233,7 @@ dialog::backdrop{background:#000c;backdrop-filter:blur(6px)}
 </section>
 <section class="section" id="versiones">
   <div class="container">
-    <div class="sechead"><div><div class="secnum">05 — HISTORIAL DE DESARROLLO</div><h2>CADA VERSIÓN<br><em>DEJA HUELLA.</em></h2></div><p>Consulta los cambios registrados desde la base antigua hasta las últimas ediciones. Las notas históricas no sustituyen pruebas visuales de calidad.</p></div>
+    <div class="sechead"><div><div class="secnum">03 — HISTORIAL DE DESARROLLO</div><h2>CADA VERSIÓN<br><em>DEJA HUELLA.</em></h2></div><p>Consulta los cambios registrados desde la base antigua hasta las últimas ediciones. Las notas históricas no sustituyen pruebas visuales de calidad.</p></div>
     <div class="versions-ui"><div class="filter-group" role="group" aria-label="Filtrar versiones"><button data-filter="all" class="active" type="button">TODAS</button><button data-filter="recent" type="button">RECIENTES</button><button data-filter="archived" type="button">ANTERIORES</button></div><input class="search" type="search" id="searchVersion" aria-label="Buscar versión" placeholder="Buscar V136, animaciones, estadio…"></div>
     <div class="timeline" id="timeline" aria-live="polite"><div class="emptyhistory">Cargando historial de versiones…</div></div>
     <p style="font-size:11px;color:#849985;line-height:1.75;margin-top:19px">El historial se amplía cuando se registran nuevas versiones. Los enlaces solo aparecen si existe un archivo publicado y accesible.</p>
@@ -289,13 +241,12 @@ dialog::backdrop{background:#000c;backdrop-filter:blur(6px)}
 </section>
 <section class="section faq" id="faq">
   <div class="container faq-grid">
-    <div><div class="sechead"><div><div class="secnum">06 — CENTRO DE AYUDA</div><h2>RESPUESTAS<br><em>SIN RODEOS.</em></h2></div><p>Preguntas habituales sobre el juego, las descargas, los gráficos, el funcionamiento y las futuras versiones.</p></div></div>
+    <div><div class="sechead"><div><div class="secnum">04 — CENTRO DE AYUDA</div><h2>RESPUESTAS<br><em>SIN RODEOS.</em></h2></div><p>Preguntas habituales sobre el juego, las descargas, los gráficos, el funcionamiento y las futuras versiones.</p></div></div>
     <div id="questions"></div>
   </div>
 </section>
 </main>
-<footer class="footer"><div class="container"><div class="footer-flex"><div><div class="big">GOLPE FRANCO <span>NEXT.</span></div><p>Juego de fútbol independiente. Una única dirección HTTPS que conserva historial, ayuda y novedades. Sin afiliación con EA SPORTS ni Rockstar Games.</p></div><div class="footer-nav"><a href="#descargas">DESCARGAS</a><a href="#guia">GUÍA</a><a href="#faq">AYUDA</a></div></div><div class="footer-bottom">© 2026 GOLPE FRANCO NEXT · Imágenes publicitarias de referencia: Pexels; no son capturas del juego · <a href="https://www.pexels.com/" target="_blank" rel="noopener noreferrer">Origen de fotografías</a> · Publicado mediante GitHub Pages</div></div></footer>
-<dialog id="videoDialog" aria-label="Vídeo externo ilustrativo de fútbol"><div class="modalhead"><div><strong>VÍDEO PUBLICITARIO ILUSTRATIVO</strong><small>Vídeo de fútbol real, no gameplay de GOLPE FRANCO NEXT</small></div><button id="closeTrailer" aria-label="Cerrar vídeo">✕</button></div><div class="modalframe" id="modalFrame"></div><a class="modallink" href="https://www.youtube.com/watch?v=kSs5YkaRJeA" target="_blank" rel="noopener noreferrer">Si el vídeo no se carga, abrir la fuente externa ↗</a></dialog>
+<footer class="footer"><div class="container"><div class="footer-flex"><div><div class="big">GOLPE FRANCO <span>NEXT.</span></div><p>Juego de fútbol independiente. Una única dirección HTTPS que conserva historial, ayuda y novedades. Sin afiliación con EA SPORTS ni Rockstar Games.</p></div><div class="footer-nav"><a href="#descargas">DESCARGAS</a><a href="#guia">GUÍA</a><a href="#faq">AYUDA</a></div></div><div class="footer-bottom">© 2026 GOLPE FRANCO NEXT · Proyecto independiente en desarrollo · Publicado mediante GitHub Pages</div></div></footer>
 <script>
 (function(){
 'use strict';
@@ -309,19 +260,18 @@ const faq=[
 ['¿Qué diferencia hay entre Master 8K y HTML autónomo?','Master incluye los recursos 8K externos y se distribuye como un ZIP. HTML autónomo es un único archivo de unos 255,7 MB que no incluye esos recursos externos. Ambos son ediciones registradas de V136, todavía pendientes de alojamiento público.'],
 ['¿Master 8K tiene gráficos iguales a FC 27 o GTA VI?','No hay pruebas que lo demuestren. El tamaño de los archivos y la resolución de las texturas no garantizan modelos, animaciones o iluminación de ese nivel.'],
 ['¿Se pueden descargar ahora mismo las dos ediciones?','La web solo activa cada enlace después de detectar un archivo público en GitHub Releases. Si ves el aviso Pendiente, el archivo todavía no está alojado.'],
-['¿Por qué aparecen fotos de fútbol tan espectaculares?','Son imágenes publicitarias de referencia, procedentes de bancos de fotografía. Están etiquetadas expresamente como ilustrativas. No son capturas del juego.'],
-['¿El vídeo es un tráiler auténtico del juego?','No. Por el momento es un vídeo externo sobre ambiente futbolístico. El vídeo jugable real se incorporará cuando exista una grabación verificada de GOLPE FRANCO NEXT.'],
 ['¿Se mantiene siempre la misma dirección de la web?','Sí, mientras siga publicado el proyecto en GitHub Pages, la intención y la configuración actuales son actualizar esta misma ruta. Las versiones se añaden sin crear una web nueva cada vez.'],
 ['¿Las nuevas versiones se publican automáticamente?','La web detecta releases con etiquetas de GOLPE FRANCO (por ejemplo, golpe-franco-v137) y GitHub Actions sincroniza el catálogo. Para descargar una nueva versión, también es necesario que su archivo se haya subido realmente al alojamiento público. Crear el archivo en un chat no basta.'],
 ['¿Cómo abro el archivo HTML autónomo?','Descarga el archivo publicado, abre el .html con un navegador moderno compatible con WebGL2 y utiliza las opciones del juego. La compatibilidad total todavía debe verificarse con partidas reales.'],
 ['¿Cómo instalo el paquete Master?','Cuando esté publicado, descarga el ZIP único y extrae su contenido en una carpeta. Sigue las instrucciones incluidas en esa edición, sin eliminar sus texturas ni cambiar su estructura.'],
+['¿En qué dispositivos puedo jugar?','GOLPE FRANCO NEXT está pensado principalmente para ordenadores con un navegador compatible con WebGL2, especialmente PC con Windows. También tiene controles táctiles y se puede intentar jugar en móviles Android, iPhone y tabletas con navegador WebGL2, pero la V136 no ha sido verificada completamente en todos estos dispositivos. El HTML autónomo es la opción con menos almacenamiento; Master 8K requiere más espacio y puede necesitar un equipo potente. No se ofrece una versión nativa verificada para PlayStation, Xbox o Nintendo Switch.'],
 ['¿Funciona en móvil?','Las versiones anteriores incluían controles móviles, pero no está verificada la ejecución fluida de la última edición en todos los teléfonos. Un paquete con recursos 8K puede ser demasiado pesado para algunos dispositivos.'],
 ['¿Qué hago si veo una pantalla negra?','La V134 sufrió un error de compilación de shaders que se corrigió en código, pero no se verificó un partido completo. Usa un navegador actualizado compatible con WebGL2 y guarda cualquier mensaje de error para identificar el problema real.'],
 ['¿Qué hago si las camisetas salen del revés?','Se registró una corrección de la orientación de texturas, pero no hay una comprobación completa de todas las equipaciones en la última versión. Es una incidencia a verificar en partida.'],
 ['¿Dónde están los controles y atajos?','Revisa las opciones de controles dentro del juego. En el registro de versiones anteriores se añadió un panel táctico mediante F7; no afirmamos que otros atajos sean idénticos sin revisarlos.'],
 ['¿Puedo escoger una versión antigua?','El historial recoge las entregas anteriores. Sus botones solo estarán disponibles si la versión concreta tiene su archivo público verificado.'],
 ['¿Cuántos FPS consigo?','No hay un número de FPS garantizado. Depende del navegador, la GPU, la resolución y los materiales. Conviene empezar con calidad moderada y comprobar el rendimiento real.'],
-['¿Guardáis mis datos al visitar la web?','Esta página es estática y consulta el catálogo público de GitHub. No requiere cuentas del juego para leer la guía o las novedades. Los servicios externos de las fotografías y el vídeo pueden tener sus propias políticas.']
+['¿Tengo que registrarme para descargar?','No. El catálogo es público, sin formularios de registro. Cuando las descargas estén alojadas, podrán utilizarse desde los botones de la edición elegida.']
 ];
 const fallback=[
 {version:'V136',title:'V136 — Reconstrucción 3D',date:'23 nov 2026',description:'Mallas faciales, animaciones y edición Master 8K registrada.',status:'Última versión registrada',size:'1,26 GB',highlights:['Refinamiento de malla facial y articulaciones.','Edición Master con recursos 8K.','Prueba visual completa pendiente.'],assets:[{type:'Master 8K (ZIP)',size:'1,26 GB',available:false,url:null},{type:'HTML autónomo',size:'255,7 MB',available:false,url:null}]}
@@ -417,12 +367,6 @@ $('searchVersion').addEventListener('input',renderHistory);
 $('refreshDownloads').addEventListener('click',async()=>{$('refreshResult').textContent='Comprobando archivos reales…';await load()});
 $('menuToggle').addEventListener('click',()=>{const menu=$('navlinks');const open=menu.classList.toggle('open');$('menuToggle').setAttribute('aria-expanded',String(open))});
 document.querySelectorAll('#navlinks a').forEach(a=>a.addEventListener('click',()=>{$('navlinks').classList.remove('open');$('menuToggle').setAttribute('aria-expanded','false')}));
-const modal=$('videoDialog');
-$('openTrailer').addEventListener('click',()=>{const frame=document.createElement('iframe');frame.src='https://www.youtube-nocookie.com/embed/kSs5YkaRJeA?autoplay=1&rel=0';frame.title='Vídeo ilustrativo de un estadio de fútbol (no es gameplay)';frame.allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture';frame.allowFullscreen=true;$('modalFrame').replaceChildren(frame);if(typeof modal.showModal==='function')modal.showModal();else window.open('https://www.youtube.com/watch?v=kSs5YkaRJeA','_blank','noopener')});
-function closeTrailer(){modal.close();$('modalFrame').replaceChildren()}
-$('closeTrailer').addEventListener('click',closeTrailer);
-modal.addEventListener('click',e=>{if(e.target===modal)closeTrailer()});
-modal.addEventListener('close',()=>{$('modalFrame').replaceChildren()});
 renderFaq();
 load();
 })();
