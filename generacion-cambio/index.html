@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>GENERACIÓN CAMBIO · Fase 1 · Aventura 3D</title>
-<meta name="theme-color" content="#071933">
+<title>GENERACIÓN CAMBIO · Fase 1 · Edición definitiva de exploración</title>
+<meta name="theme-color" content="#071933"><meta name="description" content="Aventura tridimensional interactiva: descubre seis territorios y recorre el planeta de Generación Cambio, 6º Primaria CP Carmen Ruiz-Tilve.">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Nunito:wght@500;600;700;800;900&display=swap');
 :root{--mint:#8effd9;--blue:#73dfff;--text:#f4fcff;--muted:#bdd9e8;--glass:rgba(6,21,42,.81);--line:rgba(151,225,255,.35)}*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#07132b;color:var(--text);font-family:Nunito,system-ui,sans-serif}button,input{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible{outline:3px solid #b2ffec;outline-offset:3px}#game{position:fixed;inset:0;overflow:hidden;background:linear-gradient(#498ac1,#17446d 52%,#07152e)}#viewport{position:absolute;inset:0;touch-action:none}#viewport canvas{display:block;width:100%;height:100%}.veil{position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(4,13,31,.82),transparent 47%),linear-gradient(0deg,rgba(3,10,28,.88),transparent 29%),linear-gradient(180deg,rgba(3,13,29,.55),transparent 24%);transition:opacity .6s;z-index:1}.play .veil{opacity:.28}
@@ -21,6 +21,19 @@
 @media(max-width:980px){.home{width:340px}.home h1{font-size:79px}.profile{width:199px}.worlds{grid-template-columns:repeat(3,minmax(0,1fr));max-width:450px}#hint{bottom:204px}.play .worlds{width:62vw}.play #hint{bottom:108px}}
 @media(max-width:660px){.topbar{padding:10px}.branding strong{font-size:16px}.branding small{font-size:8px}.logo{width:37px;height:37px;font-size:20px}.home{top:84px;left:12px;right:12px;max-width:none;width:auto;text-align:center}.home h1{font-size:62px;margin:12px 0 10px}.school{font-size:16px;margin:9px 0}.tagline{font-size:15px;margin:8px 0 14px}.start{padding:14px 18px;min-height:52px;font-size:13px}.profile{top:auto;bottom:170px;left:12px;right:12px;width:auto;padding:10px}.profile h2{margin-bottom:5px}.avatar-row{gap:6px}.avatar{height:33px;width:33px;font-size:19px}.statgrid{grid-template-columns:repeat(4,1fr)}.stat{padding:5px}.stat b{font-size:16px}.stat small{font-size:9px}.xp{margin-top:5px}.worlds{left:10px;right:10px;bottom:9px;transform:none;width:auto;max-width:none;grid-template-columns:repeat(3,1fr);gap:5px;padding:6px}.world{min-height:46px;padding:4px;font-size:8px}.world .emoji{font-size:17px;margin-bottom:0}.play .worlds{left:auto;right:8px;width:57vw;bottom:8px;grid-template-columns:repeat(3,1fr)}.play .world{min-height:45px;font-size:8px}.play .world .emoji{font-size:17px}#hint{bottom:162px;white-space:normal;width:78%;font-size:9px}.play #hint{bottom:167px}.play #dpad{display:block}.play .playhud{top:76px;left:10px;padding:8px;min-width:0}.playhud strong{font-size:10px}.playhud small{font-size:9px}.badge{display:none!important}.play #interact.ready{bottom:174px;right:10px;padding:12px;font-size:11px}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* V3 visual polish, clear game feedback and responsive map */
+#minimap{position:absolute;z-index:5;right:3%;top:88px;width:152px;height:152px;display:none;border-radius:50%;border:2px solid #91fff0aa;box-shadow:0 0 0 6px #05233ab9,0 15px 38px #0008;background:#061b32c9;pointer-events:none}
+.play #minimap{display:block}.play .badge{top:255px}
+.playhud strong{display:flex;justify-content:space-between;gap:18px}.playhud strong span{color:#ffde84}
+.pips{display:flex;gap:6px;margin-top:10px}.pips i{width:15px;height:9px;border-radius:10px;background:#40556c;border:1px solid #d0f6ff30;box-shadow:inset 0 2px 4px #0004}.pips i.on{background:#86ffdb;box-shadow:0 0 12px #55f7db7e}
+.xp{overflow:hidden}.xp span{display:block;height:100%;width:0;background:linear-gradient(90deg,#79ffd2,#72caff,#cd9cff);transition:width .3s}
+#hint{font-size:10px;letter-spacing:.5px}.world.found{border-color:#90ffb9ac;background:linear-gradient(#4ceaaa45,#0a3a39ad)}.world.found:after{content:'✓';position:absolute;top:6px;right:7px;background:#67ffc8;color:#084539;width:18px;height:18px;border-radius:50%;line-height:18px;font-size:11px;font-weight:1000}
+#interact{animation:lightBreath 1.7s ease-in-out infinite alternate}@keyframes lightBreath{to{box-shadow:0 0 42px #60fbe8bd;filter:brightness(1.08)}}
+#graphicSettings{position:absolute;z-index:5;bottom:106px;left:3%;display:none;gap:7px}.play #graphicSettings{display:flex}#graphicSettings button{font-size:11px;font-weight:900;color:#e3feff;background:#082b49d4;border:1px solid #a4e1ff52;border-radius:10px;padding:9px 11px}
+@media(max-width:980px){#minimap{width:112px;height:112px}.play .badge{top:211px}}
+@media(max-width:660px){#minimap{top:90px;right:12px;width:100px;height:100px}.play .badge{display:none}.play .playhud{max-width:calc(100% - 132px);padding:9px;top:91px;left:11px;min-width:0}.playhud small{font-size:9px}.playhud strong{font-size:10px}.pips{gap:4px}.pips i{width:12px}#hint{bottom:174px;font-size:9px}.play #hint{bottom:167px;max-width:58vw}#graphicSettings{bottom:182px;left:13px}.play #dpad{bottom:93px}}
+@media(max-width:390px){.play .worlds{width:54vw}.play .world{font-size:7px}.playhud small{display:none}}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
 </head>
@@ -29,11 +42,11 @@
 <div id="viewport" aria-label="Mundo tridimensional interactivo"></div><div class="veil"></div>
 <header class="topbar"><div class="branding"><div class="logo">🌎</div><div><strong>GENERACIÓN CAMBIO</strong><small>6º PRIMARIA CP CARMEN RUIZ-TILVE</small></div></div><div class="actions"><button id="sound" aria-label="Sonido" title="Sonido">♪̸</button><button id="motion" aria-label="Pausar animación" title="Animación">⏸</button><button id="info" aria-label="Información" title="Información">ⓘ</button></div></header>
 <section class="home" id="home"><div class="eyebrow">✦ UN MUNDO POR DESCUBRIR</div><h1>GENERACIÓN <em>CAMBIO</em></h1><div class="school">6º PRIMARIA CP CARMEN RUIZ-TILVE</div><p class="tagline">Explora, aprende y cambia el mundo.</p><button class="start" id="start">COMENZAR AVENTURA&nbsp;&nbsp; ➜</button></section>
-<aside class="profile"><h2>✦ PERFIL EXPLORADOR</h2><div class="avatar-row"><div class="avatar">🧑‍🚀</div><div><div id="nickname" class="user">Explorador/a</div><div class="rank">Nivel 01 · Recluta</div></div></div><button id="rename" class="rename">Elegir apodo</button><div class="statgrid"><div class="stat"><b>01</b><small>Nivel</small></div><div class="stat"><b>0</b><small>Misiones</small></div><div class="stat"><b>0</b><small>XP</small></div><div class="stat"><b>0</b><small>Insignias</small></div></div><div class="xp"></div></aside>
-<div class="playhud"><strong>✦ EXPLORACIÓN LIBRE</strong><small>WASD · Flechas · Shift correr · E portal</small></div>
-<div id="hint">SEIS TERRITORIOS · PORTALES BLOQUEADOS</div><nav id="worlds" class="worlds" aria-label="Seis territorios"></nav>
-<button id="interact">EXPLORAR PORTAL · E</button>
-<div id="dpad"><button class="dkey dup" data-key="KeyW" aria-label="Adelante">▲</button><div class="drow"><button class="dkey" data-key="KeyA" aria-label="Izquierda">◀</button><button class="dkey" data-key="KeyD" aria-label="Derecha">▶</button></div><button class="dkey dup" data-key="KeyS" aria-label="Atrás">▼</button></div>
+<aside class="profile"><h2>✦ PERFIL EXPLORADOR</h2><div class="avatar-row"><div class="avatar">🧑‍🚀</div><div><div id="nickname" class="user">Explorador/a</div><div class="rank">Nivel 01 · Recluta</div></div></div><button id="rename" class="rename">Elegir apodo</button><div class="statgrid"><div class="stat"><b id="levelValue">01</b><small>Nivel</small></div><div class="stat"><b id="missionValue">0</b><small>Misiones</small></div><div class="stat"><b id="xpValue">0</b><small>XP</small></div><div class="stat"><b id="badgeValue">0</b><small>Insignias</small></div></div><div class="xp"><span id="xpFill"></span></div></aside>
+<div class="playhud"><strong>✦ SEÑALES DEL PLANETA <span id="signalCount">0/6</span></strong><small>WASD · Flechas · Shift correr · Espacio saltar · E portal</small><div class="pips" id="signalPips"><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+<div id="hint">DESCUBRE LOS SEIS PORTALES · ACTIVA SUS BALIZAS</div><canvas id="minimap" width="180" height="180" aria-label="Minimapa de los portales"></canvas><nav id="worlds" class="worlds" aria-label="Seis territorios"></nav>
+<button id="interact">ACTIVAR BALIZA · E</button>
+<div id="graphicSettings"><button id="resetCam">CENTRAR CÁMARA</button><button id="qualityBtn">GRÁFICOS: AUTO</button></div><div id="dpad"><button class="dkey dup" data-key="KeyW" aria-label="Adelante">▲</button><div class="drow"><button class="dkey" data-key="KeyA" aria-label="Izquierda">◀</button><button class="dkey" data-key="KeyD" aria-label="Derecha">▶</button></div><button class="dkey dup" data-key="KeyS" aria-label="Atrás">▼</button></div>
 <div id="modal"><section class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialogtitle"><button class="close" id="close" aria-label="Cerrar">✕</button><h2 id="dialogtitle"></h2><div id="dialogcontent"></div></section></div><div id="notice" role="status"></div>
 <div id="fail"><div class="failcontent"><h2>NO SE PUEDE INICIAR EL MOTOR 3D</h2><p>Comprueba la conexión a Internet y que WebGL esté activado en el navegador. La aplicación necesita Chrome, Edge o un navegador compatible con WebGL.</p></div></div>
 </div>
@@ -53,13 +66,33 @@ const $=(s)=>document.querySelector(s);
 const game=$('#game'),modal=$('#modal'),worlds=$('#worlds'),notice=$('#notice');
 LEVELS.forEach((world,index)=>{const btn=document.createElement('button');btn.className='world';btn.style.setProperty('--c','#'+world.color.toString(16));btn.dataset.world=index;btn.innerHTML='<span class="emoji">'+world.emoji+'</span>'+world.short;worlds.appendChild(btn);});
 let playing=false,paused=window.matchMedia('(prefers-reduced-motion:reduce)').matches,audioEnabled=false,audio=null,near=-1,toastTimeout=null;
+const collected=new Set();let completed=false;
+try{const raw=JSON.parse(localStorage.getItem('gc-phase1-signals-v3')||'[]');if(Array.isArray(raw))raw.filter(n=>Number.isInteger(n)&&n>=0&&n<6).forEach(n=>collected.add(n));}catch{}
+function updateProgress(){
+ const n=collected.size;$('#signalCount').textContent=n+'/6';$('#xpValue').textContent=n*20;$('#badgeValue').textContent=n===6?'1':'0';$('#missionValue').textContent=n===6?'1':'0';$('#levelValue').textContent=n===6?'02':'01';$('#xpFill').style.width=(n===6?'100':n*20)+'%';
+ const pips=$$('#signalPips i');for(let i=0;i<6;i++)pips[i]?.classList.toggle('on',collected.has(i));
+ $$('.world').forEach((el,i)=>el.classList.toggle('found',collected.has(i)));
+}
+const $$=s=>[...document.querySelectorAll(s)];
+function discoverSignal(index){
+ if(!playing||near!==index||collected.has(index))return false;
+ collected.add(index);try{localStorage.setItem('gc-phase1-signals-v3',JSON.stringify([...collected]));}catch{}
+ updateProgress();beep(1000);toast('✦ BALIZA ACTIVADA · +20 XP · '+collected.size+'/6');
+ if(collected.size===6){completed=true;setTimeout(()=>dialog('¡MISIÓN DE EXPLORACIÓN COMPLETADA!','<p>Has localizado las seis balizas de los seis territorios.</p><p>✦ Insignia conseguida: CARTÓGRAFO DEL CAMBIO</p><button class="go" id="goBack">CONTINUAR EXPLORANDO</button>'),700)}
+ return true;
+}
+updateProgress();
 const keys=new Set();
 function toast(text){notice.textContent=text;notice.classList.add('show');clearTimeout(toastTimeout);toastTimeout=setTimeout(()=>notice.classList.remove('show'),2600);}
 function beep(f=670){if(!audioEnabled)return;try{audio=audio||new(window.AudioContext||window.webkitAudioContext)();const o=audio.createOscillator(),g=audio.createGain();o.type='sine';o.frequency.setValueAtTime(f,audio.currentTime);o.frequency.exponentialRampToValueAtTime(f*1.25,audio.currentTime+.12);g.gain.setValueAtTime(.04,audio.currentTime);g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+.19);o.connect(g);g.connect(audio.destination);o.start();o.stop(audio.currentTime+.2)}catch{}}
 function dialog(title,html){$('#dialogtitle').textContent=title;$('#dialogcontent').innerHTML=html;modal.classList.add('show');$('#close').focus();beep();}
 function closeDialog(){modal.classList.remove('show');}
-function showWorld(index){const w=LEVELS[index];if(!w)return;dialog(w.emoji+' '+w.name,'<p>'+w.area+'</p><div class="meta">🌍 ODS '+w.ods+'</div><p>🔒 Las actividades de este territorio se abrirán en la Fase 2.</p><button class="go" id="goBack">VOLVER AL MUNDO</button>');}
-$('#start').onclick=()=>{playing=true;game.classList.add('play');$('#home').classList.add('hidden');toast('¡AVENTURA INICIADA! Muévete con WASD o las flechas.');};
+function showWorld(index){const w=LEVELS[index];if(!w)return;
+ const activated=playing&&near===index;
+ if(activated)discoverSignal(index);
+ dialog(w.emoji+' '+w.name,'<p>'+w.area+'</p><div class="meta">🌍 ODS '+w.ods+'</div><p>'+(collected.has(index)?'✦ Baliza de exploración registrada.':'🔒 Portal educativo bloqueado hasta la Fase 2.')+'</p><button class="go" id="goBack">VOLVER AL MUNDO</button>');
+}
+$('#start').onclick=()=>{playing=true;game.classList.add('play');$('#home').classList.add('hidden');toast('✦ MISIÓN: ACTIVA LAS 6 BALIZAS. CAMINA CON WASD / FLECHAS');};
 $('#close').onclick=closeDialog;
 modal.addEventListener('click',event=>{if(event.target===modal||event.target.id==='goBack')closeDialog();if(event.target.id==='saveAlias'){const input=$('#nameinput'),name=input?.value.trim();if(name){$('#nickname').textContent=name.slice(0,24);try{localStorage.setItem('generacion-cambio-nickname',name.slice(0,24))}catch{}closeDialog();}else toast('Escribe un apodo.')}});
 $('#rename').onclick=()=>dialog('Apodo del explorador','<p>Elige un apodo sin datos personales.</p><input id="nameinput" maxlength="24" autocomplete="off" placeholder="Apodo"><button id="saveAlias" class="go">GUARDAR</button>');
@@ -98,10 +131,32 @@ const terrain=add(terrainGeo,new THREE.MeshStandardMaterial({vertexColors:true,r
 // Realistic-looking procedural grass texture and painted paths.
 function texturedNoise(size=512){const c=document.createElement('canvas');c.width=c.height=size;const g=c.getContext('2d');const im=g.createImageData(size,size);for(let i=0;i<im.data.length;i+=4){const n=Math.random()*35;im.data[i]=69+n;im.data[i+1]=91+n;im.data[i+2]=55+n*.3;im.data[i+3]=255}g.putImageData(im,0,0);const tex=new THREE.CanvasTexture(c);tex.colorSpace=THREE.SRGBColorSpace;tex.wrapS=tex.wrapT=THREE.RepeatWrapping;tex.repeat.set(25,25);tex.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());return tex;}
 const grassTexture=texturedNoise(256);terrain.material.map=grassTexture;terrain.material.needsUpdate=true;
+// V3 high-detail multi-octave procedural surface: soil, moss and blades; map+bump use the same texture to avoid extra downloads.
+function fractalTexture(size=768){
+ const cv=document.createElement('canvas');cv.width=cv.height=size;const ctx=cv.getContext('2d');const img=ctx.createImageData(size,size);const d=img.data;
+ const hash=(x,y)=>{let v=(Math.imul(x,374761393)+Math.imul(y,668265263))|0;v=Math.imul(v^(v>>>13),1274126177);return ((v^(v>>>16))>>>0)/4294967295};
+ const smooth=(n)=>n*n*(3-2*n);
+ const noise=(x,y)=>{const ix=Math.floor(x),iy=Math.floor(y),fx=smooth(x-ix),fy=smooth(y-iy);const a=hash(ix,iy),b=hash(ix+1,iy),c=hash(ix,iy+1),e=hash(ix+1,iy+1);return (a+(b-a)*fx)*(1-fy)+(c+(e-c)*fx)*fy};
+ for(let y=0;y<size;y++)for(let x=0;x<size;x++){
+  const broad=noise(x/80,y/80),middle=noise(x/24,y/24),fine=noise(x/6,y/6),grain=hash(x,y);
+  const tint=(broad-.5)*43+(middle-.5)*34+(fine-.5)*23+(grain-.5)*21;
+  const dry=broad>.64&&middle>.56;
+  const k=(y*size+x)*4;
+  d[k]=Math.max(0,Math.min(255,(dry?106:68)+tint));
+  d[k+1]=Math.max(0,Math.min(255,(dry?96:117)+tint*1.07));
+  d[k+2]=Math.max(0,Math.min(255,(dry?66:57)+tint*.67));d[k+3]=255;
+ }
+ ctx.putImageData(img,0,0);const tex=new THREE.CanvasTexture(cv);tex.colorSpace=THREE.SRGBColorSpace;tex.wrapS=tex.wrapT=THREE.RepeatWrapping;tex.repeat.set(6,6);tex.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());return tex;
+}
+const detailedGrass=fractalTexture();terrain.material.map=detailedGrass;terrain.material.bumpMap=detailedGrass;terrain.material.bumpScale=.16;terrain.material.roughness=.99;terrain.material.needsUpdate=true;
+// Textured cliffs and stonework, with a roughness response that respects the sunlight.
+function rockTexture(){const size=384,cv=document.createElement('canvas');cv.width=cv.height=size;const g=cv.getContext('2d');const img=g.createImageData(size,size);for(let y=0;y<size;y++)for(let x=0;x<size;x++){const i=(y*size+x)*4,band=Math.sin(y*.07+Math.sin(x*.035)*4)*21,m=Math.random()*26-13;img.data[i]=109+band+m;img.data[i+1]=104+band+m;img.data[i+2]=97+band+m;img.data[i+3]=255;}g.putImageData(img,0,0);const t=new THREE.CanvasTexture(cv);t.colorSpace=THREE.SRGBColorSpace;t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(3,3);return t}
+const stoneTex=rockTexture();
+
 // Cliffs: terrain border with multi-layered rock strata.
 for(let j=0;j<6;j++){
  const radius=77-j*3;const verts2=[],index2=[];for(let k=0;k<96;k++){const angle=k*Math.PI*2/96;const rr=radius+Math.sin(angle*11+j)*2;for(let r=0;r<2;r++)verts2.push(Math.cos(angle)*rr,-3.5-j*1.9+r*1.9,Math.sin(angle)*rr)}
- for(let k=0;k<96;k++){const a=k*2,b=((k+1)%96)*2;index2.push(a,b,a+1,b,b+1,a+1)}const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.Float32BufferAttribute(verts2,3));geo.setIndex(index2);geo.computeVertexNormals();add(geo,material(j%2?0x6d665b:0x5b6062,1),scene);
+ for(let k=0;k<96;k++){const a=k*2,b=((k+1)%96)*2;index2.push(a,b,a+1,b,b+1,a+1)}const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.Float32BufferAttribute(verts2,3));geo.setIndex(index2);geo.computeVertexNormals();add(geo,new THREE.MeshStandardMaterial({map:stoneTex,color:j%2?0xeee6db:0xcfcfce,bumpMap:stoneTex,bumpScale:.22,roughness:1,side:THREE.DoubleSide}),scene);
 }
 const pathMaterial=material(0x9e9b85,.95);
 for(const w of LEVELS){const length=Math.hypot(w.x,w.z);const seg=26;for(let j=1;j<seg;j++){const p=j/seg;const x=w.x*p,z=w.z*p;const stone=add(new THREE.BoxGeometry(2.3,.11,2.1),pathMaterial,scene,x,h(x,z)+.1,z);stone.rotation.y=-Math.atan2(w.x,w.z);stone.scale.x=.9+(j%3)*.08;}}
@@ -123,6 +178,22 @@ for(let i=0;i<450;i++){
  dummy.position.y=treeY+3.6*s;dummy.scale.set(1.65*s,1.35*s,1.6*s);dummy.updateMatrix();group.crown.setMatrixAt(n,dummy.matrix);group.count++;
 }
 for(const t of treeTypes){t.trunk.count=t.count;t.crown.count=t.count;t.trunk.instanceMatrix.needsUpdate=true;t.crown.instanceMatrix.needsUpdate=true;}
+// Branch and leaf volumes: dense multi-part canopies instead of a single faceted sphere.
+const leavesGeo=new THREE.IcosahedronGeometry(.56,1);
+const leavesMeshes=[0x267e43,0x329c51,0x4cb663,0x6bcc76].map(col=>{const inst=new THREE.InstancedMesh(leavesGeo,material(col,1),900);scene.add(inst);inst.castShadow=false;inst.receiveShadow=false;return inst});
+const leafCounts=[0,0,0,0];
+for(let i=0;i<380;i++){
+ const a=Math.random()*Math.PI*2,r=20+Math.random()*50,x=Math.cos(a)*r,z=Math.sin(a)*r;
+ if(LEVELS.some(w=>Math.hypot(x-w.x,z-w.z)<6.4))continue;
+ const size=.8+Math.random()*.95,base=h(x,z)+3.5*size;
+ for(let j=0;j<8;j++){
+  const p=(i+j)%4,mesh=leavesMeshes[p],idx=leafCounts[p]++;if(idx>=900)continue;
+  const phi=j*2.4+Math.random()*.4,rr=(.35+Math.random()*.85)*size;
+  dummy.position.set(x+Math.cos(phi)*rr,base+(Math.random()-.5)*1.55*size,z+Math.sin(phi)*rr);
+  const s=(.5+Math.random()*.65)*size;dummy.scale.set(s,s*.7,s);dummy.rotation.set(0,phi,0);dummy.updateMatrix();mesh.setMatrixAt(idx,dummy.matrix);
+ }
+}
+leavesMeshes.forEach((mesh,i)=>{mesh.count=Math.min(leafCounts[i],900);mesh.instanceMatrix.needsUpdate=true;});
 // Ground foliage and stones make scene less primitive.
 const rockMat=material(0x918b7d,1);const rockGeo=new THREE.DodecahedronGeometry(.45,1);const rockMesh=new THREE.InstancedMesh(rockGeo,rockMat,550);scene.add(rockMesh);rockMesh.castShadow=true;
 for(let i=0;i<550;i++){const a=Math.random()*Math.PI*2,r=8+Math.random()*67,x=Math.cos(a)*r,z=Math.sin(a)*r;dummy.position.set(x,h(x,z)+.1,z);dummy.scale.setScalar(.28+Math.random()*1.4);dummy.rotation.set(Math.random(),Math.random(),Math.random());dummy.updateMatrix();rockMesh.setMatrixAt(i,dummy.matrix);}rockMesh.instanceMatrix.needsUpdate=true;
@@ -174,12 +245,12 @@ const charFallback=new THREE.Group();characterContainer.add(charFallback);
 const suit=material(0x2d80b5,.35,.17);add(new THREE.CapsuleGeometry(.48,1.1,8,12),suit,charFallback,0,1.3,0);add(new THREE.SphereGeometry(.42,20,16),material(0xe9ac8a),charFallback,0,2.45,0);add(new THREE.SphereGeometry(.52,20,16),new THREE.MeshPhysicalMaterial({color:0xa7edff,transparent:true,opacity:.29,metalness:.18,roughness:.08}),charFallback,0,2.47,0);add(new THREE.BoxGeometry(.72,.95,.37),material(0x154e82,.4,.3),charFallback,0,1.3,-.47);
 const legs=[];for(const x of [-.24,.24]){const limb=add(new THREE.CapsuleGeometry(.15,.84,6,9),material(0x1e5887,.43,.18),charFallback,x,.6,0);legs.push(limb);const arm=add(new THREE.CapsuleGeometry(.13,.83,6,10),suit,charFallback,x*2.15,1.45,0);arm.rotation.z=x<0?.25:-.25;}
 let characterMixer=null,idleAction=null,walkAction=null,runAction=null,characterIsLoaded=false;
-const loader=new GLTFLoader();const characterUrl='https://threejs.org/examples/models/gltf/RobotExpressive/RobotExpressive.glb';
+const loader=new GLTFLoader();const characterUrl='https://threejs.org/examples/models/gltf/Xbot.glb';
 loader.load(characterUrl,gltf=>{
  const obj=gltf.scene;const box=new THREE.Box3().setFromObject(obj),size=new THREE.Vector3();box.getSize(size);obj.scale.setScalar(2.8/Math.max(size.y,.001));obj.updateMatrixWorld(true);const box2=new THREE.Box3().setFromObject(obj);obj.position.y-=box2.min.y;
  obj.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true}});characterContainer.add(obj);charFallback.visible=false;characterIsLoaded=true;
  characterMixer=new THREE.AnimationMixer(obj);const clip=(name)=>gltf.animations.find(a=>a.name.toLowerCase().includes(name));
- const idle=clip('idle'),walk=clip('walking')||clip('walk'),run=clip('running')||clip('run');
+ const idle=clip('idle')||gltf.animations[0],walk=clip('walking')||clip('walk')||gltf.animations[1],run=clip('running')||clip('run')||gltf.animations[2];
  if(idle){idleAction=characterMixer.clipAction(idle);idleAction.play();}if(walk){walkAction=characterMixer.clipAction(walk);walkAction.play();walkAction.weight=0}if(run){runAction=characterMixer.clipAction(run);runAction.play();runAction.weight=0}
 },undefined,()=>{toast('Modo gráfico compatible activado');});
 // Companion uses mechanical articulations and glow rather than four spheres.
@@ -187,25 +258,60 @@ const drone=new THREE.Group();scene.add(drone);const droneMat=new THREE.MeshStan
 for(const x of [-.18,.18])add(new THREE.SphereGeometry(.075,12,10),new THREE.MeshBasicMaterial({color:0x68fff1}),drone,x,.05,.58);
 for(const x of [-.67,.67]){add(new THREE.CylinderGeometry(.14,.18,.35,9),droneMat,drone,x,-.12,0);const fan=add(new THREE.TorusGeometry(.26,.06,10,18),new THREE.MeshBasicMaterial({color:0x7deeff}),drone,x,.04,0);fan.rotation.x=Math.PI/2;}
 const flame=add(new THREE.ConeGeometry(.18,.53,12),new THREE.MeshBasicMaterial({color:0x72f6ff,transparent:true,opacity:.45}),drone,0,-.67,0);flame.rotation.x=Math.PI;
+// V3 detailed structures: light poles, plaza benches, rocks, wildflowers and illuminated signs.
+const fixtures=new THREE.Group();scene.add(fixtures);
+function lamppost(x,z){const y=h(x,z);const pole=add(new THREE.CylinderGeometry(.085,.11,4.8,12),material(0x244c63,.35,.6),fixtures,x,y+2.45,z);const glass=add(new THREE.SphereGeometry(.26,12,12),new THREE.MeshStandardMaterial({color:0xfff3cf,emissive:0xffbd71,emissiveIntensity:1.9,roughness:.18}),fixtures,x,y+4.92,z);const glow=new THREE.PointLight(0xffdfa5,2.4,10,2);glow.position.set(x,y+4.86,z);fixtures.add(glow);}
+for(let i=0;i<12;i++){const a=i*Math.PI/6;lamppost(Math.cos(a)*12,Math.sin(a)*12)}
+function bench(x,z,angle){const y=h(x,z);const b=new THREE.Group();b.position.set(x,y,z);b.rotation.y=angle;fixtures.add(b);for(let i=0;i<4;i++){add(new THREE.BoxGeometry(2.3,.09,.21),material(0x98704d,.7),b,0,.8,-.3+i*.19);}
+ add(new THREE.BoxGeometry(2.3,.12,.21),material(0x98704d,.7),b,0,1.25,-.66).rotation.x=-.22;
+ for(const px of [-.8,.8])add(new THREE.BoxGeometry(.12,.7,.12),material(0x1e3a48,.32,.6),b,px,.38,0);
+}
+for(let i=0;i<9;i++){const a=i*Math.PI*2/9;bench(Math.cos(a)*15,Math.sin(a)*15,a)}
+const flowerGeo=new THREE.DodecahedronGeometry(.11,1),flowerColors=[0xf9d5a2,0xff96ae,0xbb9cff,0xffeb79];
+const flowers=flowerColors.map(color=>{const m=new THREE.InstancedMesh(flowerGeo,new THREE.MeshStandardMaterial({color,roughness:.7}),350);scene.add(m);m.castShadow=false;return m});
+for(let i=0;i<1400;i++){const a=Math.random()*Math.PI*2,r=9+Math.random()*56,x=Math.cos(a)*r,z=Math.sin(a)*r,f=flowers[i%4],idx=(i/4)|0;dummy.position.set(x,h(x,z)+.2,z);const sc=.5+Math.random()*.9;dummy.scale.setScalar(sc);dummy.rotation.set(0,Math.random()*6.28,0);dummy.updateMatrix();f.setMatrixAt(idx,dummy.matrix)}flowers.forEach(f=>f.instanceMatrix.needsUpdate=true);
+// Portal plinths have physical stone steps and small neon details; no extra on-screen instructions.
+portalObjects.forEach((p,i)=>{
+ const g=p.group;for(let step=0;step<3;step++){
+  const r=3.75-step*.27;const stone=add(new THREE.CylinderGeometry(r,r+.13,.18,30),material([0x727b80,0x9a9d98,0xb2b9ac][step],.85,.12),g,0,.12+step*.18,0);stone.receiveShadow=true;
+ }
+ for(let a=0;a<8;a++){const rad=a*Math.PI/4;const gem=add(new THREE.OctahedronGeometry(.13,0),new THREE.MeshStandardMaterial({color:LEVELS[i].color,emissive:LEVELS[i].color,emissiveIntensity:1.4}),g,Math.cos(rad)*3.15,.69,Math.sin(rad)*3.15);gem.castShadow=false;}
+});
+// Smooth the camera and avoid clipping into the ground; scripted zoom moves into third-person gameplay.
 // Camera controls with third person movement, run, touch and portal proximity.
 const pressed=new Map();let yaw=0,pitch=.14,distance=10,prevPinch=0;
 renderer.domElement.addEventListener('pointerdown',e=>{pressed.set(e.pointerId,[e.clientX,e.clientY]);renderer.domElement.setPointerCapture(e.pointerId)});
 renderer.domElement.addEventListener('pointermove',e=>{const old=pressed.get(e.pointerId);if(!old)return;pressed.set(e.pointerId,[e.clientX,e.clientY]);if(pressed.size===1){yaw-=(e.clientX-old[0])*.0045;pitch=THREE.MathUtils.clamp(pitch+(e.clientY-old[1])*.0035,-.08,.62)}else{const arr=[...pressed.values()];const pinch=Math.hypot(arr[0][0]-arr[1][0],arr[0][1]-arr[1][1]);if(prevPinch)distance=THREE.MathUtils.clamp(distance+(prevPinch-pinch)*.023,5,19);prevPinch=pinch;}});
 function finishPointer(e){pressed.delete(e.pointerId);prevPinch=0;}renderer.domElement.addEventListener('pointerup',finishPointer);renderer.domElement.addEventListener('pointercancel',finishPointer);
 renderer.domElement.addEventListener('wheel',e=>{e.preventDefault();distance=THREE.MathUtils.clamp(distance+e.deltaY*.012,5,19)},{passive:false});
+let qualityMode=0;
+$('#resetCam').addEventListener('click',()=>{yaw=0;pitch=.14;distance=10;toast('CÁMARA CENTRADA')});
+$('#qualityBtn').addEventListener('click',()=>{qualityMode=(qualityMode+1)%3;renderer.setPixelRatio(Math.min(window.devicePixelRatio,[1.55,1,2][qualityMode]));$('#qualityBtn').textContent='GRÁFICOS: '+['AUTO','LIGERO','ALTO'][qualityMode];resize();});
+const minimap=$('#minimap'),mini=minimap.getContext('2d');
+function drawMinimap(){if(!playing)return;
+ const w=180,h=180;mini.clearRect(0,0,w,h);mini.save();mini.beginPath();mini.arc(90,90,88,0,Math.PI*2);mini.clip();mini.fillStyle='rgba(4,29,45,.95)';mini.fillRect(0,0,w,h);
+ mini.strokeStyle='rgba(129,249,225,.16)';mini.lineWidth=1;for(let i=-2;i<=2;i++){mini.beginPath();mini.moveTo(90+i*27,0);mini.lineTo(90+i*27,180);mini.moveTo(0,90+i*27);mini.lineTo(180,90+i*27);mini.stroke()}
+ const px=x=>90+(x-player.position.x)*1.1,pz=z=>90+(z-player.position.z)*1.1;
+ LEVELS.forEach((level,i)=>{const x=px(level.x),y=pz(level.z);if(x<3||x>177||y<3||y>177)return;mini.fillStyle='#'+level.color.toString(16);mini.beginPath();mini.arc(x,y,collected.has(i)?5:4,0,Math.PI*2);mini.fill();if(collected.has(i)){mini.lineWidth=1.8;mini.strokeStyle='white';mini.stroke();}});
+ mini.save();mini.translate(90,90);mini.rotate(-player.rotation.y);mini.fillStyle='#ffffff';mini.strokeStyle='#174c62';mini.lineWidth=2;mini.beginPath();mini.moveTo(0,-10);mini.lineTo(7,8);mini.lineTo(0,5);mini.lineTo(-7,8);mini.closePath();mini.fill();mini.stroke();mini.restore();mini.restore();
+}
 function resize(){const width=viewport.clientWidth,height=viewport.clientHeight;renderer.setSize(width,height,false);camera.aspect=width/height;camera.fov=width<700?65:52;camera.updateProjectionMatrix();}window.addEventListener('resize',resize);resize();
-const direction=new THREE.Vector3(),target=new THREE.Vector3(),focus=new THREE.Vector3(),clock=new THREE.Clock();let t=0;
+const direction=new THREE.Vector3(),target=new THREE.Vector3(),focus=new THREE.Vector3(),clock=new THREE.Clock();let t=0,jumpHeight=0,jumpSpeed=0,spaceWasDown=false;let miniLast=0;
 function animate(){requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.05);if(!paused){t+=dt;characterMixer?.update(dt);water.material.uniforms.time.value=t;spire.rotation.y+=dt*.35;for(const rot of turbines)rot.rotation.z+=dt*1.5;for(const c of clouds)c.position.x+=dt*.15;for(const f of floating)f.position.y=f.userData.baseY+Math.sin(t*.6+f.position.x)*.35;for(const obj of portalObjects){obj.ring.rotation.y+=dt*.28;obj.rim.rotation.x+=dt*.23;for(const p of obj.pts)p.position.y=p.userData.baseY+Math.sin(t*2+p.userData.phase)*.18;}for(const s of sparks)s.position.y=s.userData.baseY+Math.sin(t*1.7+s.userData.phase)*.22;drone.rotation.y=Math.sin(t*1.3)*.2;}
  const modalOpen=modal.classList.contains('show');let moving=false,running=false;
  if(playing&&!modalOpen){const dx=(Number(keys.has('KeyD')||keys.has('ArrowRight'))-Number(keys.has('KeyA')||keys.has('ArrowLeft'))),dz=(Number(keys.has('KeyS')||keys.has('ArrowDown'))-Number(keys.has('KeyW')||keys.has('ArrowUp')));direction.set(dx,0,dz);moving=direction.lengthSq()>0;running=keys.has('ShiftLeft')||keys.has('ShiftRight');if(moving){direction.normalize().applyAxisAngle(new THREE.Vector3(0,1,0),yaw);const speed=running?12:7.6;target.copy(player.position).addScaledVector(direction,dt*speed);target.x=THREE.MathUtils.clamp(target.x,-68,68);target.z=THREE.MathUtils.clamp(target.z,-68,68);player.position.x=target.x;player.position.z=target.z;player.rotation.y=Math.atan2(direction.x,direction.z);}
- player.position.y+=((h(player.position.x,player.position.z))-player.position.y)*Math.min(1,dt*16);
- near=-1;let best=6.5;LEVELS.forEach((w,i)=>{const d=Math.hypot(w.x-player.position.x,w.z-player.position.z);if(d<best){near=i;best=d;}});$('#interact').classList.toggle('ready',near>=0);if(near>=0)$('#interact').textContent='EXPLORAR '+LEVELS[near].short+' · E';}
+ // Jump is a small introductory movement mechanic; the player lands on the height-mapped ground.
+ const spaceDown=keys.has('Space');if(spaceDown&&!spaceWasDown&&jumpHeight===0)jumpSpeed=6.8;spaceWasDown=spaceDown;
+ if(jumpSpeed!==0||jumpHeight>0){jumpHeight+=jumpSpeed*dt;jumpSpeed-=18*dt;if(jumpHeight<=0){jumpHeight=0;jumpSpeed=0;}}
+ player.position.y+=((h(player.position.x,player.position.z)+jumpHeight)-player.position.y)*Math.min(1,dt*18);
+ near=-1;let best=6.5;LEVELS.forEach((w,i)=>{const d=Math.hypot(w.x-player.position.x,w.z-player.position.z);if(d<best){near=i;best=d;}});$('#interact').classList.toggle('ready',near>=0);if(near>=0)$('#interact').textContent=(collected.has(near)?'VER':'ACTIVAR')+' '+LEVELS[near].short+' · E';}
  if(walkAction){const walkTarget=moving&&!running?1:0;walkAction.weight+=(walkTarget-walkAction.weight)*Math.min(1,dt*10);}if(runAction){const runTarget=moving&&running?1:0;runAction.weight+=(runTarget-runAction.weight)*Math.min(1,dt*10);}if(idleAction)idleAction.weight=Math.max(0,1-(walkAction?.weight||0)-(runAction?.weight||0));
  if(!characterIsLoaded&&moving){legs[0].rotation.x=Math.sin(t*9)*.45;legs[1].rotation.x=-Math.sin(t*9)*.45;}else{legs.forEach(l=>l.rotation.x=0)}
  drone.position.set(player.position.x+Math.sin(t*1.2)*.28+1.6,player.position.y+2.3+Math.sin(t*2.8)*.2,player.position.z+1.3);
  if(playing){focus.set(player.position.x,player.position.y+2.0,player.position.z);const offset=new THREE.Vector3(Math.sin(yaw)*distance,3.2+Math.sin(pitch)*distance,Math.cos(yaw)*distance);camera.position.lerp(focus.clone().add(offset),.11);camera.lookAt(focus);}else{camera.position.lerp(new THREE.Vector3(16+Math.sin(t*.16)*1.5,16,39),.023);camera.lookAt(0,1,-18);}
+ if(playing&&performance.now()-miniLast>120){drawMinimap();miniLast=performance.now();}
  renderer.render(scene,camera);
 }
 requestAnimationFrame(animate);
 </script>
-</body></html>
+<script>setTimeout(()=>{if(!document.querySelector('#viewport canvas')){const fallback=document.querySelector('#fail');if(fallback)fallback.style.display='flex';}},12000);</script></body></html>
