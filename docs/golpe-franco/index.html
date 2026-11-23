@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#08110c">
+<meta name="description" content="Portal permanente de versiones y descargas oficiales de GOLPE FRANCO NEXT.">
+<title>GOLPE FRANCO NEXT — Centro de descargas</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=DM+Sans:wght@400;500;600;700;800&display=swap');
+:root{font-family:"DM Sans",system-ui,sans-serif;color:#eef6e5;background:#080d0a;color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-width:320px}
+a{color:inherit;text-decoration:none}
+button{font:inherit;cursor:pointer}
+.wrap{max-width:1220px;padding:0 34px;margin:auto}
+header{position:sticky;top:0;z-index:12;background:rgba(8,14,10,.92);backdrop-filter:blur(12px);border-bottom:1px solid #2d3e31}
+.bar{display:flex;align-items:center;justify-content:space-between;height:72px;gap:15px}
+.logo{display:flex;align-items:center;gap:10px;font:900 22px "Barlow Condensed",sans-serif;letter-spacing:.04em}
+.logo-mark{display:grid;place-items:center;width:37px;height:37px;background:#c8fa67;color:#14200f;border-radius:8px;font-size:18px;font-weight:900}
+.logo b{color:#c9f970}
+nav{display:flex;gap:25px;font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#a4b6a3}
+nav a:hover{color:#d4ff88}
+.topflag{border:1px solid #48593e;border-radius:40px;padding:9px 13px;color:#d3fba0;font-size:10px;font-weight:800;letter-spacing:.08em}
+.hero{min-height:510px;position:relative;overflow:hidden;background:radial-gradient(ellipse at 74% 52%,#263b2055,transparent 43%),radial-gradient(ellipse at 0 100%,#28492a44,transparent 52%),linear-gradient(120deg,#0e1c13,#070a08)}
+.hero:before{content:"";position:absolute;inset:0;opacity:.13;background:repeating-linear-gradient(0deg,transparent 0 72px,#a6d3a3 73px,transparent 74px),repeating-linear-gradient(90deg,transparent 0 72px,#a6d3a3 73px,transparent 74px);transform:perspective(600px) rotateX(48deg) scale(1.7);transform-origin:bottom}
+.hero-inner{min-height:510px;display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:40px;position:relative;padding-top:55px;padding-bottom:60px}
+.kicker{color:#b8ed6c;font-size:11px;text-transform:uppercase;letter-spacing:.18em;font-weight:850}
+.kicker i{display:inline-block;background:#c8fa68;width:7px;height:7px;border-radius:100%;margin-right:9px}
+h1,h2,h3{font-family:"Barlow Condensed",sans-serif}
+h1{font-size:clamp(68px,9vw,122px);font-weight:900;letter-spacing:-.035em;line-height:.82;margin:24px 0 27px}
+h1 strong{color:#cbfc75;display:block}
+.hero p{font-size:16px;color:#bdceba;line-height:1.7;max-width:555px;margin:0 0 30px}
+.actions{display:flex;gap:12px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 22px;border-radius:8px;font-size:12px;letter-spacing:.025em;font-weight:850;border:1px solid transparent;transition:.15s}
+.btn:hover:not(:disabled){transform:translateY(-2px)}
+.btn-primary{background:#cafa68;color:#12200a}
+.btn-outline{border-color:#425641;background:#1c2b20;color:#edf6e5}
+.btn-dark{background:#273527;color:#d7e6d1;border-color:#40533d}
+.btn:disabled{opacity:.7;cursor:not-allowed}
+.hero-symbol{min-height:320px;display:grid;place-items:center;position:relative}
+.circle{border:1px solid #435c35;border-radius:100%;width:min(365px,90%);aspect-ratio:1;display:grid;place-items:center;position:relative;box-shadow:0 0 0 32px #bded5b08,0 0 0 73px #bded5b06,inset 0 0 70px #c9f97008}
+.circle:after{content:"";position:absolute;inset:22px;border:1px dashed #5a7646;border-radius:50%}
+.circle span{color:#d0ff7c;font:900 186px "Barlow Condensed",sans-serif;line-height:1;letter-spacing:-.085em;text-shadow:0 0 70px #baea5b42}
+.circle small{position:absolute;bottom:40px;letter-spacing:.19em;color:#789371;font-size:11px;font-weight:800}
+.stats{background:#131d16;border-top:1px solid #324631;border-bottom:1px solid #324631}
+.statgrid{display:grid;grid-template-columns:repeat(4,1fr);padding-top:25px;padding-bottom:25px}
+.stat{padding:0 25px;border-right:1px solid #364938}
+.stat:first-child{padding-left:0}
+.stat:last-child{border:0}
+.stat label{display:block;font-size:10px;color:#859982;letter-spacing:.13em;text-transform:uppercase;font-weight:850}
+.stat strong{display:block;font:850 26px "Barlow Condensed",sans-serif;margin-top:7px}
+section.content{padding-top:83px;scroll-margin-top:87px}
+.sectionhead{display:flex;justify-content:space-between;align-items:end;gap:25px;margin-bottom:26px}
+h2{font-weight:900;font-size:clamp(40px,5vw,59px);letter-spacing:.01em;line-height:.92;margin:10px 0}
+.sectionhead p{color:#8fa68c;max-width:375px;font-size:13px;line-height:1.7;margin:0}
+.release{display:grid;grid-template-columns:1.3fr .7fr;border:1px solid #334632;border-radius:16px;background:#131f16;overflow:hidden}
+.release-body{padding:36px}
+.release-aside{background:#1d2b20;border-left:1px solid #324533;padding:30px;display:flex;flex-direction:column;justify-content:space-between;gap:20px}
+.status{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:50px;background:#392b19;border:1px solid #795f35;color:#ffcf7d;font-size:10px;letter-spacing:.08em;font-weight:850}
+.status.ready{background:#263f23;border-color:#528343;color:#d1ff98}
+.release h3{font-size:55px;line-height:1;margin:17px 0 13px}
+.release-body>p{max-width:640px;color:#acc2aa;line-height:1.7;font-size:14px}
+.meta{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin-top:30px}
+.meta div{border-top:1px solid #415443;padding-top:14px}
+.meta small{display:block;font-size:10px;letter-spacing:.1em;font-weight:850;color:#839e80;text-transform:uppercase}
+.meta strong{display:block;margin-top:8px;font-size:15px}
+.release-aside h4{font:800 24px "Barlow Condensed",sans-serif;margin:0 0 15px}
+.asset{border-top:1px solid #3b4b3a;padding:15px 0}
+.assetline{display:flex;justify-content:space-between;gap:8px;font-size:12px;font-weight:800}
+.asset p{font-size:12px;line-height:1.6;color:#a9bca7;margin:9px 0 0}
+.downloadstate{background:#31392e;border:1px solid #53634a;color:#c5d3ba;border-radius:7px;padding:14px;font-size:12px;font-weight:850;text-align:center}
+.release-aside .btn{width:100%;margin-top:10px}
+#checkResult{color:#c1d5b6;font-size:12px;line-height:1.7;min-height:18px}
+.featuregrid,.historygrid,.faqgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.feature{background:#111b13;border:1px solid #304031;border-radius:13px;padding:23px}
+.symbol{font-size:26px;color:#c8f76d}
+.feature h3{font-size:24px;font-weight:850;margin:14px 0 9px}
+.feature p,.faq p{font-size:13px;color:#9eb39a;line-height:1.7;margin:0}
+.historycard{background:#111a13;color:#f0f9e7;border:1px solid #344535;border-radius:12px;text-align:left;padding:23px;min-height:180px}
+.historycard:hover,.historycard.active{border-color:#c5f369;background:#1a2a1a}
+.historycard small{color:#c0f17c;font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:800}
+.historycard strong{display:block;font:900 34px "Barlow Condensed",sans-serif;margin:11px 0}
+.historycard p{font-size:12px;color:#abbca6;line-height:1.6}
+.details{border:1px solid #354638;background:#131e16;border-radius:12px;padding:23px;margin-top:15px}
+.details h3{font-size:27px;margin:0}
+.details li{font-size:13px;color:#b0c6ab;line-height:1.9}
+.info{background:#24271a;border:1px solid #605a35;padding:26px;border-radius:12px;margin-top:35px;display:flex;gap:17px}
+.info>span{font-size:25px}
+.info strong{font-size:14px}
+.info p{font-size:13px;color:#cbc9a6;line-height:1.7;margin:7px 0 0}
+.faqgrid{grid-template-columns:repeat(2,1fr)}
+.faq{background:#111a13;border:1px solid #344535;border-radius:12px;padding:25px}
+.faq h3{font-size:24px;margin:0 0 10px}
+footer{margin-top:95px;padding:30px 0;border-top:1px solid #2e3d2e;background:#0b110c;color:#829981;font-size:12px}
+.footerline{display:flex;justify-content:space-between;gap:25px;flex-wrap:wrap}
+.footerline strong{color:#c6f878}
+@media(max-width:880px){.hero-inner{grid-template-columns:1fr}.hero-symbol{display:none}.release{grid-template-columns:1fr}.release-aside{border-left:0;border-top:1px solid #324533}.featuregrid,.historygrid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:620px){.wrap{padding:0 18px}header .bar{height:65px}.logo{font-size:18px}.logo-mark{width:32px;height:32px}nav{gap:12px;font-size:10px}.topflag{display:none}.hero,.hero-inner{min-height:480px}.hero-inner{padding-top:65px;padding-bottom:60px}h1{font-size:72px}.hero p{font-size:14px}.statgrid{grid-template-columns:repeat(2,1fr);gap:25px 0}.stat{padding:0 14px}.stat:nth-child(2){border:0}.stat:nth-child(3){padding-left:0}.stat strong{font-size:22px}.sectionhead{display:block}section.content{padding-top:64px}.release-body,.release-aside{padding:23px}.release h3{font-size:44px}.meta{grid-template-columns:repeat(2,1fr)}.featuregrid,.historygrid,.faqgrid{grid-template-columns:1fr}.info{padding:19px}}
+</style>
+</head>
+<body>
+<header><div class="wrap bar">
+<a class="logo" href="#inicio" aria-label="GOLPE FRANCO NEXT inicio"><span class="logo-mark">GF</span>GOLPE FRANCO <b>NEXT</b></a>
+<nav><a href="#descargas">Descargas</a><a href="#versiones">Versiones</a><a href="#avances">Avances</a></nav><span class="topflag">PORTAL OFICIAL DEL PROYECTO</span>
+</div></header>
+<section class="hero" id="inicio"><div class="wrap hero-inner">
+<div><span class="kicker"><i></i>CENTRO PERMANENTE DE VERSIONES</span><h1>EL FÚTBOL<br><strong>EVOLUCIONA.</strong></h1><p>Una única web para GOLPE FRANCO NEXT. Aquí aparecerá la versión más reciente, sus mejoras y su archivo descargable cuando esté realmente publicado.</p><div class="actions"><a class="btn btn-primary" href="#descargas">IR A DESCARGAS &nbsp; ↗</a><a class="btn btn-outline" href="#versiones">HISTORIAL DE VERSIONES ↓</a></div></div>
+<div class="hero-symbol" aria-hidden="true"><div class="circle"><span>GF</span><small>NEXT GENERATION</small></div></div>
+</div></section>
+<div class="stats"><div class="wrap statgrid"><div class="stat"><label>Última versión</label><strong id="latestStat">V136</strong></div><div class="stat"><label>Plataformas</label><strong>PC / MÓVIL</strong></div><div class="stat"><label>Motor</label><strong>WEBGL 3D</strong></div><div class="stat"><label>Descarga</label><strong id="downloadStat">SIN PUBLICAR</strong></div></div></div>
+<main class="wrap">
+<section class="content" id="descargas"><div class="sectionhead"><div><span class="kicker">01 / ÚLTIMA ENTREGA</span><h2>DESCARGA DEL JUEGO</h2></div><p>El enlace se activará únicamente cuando exista un archivo real, público y comprobado.</p></div>
+<div class="release">
+<div class="release-body"><span class="status" id="releaseStatus">◷ &nbsp; ARCHIVO SIN ALOJAR</span><h3 id="releaseTitle">V136 — RECONSTRUCCIÓN 3D</h3><p id="releaseDescription">Edición de GOLPE FRANCO NEXT con mejoras en los modelos 3D y las animaciones. El paquete grande todavía no dispone de enlace público verificable.</p>
+<div class="meta"><div><small>Versión</small><strong id="releaseVersion">V136</strong></div><div><small>Tamaño previsto</small><strong id="releaseSize">1,26 GB</strong></div><div><small>Registro</small><strong id="releaseDate">23 nov 2026</strong></div></div></div>
+<div class="release-aside"><div><h4>ARCHIVOS DE ESTA VERSIÓN</h4><div id="assetList"><div class="asset"><div class="assetline"><span>Paquete completo</span><span>1,26 GB</span></div><p>No está alojado públicamente.</p></div></div></div>
+<div><div id="downloadUnavailable" class="downloadstate">⚠ DESCARGA PENDIENTE DE PUBLICACIÓN</div><a id="downloadLink" class="btn btn-primary" href="#" hidden rel="noopener noreferrer">↓ DESCARGAR VERSIÓN</a><button id="checkButton" class="btn btn-dark" type="button">↻ &nbsp; COMPROBAR DISPONIBILIDAD</button><div id="checkResult" role="status"></div></div></div>
+</div></section>
+<section class="content" id="avances"><div class="sectionhead"><div><span class="kicker">02 / MEJORAS</span><h2>EL SIGUIENTE NIVEL GRÁFICO</h2></div><p>Los gigabytes no prueban la calidad: aquí importan los modelos, las animaciones y un motor estable.</p></div>
+<div class="featuregrid"><article class="feature"><div class="symbol">◈</div><h3>FUTBOLISTAS 3D</h3><p>Geometría, rostros, peinados, equipaciones y mejores proporciones.</p></article><article class="feature"><div class="symbol">↯</div><h3>ANIMACIONES Y FÍSICA</h3><p>Movimiento más natural, pases, giros, saltos y contacto con el balón.</p></article><article class="feature"><div class="symbol">▧</div><h3>RENDERIZADO FIABLE</h3><p>Sombras, iluminación, materiales y shaders comprobados antes de cada entrega.</p></article></div></section>
+<section class="content" id="versiones"><div class="sectionhead"><div><span class="kicker">03 / ARCHIVO DE VERSIONES</span><h2>HISTORIAL DEL JUEGO</h2></div><p>Conservamos las notas de cada entrega sin confundir «versión registrada» con «descarga disponible».</p></div><div class="historygrid" id="historyGrid" aria-label="Versiones registradas"><p>Cargando versiones...</p></div><div class="details" id="releaseDetails"><h3>V136</h3><p>Consulta las notas de cada versión.</p></div></section>
+<div class="info" role="note"><span>⚠</span><div><strong>SOBRE EL ARCHIVO DE 1,26 GB</strong><p>Este portal queda preparado como dirección fija para futuras versiones. La edición V136 de 1,26 GB todavía no se ha alojado en un servidor público compatible. No habrá botones que simulen una descarga real. Una vez publicado y verificado el archivo, la ficha se actualizará aquí sin cambiar de dirección web.</p></div></div>
+<section class="content"><div class="sectionhead"><div><span class="kicker">04 / INFORMACIÓN</span><h2>UNA WEB, TODAS LAS VERSIONES</h2></div></div><div class="faqgrid">
+<div class="faq"><h3>¿CAMBIA LA DIRECCIÓN?</h3><p>El objetivo es mantener esta misma dirección para las próximas entregas. Solo se actualizan el historial y los enlaces.</p></div>
+<div class="faq"><h3>¿POR QUÉ NO DESCARGA AHORA?</h3><p>El ZIP grande necesita alojamiento compatible; el repositorio de esta web no es un depósito para juegos de más de 1 GB.</p></div>
+<div class="faq"><h3>¿PUEDO DESCARGAR UN ARCHIVO ÚNICO?</h3><p>Sí, cuando el paquete esté alojado. La ficha está diseñada para ofrecer un único enlace al archivo final.</p></div>
+<div class="faq"><h3>¿QUÉ CAMBIARÁ EN EL FUTURO?</h3><p>Cada versión podrá incluir notas nuevas y un enlace comprobado, manteniendo el diseño y la dirección.</p></div>
+</div></section>
+</main>
+<footer><div class="wrap footerline"><strong>GOLPE FRANCO NEXT · RELEASE CENTER</strong><span>Proyecto independiente · Sin afiliación con EA SPORTS ni Rockstar Games</span><span>23 noviembre 2026</span></div></footer>
+<script>
+(function(){
+'use strict';
+const $=(id)=>document.getElementById(id);
+let catalog=null;
+function safeUrl(value){try{const u=new URL(value);return u.protocol==='https:'?u.href:null}catch{return null}}
+function text(id,v){$(id).textContent=v}
+function present(data){
+ catalog=data;
+ const releases=Array.isArray(data.releases)?data.releases:[];
+ const latest=releases.find(r=>r.version===data.latest)||releases[0];
+ if(!latest)return;
+ text('latestStat',latest.version);text('releaseTitle',latest.title);text('releaseVersion',latest.version);text('releaseSize',latest.size);text('releaseDate',latest.date);text('releaseDescription',latest.description);
+ const assets=Array.isArray(latest.assets)?latest.assets:[];
+ const ready=assets.find(a=>a.available && safeUrl(a.url));
+ const box=$('assetList');box.replaceChildren();
+ assets.forEach(a=>{
+ const el=document.createElement('div');el.className='asset';
+ const line=document.createElement('div');line.className='assetline';
+ const name=document.createElement('span');name.textContent=a.type;
+ const size=document.createElement('span');size.textContent=a.size;
+ line.append(name,size);
+ const note=document.createElement('p');note.textContent=a.note;
+ el.append(line,note);box.appendChild(el);
+ });
+ const status=$('releaseStatus');
+ const unavailable=$('downloadUnavailable');const link=$('downloadLink');
+ status.className=ready?'status ready':'status';
+ status.textContent=ready?'✓ DESCARGA PUBLICADA':'◷ ARCHIVO SIN ALOJAR';
+ text('downloadStat',ready?'DISPONIBLE':'SIN PUBLICAR');
+ if(ready){link.href=safeUrl(ready.url);link.hidden=false;link.textContent='↓ DESCARGAR '+latest.version;unavailable.hidden=true;}
+ else{link.hidden=true;unavailable.hidden=false;link.removeAttribute('href');}
+ const history=$('historyGrid');history.replaceChildren();
+ releases.forEach(r=>{
+ const btn=document.createElement('button');btn.type='button';btn.className='historycard';btn.setAttribute('aria-pressed',r.version===latest.version?'true':'false');
+ const small=document.createElement('small');small.textContent=r.status;
+ const strong=document.createElement('strong');strong.textContent=r.version;
+ const para=document.createElement('p');para.textContent=r.description;
+ btn.append(small,strong,para);
+ btn.addEventListener('click',()=>{history.querySelectorAll('button').forEach(b=>{b.classList.remove('active');b.setAttribute('aria-pressed','false')});btn.classList.add('active');btn.setAttribute('aria-pressed','true');showDetails(r)});
+ history.appendChild(btn);
+ });
+ const first=history.querySelector('button');if(first)first.classList.add('active');
+ showDetails(latest);
+}
+function showDetails(r){
+ const container=$('releaseDetails');container.replaceChildren();
+ const h=document.createElement('h3');h.textContent='NOTAS DE '+r.version;
+ const ul=document.createElement('ul');
+ (r.highlights||[]).forEach(v=>{const li=document.createElement('li');li.textContent=v;ul.appendChild(li)});
+ const p=document.createElement('p');p.textContent='Descarga: '+((r.assets||[]).some(a=>a.available&&safeUrl(a.url))?'enlace publicado':'todavía sin enlace público verificado');
+ container.append(h,ul,p);
+}
+async function update(announce){
+ if(announce){$('checkButton').disabled=true;text('checkResult','Comprobando la publicación…')}
+ try{
+ const response=await fetch('./releases.json?nocache='+Date.now(),{cache:'no-store'});
+ if(!response.ok)throw new Error('No se pudo abrir el catálogo');
+ const data=await response.json();present(data);
+ if(announce)text('checkResult',(data.releases||[]).find(r=>r.version===data.latest)?.assets?.some(a=>a.available&&safeUrl(a.url))?'Ya hay un archivo publicado.':'Todavía no hay una descarga pública verificada del paquete.');
+ }catch(error){text('checkResult','No se ha podido consultar el catálogo. Inténtalo de nuevo.');if(!announce)text('historyGrid','No fue posible cargar el catálogo.')}
+ finally{$('checkButton').disabled=false}
+}
+$('checkButton').addEventListener('click',()=>update(true));
+update(false);
+})();
+</script>
+</body>
+</html>
