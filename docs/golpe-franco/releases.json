@@ -77,6 +77,142 @@
           "note": "No publicado como descarga estable en esta web."
         }
       ]
+    },
+    {
+      "version": "V133",
+      "title": "V133 — Estadio y equipaciones ampliadas",
+      "date": "23 nov 2026",
+      "size": "255,7 MB",
+      "status": "Registro histórico (sin descarga verificada)",
+      "description": "Nueva geometría de retransmisión, detalles de estadio y equipaciones.",
+      "highlights": [
+        "Banquillos tridimensionales y cámaras de televisión decorativas.",
+        "Costuras y materiales añadidos a camisetas y cabello.",
+        "Animaciones de arranque y nuevas perspectivas de cámara.",
+        "Juego basado en la reconstrucción anterior; sin prueba completa en navegador."
+      ],
+      "assets": [
+        {
+          "type": "Edición histórica",
+          "size": "255,7 MB",
+          "available": false,
+          "url": null,
+          "note": "Historial informativo: no se dispone todavía de URL HTTPS pública validada."
+        }
+      ]
+    },
+    {
+      "version": "V132",
+      "title": "V132 — Movimiento y cámaras",
+      "date": "23 nov 2026",
+      "size": "255,7 MB",
+      "status": "Registro histórico (sin descarga verificada)",
+      "description": "Animación corporal y detalles de botas y estadio.",
+      "highlights": [
+        "Ajustes en cambios de dirección, frenadas y transferencia de peso.",
+        "Cordones, ojales y costuras de botas 3D.",
+        "Perspectivas TV Profesional y Estadio 3D.",
+        "Sin comparación visual validada con FC 27."
+      ],
+      "assets": [
+        {
+          "type": "Edición histórica",
+          "size": "255,7 MB",
+          "available": false,
+          "url": null,
+          "note": "Historial informativo: no se dispone todavía de URL HTTPS pública validada."
+        }
+      ]
+    },
+    {
+      "version": "V131",
+      "title": "V131 — Evolución 3D",
+      "date": "23 nov 2026",
+      "size": "255,7 MB",
+      "status": "Registro histórico (sin descarga verificada)",
+      "description": "Mejoras en tejido, detalles de césped, cámaras y desmarques.",
+      "highlights": [
+        "Tela de equipaciones con relieve y ajustes de sombreado.",
+        "Marcas de contacto dinámicas calculadas con la posición de jugadores.",
+        "Poses anticipatorias al recibir pases y seguimiento de cámara.",
+        "Partido completo no verificado visualmente."
+      ],
+      "assets": [
+        {
+          "type": "Edición histórica",
+          "size": "255,7 MB",
+          "available": false,
+          "url": null,
+          "note": "Historial informativo: no se dispone todavía de URL HTTPS pública validada."
+        }
+      ]
+    },
+    {
+      "version": "V130",
+      "title": "V130 — Reconstrucción del motor",
+      "date": "23 nov 2026",
+      "size": "255,7 MB",
+      "status": "Registro histórico (sin descarga verificada)",
+      "description": "Se introdujeron peinados, cámaras, ajustes de pases y tácticas.",
+      "highlights": [
+        "Variantes adicionales de cabello tridimensional.",
+        "Centro táctico relacionado con la tecla F7.",
+        "Cambios de IA y pases anticipativos.",
+        "Esta reconstrucción partía de la V117, no del HTML original de la V129."
+      ],
+      "assets": [
+        {
+          "type": "Edición histórica",
+          "size": "255,7 MB",
+          "available": false,
+          "url": null,
+          "note": "Historial informativo: no se dispone todavía de URL HTTPS pública validada."
+        }
+      ]
+    },
+    {
+      "version": "V129",
+      "title": "V129 — Referencia de peinados 3D",
+      "date": "nov 2026",
+      "size": "Tamaño sin comprobar",
+      "status": "Registro histórico (sin descarga verificada)",
+      "description": "Versión recordada como referencia por sus peinados 3D.",
+      "highlights": [
+        "Peinados 3D usados como referencia antes de reconstrucciones posteriores.",
+        "Se detectó un problema de orientación vertical de las camisetas.",
+        "El HTML íntegro de V129 no se recuperó durante las reconstrucciones."
+      ],
+      "assets": [
+        {
+          "type": "Edición histórica",
+          "size": "Tamaño sin comprobar",
+          "available": false,
+          "url": null,
+          "note": "Historial informativo: no se dispone todavía de URL HTTPS pública validada."
+        }
+      ]
+    },
+    {
+      "version": "V117",
+      "title": "V117 — Base histórica recuperada",
+      "date": "nov 2026",
+      "size": "255,7 MB",
+      "status": "Registro histórico (sin descarga verificada)",
+      "description": "Base técnica utilizada para reconstruir versiones posteriores.",
+      "highlights": [
+        "Archivo HTML autónomo recuperado y utilizado como punto de partida.",
+        "No equivale a conservar automáticamente las mejoras exclusivas de V118–V129.",
+        "Los cambios acumulativos desde la V129 original no están garantizados."
+      ],
+      "assets": [
+        {
+          "type": "Edición histórica",
+          "size": "255,7 MB",
+          "available": false,
+          "url": null,
+          "note": "Historial informativo: no se dispone todavía de URL HTTPS pública validada."
+        }
+      ]
     }
   ]
 }
