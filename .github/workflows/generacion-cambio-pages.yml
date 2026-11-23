@@ -4,6 +4,7 @@ on:
     branches: [main]
     paths:
       - 'docs/generacion-cambio/**'
+      - 'docs/golpe-franco/**'
       - '.github/workflows/generacion-cambio-pages.yml'
   workflow_dispatch:
 permissions:
