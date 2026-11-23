@@ -1,0 +1,82 @@
+{
+  "latest": "V136",
+  "releases": [
+    {
+      "version": "V136",
+      "title": "V136 — RECONSTRUCCIÓN 3D",
+      "date": "23 nov 2026",
+      "size": "1,26 GB",
+      "status": "Última versión registrada",
+      "description": "Se modificaron mallas faciales y animaciones del juego. El paquete de alta resolución se preparó, pero su descarga pública todavía no está alojada ni verificada.",
+      "highlights": [
+        "Revisión de mallas faciales y niveles de detalle.",
+        "Cambios en articulaciones y animaciones sobre el esqueleto original.",
+        "Revisión de materiales de equipaciones y cabello.",
+        "Se preparó un paquete con atlas 8K, pendiente de alojamiento público.",
+        "No hay validación visual de un partido completo ni calidad FC 27 alcanzada."
+      ],
+      "assets": [
+        {
+          "type": "Paquete completo y recursos 8K",
+          "size": "1,26 GB",
+          "available": false,
+          "url": null,
+          "note": "Falta alojamiento público compatible. Este portal no finge que esté descargable."
+        },
+        {
+          "type": "HTML autónomo",
+          "size": "255,7 MB",
+          "available": false,
+          "url": null,
+          "note": "Disponible como archivo en el chat de desarrollo, pero sin URL pública permanente desde esta web."
+        }
+      ]
+    },
+    {
+      "version": "V135",
+      "title": "V135 — ULTRA HD",
+      "date": "23 nov 2026",
+      "size": "1,26 GB",
+      "status": "Edición anterior",
+      "description": "Versión que añadió cinco atlas de materiales 8K y ajustes visuales; no hay un paquete único público verificable.",
+      "highlights": [
+        "Cinco atlas 8K para superficies del juego.",
+        "Tratamiento de materiales, césped e iluminación.",
+        "Contenido gráfico añadido sin prueba de calidad equivalente a FC 27.",
+        "Descarga pública sin verificar."
+      ],
+      "assets": [
+        {
+          "type": "Paquete ULTRA",
+          "size": "1,26 GB",
+          "available": false,
+          "url": null,
+          "note": "No existe un enlace público verificado."
+        }
+      ]
+    },
+    {
+      "version": "V134",
+      "title": "V134 — ESTADIO AMPLIADO",
+      "date": "23 nov 2026",
+      "size": "255,7 MB",
+      "status": "Edición anterior",
+      "description": "Ampliación del estadio y personal 3D. El juego mostró posteriormente un error de shaders que exigió una corrección.",
+      "highlights": [
+        "Nuevos elementos y figuras tridimensionales en el estadio.",
+        "Sombras de contacto del balón y nuevas cámaras.",
+        "Se corrigió en código un fallo de shader, sin prueba visual completa.",
+        "No hay un enlace público permanente disponible."
+      ],
+      "assets": [
+        {
+          "type": "Juego HTML",
+          "size": "255,7 MB",
+          "available": false,
+          "url": null,
+          "note": "No publicado como descarga estable en esta web."
+        }
+      ]
+    }
+  ]
+}
