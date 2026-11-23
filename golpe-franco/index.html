@@ -327,8 +327,8 @@ const fallback=[
 {version:'V136',title:'V136 — Reconstrucción 3D',date:'23 nov 2026',description:'Mallas faciales, animaciones y edición Master 8K registrada.',status:'Última versión registrada',size:'1,26 GB',highlights:['Refinamiento de malla facial y articulaciones.','Edición Master con recursos 8K.','Prueba visual completa pendiente.'],assets:[{type:'Master 8K (ZIP)',size:'1,26 GB',available:false,url:null},{type:'HTML autónomo',size:'255,7 MB',available:false,url:null}]}
 ];
 function secure(url){try{let u=new URL(String(url));return u.protocol==='https:'?u.href:null}catch{return null}}
-function asInt(version){return Number(String(version).replace(/\\D/g,''))||0}
-function assetClass(a){let s=String(a.type||a.name||'').toLowerCase();if(/\\.html?(?:$|[?#])/.test(s)||/html|aut[oó]nomo|liger[oa]/.test(s))return'html';if(/\\.zip(?:$|[?#])/.test(s)||/8k|master|completo/.test(s))return'ultra';return null}
+function asInt(version){return Number(String(version).replace(/\D/g,''))||0}
+function assetClass(a){let s=String(a.type||a.name||'').toLowerCase();if(/\.html?(?:$|[?#])/.test(s)||/html|aut[oó]nomo|liger[oa]/.test(s))return'html';if(/\.zip(?:$|[?#])/.test(s)||/8k|master|completo/.test(s))return'ultra';return null}
 function fileName(url){try{return decodeURIComponent(new URL(url).pathname.split('/').pop()||'')}catch{return''}}
 function fromGitHub(base,releases){
  if(!Array.isArray(releases))return base;
@@ -340,11 +340,11 @@ function fromGitHub(base,releases){
   const version='V'+Number(m[1]),previous=items.get(version)||{},assets=[];
   (r.assets||[]).forEach(a=>{
    const url=secure(a.browser_download_url),name=String(a.name||'');
-   if(!url||!url.startsWith('https://github.com/'+repo+'/releases/download/')||!a.size||!/\\.(zip|html?|exe|7z)$/i.test(name))return;
+   if(!url||!url.startsWith('https://github.com/'+repo+'/releases/download/')||!a.size||!/\.(zip|html?|exe|7z)$/i.test(name))return;
    const sz=a.size>=1e9?(a.size/1e9).toFixed(2)+' GB':(a.size/1e6).toFixed(1)+' MB';
    assets.push({type:name,size:sz,available:true,url,note:'Descarga alojada en GitHub Releases.'});
   });
-  const parts=String(r.body||'').split('\\n').map(x=>x.replace(/^\\s*[-*]\\s*/,'').trim()).filter(Boolean);
+  const parts=String(r.body||'').split('\n').map(x=>x.replace(/^\s*[-*]\s*/,'').trim()).filter(Boolean);
   const date=r.published_at?new Date(r.published_at):null;
   items.set(version,{version,title:String(r.name||'').trim()||previous.title||version,date:date&&!isNaN(date.getTime())?date.toLocaleDateString('es-ES'):previous.date||'—',status:assets.length?'Descarga publicada':previous.status||'Versión registrada',size:assets[0]?.size||previous.size||'Pendiente',description:parts[0]||previous.description||'Actualización registrada.',highlights:parts.length?parts.slice(0,15):previous.highlights||[],assets:assets.length?assets:previous.assets||[]});
  });
