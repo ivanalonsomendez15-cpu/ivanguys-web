@@ -164,6 +164,19 @@ dialog::backdrop{background:#000c;backdrop-filter:blur(6px)}
 .guide{padding:68px 0}
 #versiones.section,#faq.section{padding:72px 0}
 @media(max-width:690px){.hero{min-height:330px}.hero-inner{padding-top:38px;padding-bottom:37px}.hero h1{font-size:clamp(51px,11.7vw,75px);line-height:.9;margin:18px 0}.hero-controls{gap:8px}.hero-spec{font-size:9px;gap:6px}.edition{min-height:310px}#descargas.section{padding-top:47px}}
+
+/* Presentación compacta: las descargas conservan la prioridad */
+.promo-compact{background:#121b16;border-top:1px solid #344736;border-bottom:1px solid #344736;padding:35px 0}
+.promo-compact-grid{display:grid;grid-template-columns:165px minmax(0,1fr) auto;align-items:center;gap:25px}
+.promo-cover{height:127px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;background:radial-gradient(ellipse at 65% 15%,#caff4585,transparent 35%),linear-gradient(135deg,#2d5937,#0b2215);border:1px solid #79936e}
+.promo-cover:before{content:'';position:absolute;inset:16px;border:2px solid #c0e1b45a;transform:perspective(160px) rotateX(35deg) scale(1.2)}
+.promo-play{width:60px;height:60px;display:grid;place-items:center;border-radius:50%;background:#d8ff60;color:#15200e;font-size:25px;z-index:1;box-shadow:0 0 0 9px #d7ff6030}
+.promo-compact .eyeline{font-size:10px;letter-spacing:2px;color:#d8ff60;font-weight:900}
+.promo-compact h2{font-size:40px;line-height:1;margin:11px 0 8px}
+.promo-compact p{font-size:12px;line-height:1.7;color:#a9c1a9;max-width:600px;margin:0}
+.promo-compact .btn{white-space:nowrap}
+@media(max-width:830px){.promo-compact-grid{grid-template-columns:115px minmax(0,1fr)}.promo-compact-grid>.btn{grid-column:2;justify-self:start}.promo-cover{height:117px}.promo-compact h2{font-size:34px}}
+@media(max-width:590px){.promo-compact-grid{grid-template-columns:1fr;gap:12px}.promo-cover{display:none}.promo-compact-grid>.btn{grid-column:1}.promo-compact h2{font-size:35px}}
 </style>
 </head>
 <body>
@@ -171,7 +184,7 @@ dialog::backdrop{background:#000c;backdrop-filter:blur(6px)}
 <header>
   <div class="container nav">
     <a class="identity" href="#inicio" aria-label="Ir al inicio"><span class="gf">GF</span><span><strong>GOLPE FRANCO NEXT</strong><small>THE RELEASE CENTER</small></span></a>
-    <nav id="navlinks" class="navlinks" aria-label="Navegación"><a href="#descargas">DESCARGAR</a><a <a href="#guia">GUÍA</a><a href="#versiones">VERSIONES</a><a href="#faq">PREGUNTAS</a></nav>
+    <nav id="navlinks" class="navlinks" aria-label="Navegación"><a href="#descargas">DESCARGAR</a><a <a href="#presentacion">VÍDEO</a><a href="#guia">GUÍA</a><a href="#versiones">VERSIONES</a><a href="#faq">PREGUNTAS</a></nav>
     <a href="#descargas" class="navdownload">VER DESCARGAS ↗</a>
     <button type="button" id="menuToggle" class="navtoggle" aria-label="Abrir menú" aria-expanded="false">☰</button>
   </div>
@@ -219,6 +232,18 @@ dialog::backdrop{background:#000c;backdrop-filter:blur(6px)}
     </table>
   </div>
 </section>
+
+<section class="promo-compact" id="presentacion">
+  <div class="container promo-compact-grid">
+    <div class="promo-cover" aria-hidden="true"><span class="promo-play">▶</span></div>
+    <div>
+      <div class="eyeline">CLIP 4K · 26 SEGUNDOS</div>
+      <h2>LA EMOCIÓN DEL FÚTBOL.</h2>
+      <p>Una referencia cinematográfica de partido nocturno para el futuro del proyecto. Material de fútbol real de Manuel Campagnoli en Pexels; no corresponde a una partida de GOLPE FRANCO NEXT.</p>
+    </div>
+    <a class="btn btn-stroke" target="_blank" rel="noopener noreferrer" href="https://www.pexels.com/video/exciting-night-football-match-at-city-arena-32614272/" aria-label="Ver vídeo de ambiente futbolístico en 4K en Pexels, no es gameplay">VER VÍDEO 4K ↗</a>
+  </div>
+</section>
 <section class="guide" id="guia">
   <div class="container">
     <div class="sechead"><div><div class="secnum">02 — MINI GUÍA</div><h2>TU PRIMER<br><em>PARTIDO.</em></h2></div><p>Una guía de inicio rápida para elegir edición, abrir el juego y saber dónde mirar si algo falla.</p></div>
@@ -258,13 +283,14 @@ let openRelease=null;
 const faq=[
 ['¿Cuesta dinero jugar?','El proyecto se presenta como gratuito. No necesitas pagar para consultar la web ni el historial. Los archivos descargables se habilitan solo tras su publicación real.'],
 ['¿Qué diferencia hay entre Master 8K y HTML autónomo?','Master incluye los recursos 8K externos y se distribuye como un ZIP. HTML autónomo es un único archivo de unos 255,7 MB que no incluye esos recursos externos. Ambos son ediciones registradas de V136, todavía pendientes de alojamiento público.'],
+['¿Puedo usar el vídeo 4K promocional en mi canal?','El clip enlazado procede de Pexels. Su licencia permite incorporarlo a un vídeo propio con edición o material original añadido. Pexels no permite subir una copia idéntica y sin modificar. Al usarlo para anunciar GOLPE FRANCO NEXT, debe quedar claro que son imágenes de referencia y no grabaciones del juego.'],
 ['¿Master 8K tiene gráficos iguales a FC 27 o GTA VI?','No hay pruebas que lo demuestren. El tamaño de los archivos y la resolución de las texturas no garantizan modelos, animaciones o iluminación de ese nivel.'],
 ['¿Se pueden descargar ahora mismo las dos ediciones?','La web solo activa cada enlace después de detectar un archivo público en GitHub Releases. Si ves el aviso Pendiente, el archivo todavía no está alojado.'],
 ['¿Se mantiene siempre la misma dirección de la web?','Sí, mientras siga publicado el proyecto en GitHub Pages, la intención y la configuración actuales son actualizar esta misma ruta. Las versiones se añaden sin crear una web nueva cada vez.'],
 ['¿Las nuevas versiones se publican automáticamente?','La web detecta releases con etiquetas de GOLPE FRANCO (por ejemplo, golpe-franco-v137) y GitHub Actions sincroniza el catálogo. Para descargar una nueva versión, también es necesario que su archivo se haya subido realmente al alojamiento público. Crear el archivo en un chat no basta.'],
 ['¿Cómo abro el archivo HTML autónomo?','Descarga el archivo publicado, abre el .html con un navegador moderno compatible con WebGL2 y utiliza las opciones del juego. La compatibilidad total todavía debe verificarse con partidas reales.'],
 ['¿Cómo instalo el paquete Master?','Cuando esté publicado, descarga el ZIP único y extrae su contenido en una carpeta. Sigue las instrucciones incluidas en esa edición, sin eliminar sus texturas ni cambiar su estructura.'],
-['¿En qué dispositivos puedo jugar?','GOLPE FRANCO NEXT está pensado principalmente para ordenadores con un navegador compatible con WebGL2, especialmente PC con Windows. También tiene controles táctiles y se puede intentar jugar en móviles Android, iPhone y tabletas con navegador WebGL2, pero la V136 no ha sido verificada completamente en todos estos dispositivos. El HTML autónomo es la opción con menos almacenamiento; Master 8K requiere más espacio y puede necesitar un equipo potente. No se ofrece una versión nativa verificada para PlayStation, Xbox o Nintendo Switch.'],
+['¿En qué dispositivos puedo jugar?','La edición HTML está pensada para PC con Windows y navegador compatible con WebGL2. También podría ejecutarse en Mac, Linux, Android, iPhone o iPad si el navegador admite WebGL2 y la memoria disponible es suficiente, pero la V136 no se ha verificado completamente en esos sistemas. Master 8K exige más almacenamiento y memoria. No existe una versión nativa confirmada para PlayStation, Xbox ni Nintendo Switch.'],
 ['¿Funciona en móvil?','Las versiones anteriores incluían controles móviles, pero no está verificada la ejecución fluida de la última edición en todos los teléfonos. Un paquete con recursos 8K puede ser demasiado pesado para algunos dispositivos.'],
 ['¿Qué hago si veo una pantalla negra?','La V134 sufrió un error de compilación de shaders que se corrigió en código, pero no se verificó un partido completo. Usa un navegador actualizado compatible con WebGL2 y guarda cualquier mensaje de error para identificar el problema real.'],
 ['¿Qué hago si las camisetas salen del revés?','Se registró una corrección de la orientación de texturas, pero no hay una comprobación completa de todas las equipaciones en la última versión. Es una incidencia a verificar en partida.'],
