@@ -1024,7 +1024,7 @@ function animate(){requestAnimationFrame(animate);const dt=Math.min(clock.getDel
   const safeFocus=focus.clone().add(new THREE.Vector3(Math.cos(yaw),0,-Math.sin(yaw)).multiplyScalar(lateralSafe));
   safeFocus.y-=window.innerWidth<=660?.20:0;
   camera.lookAt(safeFocus);
-}else{camera.position.lerp(new THREE.Vector3(-9.7+Math.sin(t*.23)*.30,7.35,18.2),.048);camera.lookAt(0,1.50,5.15);}
+}else{camera.position.lerp(new THREE.Vector3(-9.7+Math.sin(t*.23)*.30,7.35,18.2),.048);camera.lookAt(0,window.innerWidth<=660?(window.innerHeight<=700?-.35:.15):1.50,5.15);}
  if(playing&&performance.now()-miniLast>120){drawMinimap();miniLast=performance.now();}
  renderer.render(scene,camera);if(!game.classList.contains("webgl-ready"))game.classList.add("webgl-ready");
 }
