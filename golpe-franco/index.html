@@ -185,6 +185,7 @@ dialog::backdrop{background:#000c;backdrop-filter:blur(6px)}
 
 /* Mantener las tarjetas honestas: <a hidden> no debe ser forzado a display:flex */
 [hidden]{display:none!important}
+.feature-media.photo-only{display:block}.photo-only .gallery-stack{grid-template-columns:1fr 1fr;grid-template-rows:none}.photo-only .galleryitem{min-height:clamp(220px,32vw,410px)}@media(max-width:690px){.photo-only .gallery-stack{grid-template-columns:1fr}.photo-only .galleryitem{min-height:230px}}
 </style>
 </head>
 <body>
@@ -243,20 +244,13 @@ dialog::backdrop{background:#000c;backdrop-filter:blur(6px)}
 <section class="section media-section" id="galeria">
   <div class="container">
     <div class="sechead"><div><div class="secnum">02 — PRESENTACIÓN VISUAL</div><h2>IMAGINA<br><em>LA ATMÓSFERA.</em></h2></div><p>El ambiente, la intensidad y las retransmisiones del fútbol profesional son la referencia creativa del proyecto.</p></div>
-    <div class="feature-media">
-      <div class="video-stage">
-        <div class="video-content">
-          <span class="media-label">FÚTBOL REAL · RESUMEN OFICIAL FIFA</span>
-          <button id="openTrailer" class="bigplay" aria-label="Ver vídeo de ambiente futbolístico">▶</button>
-          <div><h3>FÚTBOL.<br>PURA EMOCIÓN.</h3><p class="caption">Momentos reales de fútbol profesional para presentar el ambiente al que aspira GOLPE FRANCO NEXT.</p></div>
-        </div>
-      </div>
+    <div class="feature-media photo-only">
       <div class="gallery-stack">
         <div class="galleryitem"><img loading="lazy" alt="Foto de un estadio iluminado, imagen de referencia y no captura de GOLPE FRANCO" src="https://images.pexels.com/photos/38698665/pexels-photo-38698665.jpeg?auto=compress&cs=tinysrgb&w=900"><div class="photo-caption"><strong>ESTADIO</strong><small>La atmósfera del fútbol</small></div></div>
         <div class="galleryitem"><img loading="lazy" alt="Vista aérea de un campo de fútbol real usado como referencia visual" src="https://images.pexels.com/photos/3507477/pexels-photo-3507477.jpeg?auto=compress&cs=tinysrgb&w=900"><div class="photo-caption"><strong>CÉSPED & LUZ</strong><small>Inspiración visual</small></div></div>
       </div>
     </div>
-    <p class="media-disclaimer"><strong>Presentación visual:</strong> fotografías de referencia y resumen futbolístico de FIFA; no son imágenes capturadas de GOLPE FRANCO NEXT. Las capturas auténticas se incorporarán cuando exista una grabación del juego verificada.</p>
+    <p class="media-disclaimer"><strong>Inspiración visual:</strong> fotografías de referencia del fútbol real.</p>
   </div>
 </section>
 <section class="section play-section" id="graficos">
@@ -297,8 +291,8 @@ dialog::backdrop{background:#000c;backdrop-filter:blur(6px)}
   </div>
 </section>
 </main>
-<footer class="footer"><div class="container"><div class="footer-flex"><div><div class="big">GOLPE FRANCO <span>NEXT.</span></div><p>Juego de fútbol independiente. Una única dirección HTTPS que conserva historial, ayuda y novedades. Sin afiliación con EA SPORTS ni Rockstar Games.</p></div><div class="footer-nav"><a href="#descargas">DESCARGAS</a><a href="#guia">GUÍA</a><a href="#faq">AYUDA</a></div></div><div class="footer-bottom">© 2026 GOLPE FRANCO NEXT · Imágenes publicitarias de referencia: Pexels; no son capturas del juego · <a href="https://www.pexels.com/" target="_blank" rel="noopener noreferrer">Origen de fotografías</a> · Publicado mediante GitHub Pages</div></div></footer>
-<dialog id="videoDialog" aria-label="Vídeo externo ilustrativo de fútbol"><div class="modalhead"><div><strong>FÚTBOL PROFESIONAL · FIFA</strong><small>Resumen oficial de Argentina - Francia (2022), referencia externa; no es gameplay de GOLPE FRANCO NEXT</small></div><button id="closeTrailer" aria-label="Cerrar vídeo">✕</button></div><div class="modalframe" id="modalFrame"></div><a class="modallink" href="https://www.youtube.com/watch?v=IipmpVcISXE" target="_blank" rel="noopener noreferrer">Si el vídeo no se carga, abrir la fuente externa ↗</a></dialog>
+<footer class="footer"><div class="container"><div class="footer-flex"><div><div class="big">GOLPE FRANCO <span>NEXT.</span></div><p>Juego de fútbol independiente. Una única dirección HTTPS que conserva historial, ayuda y novedades. Sin afiliación con EA SPORTS ni Rockstar Games.</p></div><div class="footer-nav"><a href="#descargas">DESCARGAS</a><a href="#guia">GUÍA</a><a href="#faq">AYUDA</a></div></div><div class="footer-bottom">© 2026 GOLPE FRANCO NEXT · Fotografías de referencia: Pexels · <a href="https://www.pexels.com/" target="_blank" rel="noopener noreferrer">Origen de fotografías</a> · Publicado mediante GitHub Pages</div></div></footer>
+
 <script>
 (function(){
 'use strict';
@@ -313,7 +307,6 @@ const faq=[
 ['¿Master 8K tiene gráficos iguales a FC 27 o GTA VI?','No hay pruebas que lo demuestren. El tamaño de los archivos y la resolución de las texturas no garantizan modelos, animaciones o iluminación de ese nivel.'],
 ['¿Se pueden descargar ahora mismo las dos ediciones?','La web solo activa cada enlace después de detectar un archivo público en GitHub Releases. Si ves el aviso Pendiente, el archivo todavía no está alojado.'],
 ['¿Por qué aparecen fotos de fútbol tan espectaculares?','Son imágenes publicitarias de referencia, procedentes de bancos de fotografía. Están etiquetadas expresamente como ilustrativas. No son capturas del juego.'],
-['¿El vídeo es un tráiler auténtico del juego?','Es un resumen oficial de fútbol real publicado por FIFA. Sirve de referencia visual, no es gameplay de GOLPE FRANCO NEXT. Cuando exista una grabación real de nuestro juego, podremos ponerla en su lugar.'],
 ['¿Se mantiene siempre la misma dirección de la web?','Sí, mientras siga publicado el proyecto en GitHub Pages, la intención y la configuración actuales son actualizar esta misma ruta. Las versiones se añaden sin crear una web nueva cada vez.'],
 ['¿Las nuevas versiones se publican automáticamente?','La web detecta releases con etiquetas de GOLPE FRANCO (por ejemplo, golpe-franco-v137) y GitHub Actions sincroniza el catálogo. Para descargar una nueva versión, también es necesario que su archivo se haya subido realmente al alojamiento público. Crear el archivo en un chat no basta.'],
 ['¿Cómo abro el archivo HTML autónomo?','Descarga el archivo publicado, abre el .html con un navegador moderno compatible con WebGL2 y utiliza las opciones del juego. La compatibilidad total todavía debe verificarse con partidas reales.'],
@@ -325,7 +318,7 @@ const faq=[
 ['¿Dónde están los controles y atajos?','Revisa las opciones de controles dentro del juego. En el registro de versiones anteriores se añadió un panel táctico mediante F7; no afirmamos que otros atajos sean idénticos sin revisarlos.'],
 ['¿Puedo escoger una versión antigua?','El historial recoge las entregas anteriores. Sus botones solo estarán disponibles si la versión concreta tiene su archivo público verificado.'],
 ['¿Cuántos FPS consigo?','No hay un número de FPS garantizado. Depende del navegador, la GPU, la resolución y los materiales. Conviene empezar con calidad moderada y comprobar el rendimiento real.'],
-['¿Guardáis mis datos al visitar la web?','Esta página es estática y consulta el catálogo público de GitHub. No requiere cuentas del juego para leer la guía o las novedades. Los servicios externos de las fotografías y el vídeo pueden tener sus propias políticas.']
+['¿Guardáis mis datos al visitar la web?','Esta página es estática y consulta el catálogo público de GitHub. No requiere cuentas del juego para leer la guía o las novedades. Los servicios externos de las fotografías pueden tener sus propias políticas.']
 ];
 const fallback=[
 {version:'V136',title:'V136 — Reconstrucción 3D',date:'23 nov 2026',description:'Mallas faciales, animaciones y edición Master 8K registrada.',status:'Última versión registrada',size:'1,26 GB',highlights:['Refinamiento de malla facial y articulaciones.','Edición Master con recursos 8K.','Prueba visual completa pendiente.'],assets:[{type:'Master 8K (ZIP)',size:'1,26 GB',available:false,url:null},{type:'HTML autónomo',size:'255,7 MB',available:false,url:null}]}
@@ -421,12 +414,6 @@ $('searchVersion').addEventListener('input',renderHistory);
 $('refreshDownloads').addEventListener('click',async()=>{$('refreshResult').textContent='Comprobando archivos reales…';await load()});
 $('menuToggle').addEventListener('click',()=>{const menu=$('navlinks');const open=menu.classList.toggle('open');$('menuToggle').setAttribute('aria-expanded',String(open))});
 document.querySelectorAll('#navlinks a').forEach(a=>a.addEventListener('click',()=>{$('navlinks').classList.remove('open');$('menuToggle').setAttribute('aria-expanded','false')}));
-const modal=$('videoDialog');
-$('openTrailer').addEventListener('click',()=>{const frame=document.createElement('iframe');frame.src='https://www.youtube-nocookie.com/embed/IipmpVcISXE?autoplay=1&rel=0';frame.title='Resumen oficial FIFA Argentina-Francia 2022 (vídeo real externo, no gameplay del proyecto)';frame.allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture';frame.allowFullscreen=true;$('modalFrame').replaceChildren(frame);if(typeof modal.showModal==='function')modal.showModal();else window.open('https://www.youtube.com/watch?v=IipmpVcISXE','_blank','noopener')});
-function closeTrailer(){modal.close();$('modalFrame').replaceChildren()}
-$('closeTrailer').addEventListener('click',closeTrailer);
-modal.addEventListener('click',e=>{if(e.target===modal)closeTrailer()});
-modal.addEventListener('close',()=>{$('modalFrame').replaceChildren()});
 renderFaq();
 load();
 })();
