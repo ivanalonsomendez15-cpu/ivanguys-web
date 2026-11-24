@@ -832,6 +832,13 @@
 }
 @media(max-height:420px) and (orientation:landscape){#gcPhase2 .p2-shell{max-height:calc(100dvh - 6px);min-height:calc(100dvh - 6px)}#gcPhase2 .p2-head{min-height:46px;padding:5px 11px}#gcPhase2 .p2-content{padding:12px}#gcPhase2 .p2-footer{min-height:32px;padding:5px 11px}#gcPhase2 h2{font-size:30px;margin:3px 0 5px}}
 @media(prefers-reduced-motion:reduce){#gcPhase2 *,#gcPhase2 *:before{transition:none!important;animation:none!important}}
+#gcPhase2 .p2-order-instruction{font-weight:850;color:#b6ffde;margin:0 0 9px}
+#gcPhase2 .p2-order-built{display:flex;flex-wrap:wrap;gap:6px;align-items:center;min-height:56px;border:1px dashed #8af1e264;border-radius:12px;padding:10px;margin:0 0 15px;background:#0b3047;color:#bcd6e6;font-size:13px}
+#gcPhase2 .p2-order-chip{display:inline-flex;gap:5px;align-items:center;padding:8px 10px;border:1px solid #8cffe88a;border-radius:8px;background:#1b645db9;color:#ecfff9;font-weight:800;max-width:100%;overflow-wrap:anywhere}
+#gcPhase2 .p2-order-chip b{color:#a9ffdc}
+#gcPhase2 [data-p2-undo]:disabled{opacity:.35;cursor:not-allowed}
+
+#gcPhase2 .p2-answer.selected{border-color:#86dafa;background:#1a4b69;opacity:.75}
 
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
@@ -1112,6 +1119,12 @@ const GC_P2_DATA = {
  }
 };
 
+/* Retos de secuenciación: minijuegos táctiles y accesibles, distintos de las preguntas tipo test. */
+GC_P2_DATA.naturales.themes[0].missions[0].questions.push({mode:'order',text:'Ordena las fases que permiten reaccionar al semáforo en verde.',steps:['El ojo detecta el cambio de color','El sistema nervioso procesa la información','El cerebro envía una orden de movimiento','El aparato locomotor realiza la acción'],explain:'Los órganos de los sentidos perciben estímulos; el sistema nervioso procesa y coordina la respuesta, que puede ejecutar el aparato locomotor.'});
+GC_P2_DATA.naturales.themes[1].missions[1].questions.push({mode:'order',text:'Reconstruye el orden general de las etapas de la reproducción humana.',steps:['Fecundación','Embarazo','Parto'],explain:'El proceso general se organiza en fecundación, embarazo y parto.'});
+GC_P2_DATA.sociales.themes[0].missions[3].questions.push({mode:'order',text:'Organiza un circuito de consumo y economía circular.',steps:['Obtener materiales','Fabricar un producto','Utilizar el producto','Reutilizarlo o reciclar sus materiales'],explain:'La economía circular trata de aprovechar los recursos y evitar el modelo de usar y tirar.'});
+GC_P2_DATA.sociales.themes[1].missions[0].questions.push({mode:'order',text:'Ordena esta cadena de tres sectores económicos.',steps:['Cultivar trigo: sector primario','Transformar trigo en harina: sector secundario','Vender harina: sector terciario'],explain:'Los sectores se relacionan: se obtienen recursos, se transforman y se comercializan o prestan servicios.'});
+
 /* Fase 2 · Motor de retos independiente de WebGL. Accesible incluso cuando falla la carga 3D. */
 (function(){
  'use strict';
@@ -1123,7 +1136,7 @@ const GC_P2_DATA = {
  const footer=document.getElementById('gcP2Footer');
  const opener=document.getElementById('gc-phase2-open');
  const storeKey='generacion-cambio-fase2-progreso-1t-v1';
- const state={view:'home',area:'naturales',missionId:'',step:0,points:0,answered:false,lastFocus:null,chosen:-1};
+ const state={view:'home',area:'naturales',missionId:'',step:0,points:0,answered:false,lastFocus:null,chosen:-1,order:[]};
  let saved={};
  try{const value=JSON.parse(localStorage.getItem(storeKey)||'{}');if(value&&typeof value==='object'&&!Array.isArray(value))saved=value;}catch{}
  const ALL=Object.entries(DATA).flatMap(([area,meta])=>meta.themes.flatMap((theme,ti)=>theme.missions.map((mission,mi)=>({...mission,area,themeIndex:ti,missionIndex:mi,themeName:theme.title}))));
@@ -1136,7 +1149,7 @@ const GC_P2_DATA = {
  const head=(tag,title,lead)=>`<span class="p2-kicker">✦ ${esc(tag)}</span><h2>${esc(title)}</h2><p class="p2-lead">${esc(lead)}</p>`;
  const termRow=()=>`<div class="p2-term-row" aria-label="Trimestres"><div class="p2-term active" aria-current="true">1.º TRIMESTRE<small>Contenido disponible</small></div><div class="p2-term" aria-disabled="true">2.º TRIMESTRE<small>Pendiente de materiales</small></div><div class="p2-term" aria-disabled="true">3.º TRIMESTRE<small>Pendiente de materiales</small></div></div>`;
  const updateFooter=()=>{const done=doneCount();footer.innerHTML=`<span>✦ FASE 2 · <strong>${done} / ${ALL.length} misiones</strong> del primer trimestre</span><span><strong>${getXp()} XP</strong> de aprendizaje · Guardado en este navegador</span>`;};
- function moveView(view){state.view=view;state.answered=false;state.chosen=-1;render();content.scrollTop=0;}
+ function moveView(view){state.view=view;state.answered=false;state.chosen=-1;state.order=[];render();content.scrollTop=0;}
  function renderHome(){
   content.innerHTML=head('El laboratorio del conocimiento','MISIONES DEL CAMBIO','Dos áreas · tres trimestres por área. Solo se han activado las misiones basadas en los materiales del primer trimestre.')+
   `<div class="p2-grid">${Object.entries(DATA).map(([key,area])=>{
@@ -1153,10 +1166,14 @@ const GC_P2_DATA = {
  function renderQuestion(){
   const mission=byId(state.missionId);if(!mission){moveView('area');return}
   const q=mission.questions[state.step],n=mission.questions.length;
+  const isOrder=q.mode==='order';
+  const questionText=isOrder?q.text:q[0];
+  const answerContent=isOrder?`<p class="p2-order-instruction">Toca las tarjetas en el orden correcto:</p><div class="p2-order-built" id="gcP2OrderBuilt" aria-live="polite">Elige el primer paso…</div><div class="p2-answers" role="group" aria-label="Pasos disponibles">${q.steps.map((_,i,steps)=>{const idx=(i+1)%steps.length;return `<button class="p2-answer" data-p2-order="${idx}"><span class="p2-letter">↗</span><span>${esc(steps[idx])}</span></button>`}).join('')}</div><div class="p2-actions"><button class="p2-soft-btn" data-p2-undo>DESHACER ÚLTIMO PASO</button></div>`:
+  `<div class="p2-answers" role="group" aria-labelledby="gcP2Question">${q[1].map((answer,i)=>`<button class="p2-answer" data-p2-answer="${i}"><span class="p2-letter">${'ABC'[i]}</span><span>${esc(answer)}</span></button>`).join('')}</div>`;
   content.innerHTML=`<span class="p2-kicker">${esc(DATA[mission.area].label)} · TEMA ${mission.themeIndex+1} · ODS ${esc(mission.ods)}</span><h2>${esc(mission.title)}</h2>`+
   (state.step===0?`<div class="p2-brief">✦ <strong>ENCARGO DEL INVENTOR</strong><p style="margin:6px 0 0">${esc(mission.brief)}</p></div>`:'')+
   `<div class="p2-step-row"><span>RETO ${state.step+1} DE ${n}</span><span>${state.points} aciertos al primer intento</span></div><div class="p2-progressbar"><span style="width:${Math.round((state.step/n)*100)}%"></span></div>`+
-  `<p class="p2-question" id="gcP2Question">${esc(q[0])}</p><div class="p2-answers" role="group" aria-labelledby="gcP2Question">${q[1].map((answer,i)=>`<button class="p2-answer" data-p2-answer="${i}"><span class="p2-letter">${'ABC'[i]}</span><span>${esc(answer)}</span></button>`).join('')}</div>`+
+  `<p class="p2-question" id="gcP2Question">${esc(questionText)}</p>${answerContent}`+
   '<div id="gcP2Feedback" aria-live="polite"></div><div id="gcP2Actions" class="p2-actions"></div>';
  }
  function answer(index){
@@ -1169,9 +1186,32 @@ const GC_P2_DATA = {
   content.querySelector('#gcP2Actions').innerHTML=`<button class="p2-main-btn" data-p2-next>${state.step===m.questions.length-1?'FINALIZAR MISIÓN':'SIGUIENTE RETO →'}</button>`;
   content.querySelector('[data-p2-next]')?.focus({preventScroll:true});
  }
+ function chooseOrder(index){
+  if(state.view!=='question'||state.answered)return;
+  const mission=byId(state.missionId),q=mission?.questions[state.step];
+  if(q?.mode!=='order'||index<0||index>=q.steps.length||state.order.includes(index))return;
+  state.order.push(index);
+  updateOrderUI();
+  if(state.order.length!==q.steps.length)return;
+  state.answered=true;
+  const correct=state.order.every((x,i)=>x===i);
+  if(correct)state.points++;
+  content.querySelectorAll('[data-p2-order]').forEach(b=>b.disabled=true);
+  content.querySelector('#gcP2Feedback').innerHTML=`<div class="p2-feedback ${correct?'':'error'}"><strong>${correct?'✓ ¡SECUENCIA CORRECTA!':'↗ RECONSTRUYE LA SECUENCIA'}</strong><br>${esc(q.explain)}${correct?'':`<br>Orden esperado: <strong>${q.steps.map(esc).join(' → ')}</strong>`}</div>`;
+  content.querySelector('[data-p2-undo]')?.setAttribute('disabled','');
+  content.querySelector('#gcP2Actions').innerHTML=`<button class="p2-main-btn" data-p2-next>${state.step===mission.questions.length-1?'FINALIZAR MISIÓN':'SIGUIENTE RETO →'}</button>`;
+  content.querySelector('[data-p2-next]')?.focus({preventScroll:true});
+ }
+ function updateOrderUI(){
+  const q=byId(state.missionId)?.questions[state.step];if(q?.mode!=='order')return;
+  const built=content.querySelector('#gcP2OrderBuilt');
+  if(built)built.innerHTML=state.order.length?state.order.map((idx,i)=>`<span class="p2-order-chip"><b>${i+1}.</b> ${esc(q.steps[idx])}</span>`).join(''):'Elige el primer paso…';
+  content.querySelectorAll('[data-p2-order]').forEach(b=>{b.disabled=state.order.includes(Number(b.dataset.p2Order));if(b.disabled)b.classList.add('selected');else b.classList.remove('selected')});
+ }
+ function undoOrder(){if(state.answered||!state.order.length)return;state.order.pop();updateOrderUI()}
  function next(){
   if(state.view!=='question'||!state.answered)return;
-  const m=byId(state.missionId);if(state.step+1<m.questions.length){state.step++;state.answered=false;renderQuestion();content.scrollTop=0;return}
+  const m=byId(state.missionId);if(state.step+1<m.questions.length){state.step++;state.answered=false;state.order=[];renderQuestion();content.scrollTop=0;return}
   const prev=saved[m.id];saved[m.id]={score:Math.max(state.points,Number(prev?.score)||0),total:m.questions.length};persist();
   if(window.GC_Audio?.celebrate)window.GC_Audio.celebrate(doneCount()===ALL.length);
   state.view='result';render();content.scrollTop=0;
@@ -1200,6 +1240,8 @@ const GC_P2_DATA = {
   if(target.dataset.p2Area)openArea(target.dataset.p2Area);
   else if(target.dataset.p2Mission)openMission(target.dataset.p2Mission);
   else if(target.hasAttribute('data-p2-answer'))answer(Number(target.dataset.p2Answer));
+  else if(target.hasAttribute('data-p2-order'))chooseOrder(Number(target.dataset.p2Order));
+  else if(target.hasAttribute('data-p2-undo'))undoOrder();
   else if(target.hasAttribute('data-p2-next'))next();
   else if(target.hasAttribute('data-p2-replay'))openMission(state.missionId);
   else if(target.hasAttribute('data-p2-back-area'))moveView('area');
