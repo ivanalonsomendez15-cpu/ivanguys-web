@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>GENERACIÓN CAMBIO · Fase 2 · V16.3 · Auditoría y consolidación · 1.º trimestre</title>
+<title>GENERACIÓN CAMBIO · Fase 2 · V16.3 · Jugabilidad y rendimiento · 1.º trimestre</title>
 <meta name="theme-color" content="#071933"><meta name="description" content="Aventura tridimensional interactiva mejorada: descubre seis territorios en un planeta con atmósfera más cinematográfica, agua dinámica y vegetación reforzada.">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&amp;family=Nunito:wght@500;600;700;800;900&amp;display=swap" media="print" onload="this.media='all'">
 <style>
@@ -882,6 +882,84 @@
 <style id="gc-v16-audit-style">#gcPhase2 .gc-frac{display:inline-grid;grid-template-rows:auto auto;align-items:center;vertical-align:middle;line-height:1.08;text-align:center;min-width:1.1em;padding:0 .12em;font-variant-numeric:tabular-nums}#gcPhase2 .gc-frac>span:first-child{border-bottom:1.5px solid currentColor;padding:0 .16em .1em}#gcPhase2 .gc-frac>span:last-child{padding:.1em .16em 0}#gcPhase2 input:focus-visible,#gcPhase2 textarea:focus-visible,#gcPhase2 button:focus-visible,#gcPhase2 select:focus-visible{outline:2px solid #a8faff;outline-offset:3px}#gcPhase2 .r15-box,#gcPhase2 .p2-question{overflow-wrap:anywhere}@media(prefers-reduced-motion:reduce){#gcPhase2 *,#gcPhase2 *::before,#gcPhase2 *::after{animation-duration:.001ms!important;transition-duration:.001ms!important}}</style>
 <style id="gc-v16-research-tools">#gcPhase2 .r16-route{display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:8px;margin:14px 0}#gcPhase2 .r16-node{min-width:0;display:grid;gap:7px;padding:12px;background:linear-gradient(145deg,#143b54,#091b31);border:1px solid #80d8e2;border-radius:12px;overflow-wrap:anywhere}#gcPhase2 .r16-node-number{color:#8af4e2;font-size:13px;font-weight:800}#gcPhase2 .r16-node small{color:#c4e6f2;font-size:12px}#gcPhase2 .r16-tool-fields{display:grid;gap:9px}#gcPhase2 .r16-choice{display:grid;gap:5px;color:#e7f5ff;font-size:14px}#gcPhase2 .r16-choice input,#gcPhase2 .r16-choice select{width:100%;min-width:0;max-width:100%;border:1px solid #92c9de;background:#091b30;color:#fff;border-radius:8px;padding:9px;font:inherit}#gcPhase2 .r16-fieldset{min-width:0;margin:0;border:1px solid #56819a;padding:12px;border-radius:9px;display:grid;gap:9px}.r16-tool-report table{border-collapse:collapse;width:100%;table-layout:fixed}.r16-tool-report td,.r16-tool-report th{padding:6px;border:1px solid #8aa5b4;overflow-wrap:anywhere}#gcPhase2 .r16-tool-report td,#gcPhase2 .r16-tool-report th{color:#e8faff;background:transparent}@media(max-width:400px){#gcPhase2 .r16-route{grid-template-columns:repeat(2,minmax(0,1fr))}}</style>
 <style id="gc-v162-startup-style">#fail{display:none!important;pointer-events:none!important}.gc3d-status{font-size:12px;line-height:1.35;color:#d0e6f5;margin:4px 0 7px;max-width:100%;overflow-wrap:anywhere}.gc3d-status[hidden]{display:none!important}#start:disabled{cursor:default;opacity:.82;filter:none}#game.gc-3d-unavailable #start{font-size:clamp(12px,1.5vw,17px)}#game.gc-3d-unavailable #gc-phase2-open{outline:2px solid #8effd9;outline-offset:3px}#gcPhase2{overflow:hidden}#gcPhase2 .p2-content{min-width:0;max-width:100%;overflow-x:hidden;overflow-wrap:anywhere}#gcPhase2 .p2-mission-card{min-width:0;overflow-wrap:anywhere}@media(orientation:landscape) and (max-height:500px){#gcPhase2 .p2-shell{min-height:0;max-height:calc(100dvh - 12px)}#gcPhase2 .p2-head{min-height:40px;padding:5px 10px}#gcPhase2 .p2-footer{flex-shrink:0}#gcPhase2 .p2-content{min-height:0;overflow-y:auto}}</style>
+<style id="gc-v163-play-layout">
+/* V16.3: separate scene and every interactive control; no panel overlays the player. */
+#game.play{grid-template-columns:minmax(0,1fr) minmax(0,1fr) var(--gc-rail);grid-template-rows:minmax(58px,auto) 102px auto minmax(0,1fr) minmax(48px,auto)}
+#game.play .topbar{grid-area:1/1/2/4;min-width:0}
+#game.play .playhud{grid-area:2/1/3/3}
+#game.play #hint{grid-area:3/1/4/3}
+#game.play #viewport{grid-area:4/1/5/3;min-height:0}
+#game.play #minimap{grid-area:2/3/3/4;width:99px!important;height:99px!important}
+#game.play #worlds{grid-area:3/3/6/4;min-height:0;max-height:100%;overflow:auto;align-self:end}
+#game.play #graphicSettings{grid-area:5/1/6/2;width:100%;max-width:100%;justify-content:flex-start;flex-wrap:wrap}
+#game.play #graphicSettings button{min-width:0;max-width:100%;overflow-wrap:anywhere}
+#game.play #interact.ready{grid-area:5/2/6/3;width:100%;max-width:100%;justify-self:stretch;align-self:center}
+#game.play #viewport canvas{width:100%!important;height:100%!important;touch-action:none}
+#game.play .topbar .branding{min-width:0;flex:1}
+#game.play .topbar .branding strong,#game.play .topbar .branding small{overflow-wrap:anywhere}
+#game.play .topbar .actions{flex-shrink:0}
+#game.play #dpad .gc-run,#game.play #dpad .gc-jump{font-size:9px;line-height:1;padding:2px}
+#game.play #dpad .dkey{touch-action:none}
+@media(max-width:1024px) and (orientation:portrait){
+ #game.play{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:minmax(54px,auto) 73px 40px minmax(100px,1fr) 40px 150px;gap:5px;padding:0 7px 7px;overflow:hidden}
+ #game.play .topbar{grid-area:1/1/2/3;min-height:0;padding:5px 2px;align-self:center;gap:5px}
+ #game.play .topbar .branding strong{font-size:clamp(11px,3vw,18px);line-height:1.1}
+ #game.play .topbar .branding small{font-size:clamp(7px,1.8vw,10px);line-height:1.15}
+ #game.play .topbar .actions{gap:3px}
+ #game.play .topbar .actions button{width:clamp(30px,8vw,42px);height:36px;min-width:0;padding:5px}
+ #game.play .playhud{grid-area:2/1/3/2;min-height:0;max-width:100%;width:100%;padding:5px}
+ #game.play .playhud strong{font-size:10px;line-height:1.15}
+ #game.play .playhud small{font-size:8px;line-height:1.15;white-space:normal}
+ #game.play #minimap{grid-area:2/2/3/3;width:70px!important;height:70px!important;margin:0}
+ #game.play #hint{grid-area:3/1/4/2;display:flex;align-items:center;justify-content:center;align-self:stretch;justify-self:stretch;width:100%;max-width:100%;height:auto;font-size:9px;padding:3px;white-space:normal;text-align:center}
+ #game.play #interact.ready{grid-area:3/2/4/3;align-self:stretch;min-height:0;padding:4px;font-size:10px}
+ #game.play #viewport{grid-area:4/1/5/3;min-height:100px}
+ #game.play #graphicSettings{grid-area:5/1/6/3;align-self:stretch;justify-content:center;flex-wrap:nowrap;gap:6px}
+ #game.play #graphicSettings button{flex:1;max-width:190px;min-height:30px;font-size:10px}
+ #game.play #worlds{grid-area:6/2/7/3;height:100%;width:100%!important;min-height:0;align-self:stretch;grid-template-columns:repeat(2,minmax(0,1fr))!important;grid-template-rows:repeat(3,minmax(0,1fr));padding:4px;gap:3px}
+ #game.play .world{min-height:0;padding:3px;font-size:clamp(8px,1.9vw,12px);line-height:1.15}
+ #game.play .world .emoji{width:19px;height:19px;margin:0 auto 2px}
+ #game.play .world .emoji .world-icon{width:19px;height:19px}
+ #game.play #dpad{grid-area:6/1/7/2}
+}
+@media(max-width:1024px) and (orientation:landscape), (pointer:coarse) and (orientation:landscape) and (max-width:1400px){
+ #game.play{grid-template-columns:minmax(132px,21vw) minmax(0,1fr) minmax(175px,25vw);grid-template-rows:minmax(46px,auto) 66px 27px 34px minmax(96px,1fr);gap:4px;padding:0 6px 6px;overflow:hidden}
+ #game.play .topbar{grid-area:1/1/2/4;min-height:0;padding:4px 3px;align-self:center}
+ #game.play .topbar .branding strong{font-size:14px}
+ #game.play .topbar .branding small{font-size:8px}
+ #game.play .topbar .actions{gap:4px}
+ #game.play .topbar .actions button{height:35px;width:35px;min-width:35px;padding:5px}
+ #game.play .playhud{grid-area:2/1/3/2;width:100%;min-width:0;max-width:100%;padding:4px;align-self:stretch}
+ #game.play .playhud strong{font-size:9px;line-height:1.15}
+ #game.play .playhud small{font-size:8px;line-height:1.12;white-space:normal}
+ #game.play .playhud .pips{gap:3px;margin-top:3px}
+ #game.play .playhud .pips i{width:9px;height:6px}
+ #game.play #hint{grid-area:3/1/4/2;display:flex;align-items:center;justify-content:center;align-self:stretch;justify-self:stretch;width:100%;max-width:100%;height:auto;padding:3px;font-size:8px;letter-spacing:0;white-space:normal;text-align:center}
+ #game.play #graphicSettings{grid-area:4/1/5/2;align-self:stretch;justify-content:stretch;flex-wrap:nowrap;gap:3px}
+ #game.play #graphicSettings button{flex:1;min-width:0;min-height:0;padding:3px 2px;font-size:8px;line-height:1.1}
+ #game.play #viewport{grid-area:2/2/6/3;min-height:0;height:100%!important}
+ #game.play #minimap{grid-area:2/3/3/4;width:62px!important;height:62px!important;align-self:center;justify-self:end;margin:0}
+ #game.play #interact.ready{grid-area:2/3/3/4;width:calc(100% - 67px);max-width:calc(100% - 67px);justify-self:start;align-self:center;padding:5px 3px;min-height:40px;font-size:9px}
+ #game.play #worlds{grid-area:3/3/6/4;height:100%;min-height:0;align-self:stretch;grid-template-columns:repeat(2,minmax(0,1fr))!important;grid-template-rows:repeat(3,minmax(0,1fr));padding:4px;gap:4px}
+ #game.play .world{min-height:0;padding:3px;font-size:clamp(8px,1.25vw,12px);line-height:1.15}
+ #game.play .world .emoji{width:20px;height:20px;margin:0 auto 2px}
+ #game.play .world .emoji .world-icon{width:19px;height:19px}
+ #game.play #dpad{grid-area:5/1/6/2}
+}
+@media(max-width:1024px), (pointer:coarse) and (max-width:1400px){
+ #game.play #dpad{display:grid!important;position:relative!important;inset:auto!important;transform:none!important;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(3,minmax(0,1fr));gap:3px;width:min(100%,142px);height:min(100%,142px);min-height:0;align-self:center;justify-self:center;margin:0;max-width:100%}
+ #game.play #dpad .drow{display:contents}
+ #game.play #dpad .dkey{width:100%;height:100%;min-width:0;min-height:0;margin:0;padding:0;font-size:19px}
+ #game.play #dpad [data-key="KeyW"]{grid-area:1/2}#game.play #dpad [data-key="KeyA"]{grid-area:2/1}#game.play #dpad [data-key="KeyD"]{grid-area:2/3}#game.play #dpad [data-key="KeyS"]{grid-area:3/2}#game.play #dpad .gc-run{grid-area:3/1;font-size:9px}#game.play #dpad .gc-jump{grid-area:3/3;font-size:9px}
+}
+@media(max-width:1024px) and (orientation:landscape) and (max-height:420px){#game.play #dpad{width:min(100%,118px);height:min(100%,115px)}#game.play #dpad .dkey{font-size:15px}#game.play #dpad .gc-run,#game.play #dpad .gc-jump{font-size:8px}}
+#game:not(.play) .home{min-width:0;overflow-wrap:anywhere}
+#game:not(.play) .gc3d-status{max-width:100%}
+#gcPhase2 .p2-shell{min-width:0;max-width:100%;overflow:hidden}
+#gcPhase2 .p2-head .p2-brand{min-width:0}
+#gcPhase2 .p2-head button{flex-shrink:0}
+#gcPhase2 .p2-content{min-height:0}
+</style>
 </head>
 <body>
 <div id="game">
@@ -905,10 +983,10 @@
 <button class="skin-choice" data-skin="2" style="--skin-color:#ffb854" aria-pressed="false"><span class="skin-symbol"></span><b>KAI</b></button>
 </div></section>
 <aside class="profile"><h2>✦ PERFIL EXPLORADOR</h2><div class="avatar-row"><div class="avatar" id="skinAvatar" data-skin="0" role="img" aria-label="Retrato del personaje seleccionado"></div><div><div id="nickname" class="user">Explorador/a</div><div class="rank">Nivel 01 · Recluta</div></div></div><button id="rename" class="rename">Elegir apodo</button><div class="statgrid"><div class="stat"><b id="levelValue">01</b><small>Nivel</small></div><div class="stat"><b id="missionValue">0</b><small>Misiones</small></div><div class="stat"><b id="xpValue">0</b><small>XP</small></div><div class="stat"><b id="badgeValue">0</b><small>Insignias</small></div></div><div class="xp"><span id="xpFill"></span></div></aside>
-<div class="playhud"><strong>✦ SEÑALES DEL PLANETA <span id="signalCount">0/6</span></strong><small>WASD · Flechas · Shift correr · Espacio saltar · E portal</small><div class="pips" id="signalPips"><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+<div class="playhud"><strong>✦ SEÑALES DEL PLANETA <span id="signalCount">0/6</span></strong><small>WASD / flechas · Shift correr · Espacio saltar · E portal</small><div class="pips" id="signalPips"><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
 <div id="hint">DESCUBRE LOS SEIS PORTALES · ACTIVA SUS BALIZAS</div><canvas id="minimap" width="180" height="180" aria-label="Minimapa de los portales"></canvas><nav id="worlds" class="worlds" aria-label="Seis territorios"></nav>
 <button id="interact">ACTIVAR BALIZA · E</button>
-<div id="graphicSettings"><button id="resetCam">CENTRAR CÁMARA</button><button id="qualityBtn">GRÁFICOS: AUTO</button></div><div id="dpad"><button class="dkey dup" data-key="KeyW" aria-label="Adelante">▲</button><div class="drow"><button class="dkey" data-key="KeyA" aria-label="Izquierda">◀</button><button class="dkey" data-key="KeyD" aria-label="Derecha">▶</button></div><button class="dkey dup" data-key="KeyS" aria-label="Atrás">▼</button></div>
+<div id="graphicSettings"><button id="resetCam">CENTRAR CÁMARA</button><button id="qualityBtn">GRÁFICOS: AUTO</button></div><div id="dpad"><button class="dkey dup" data-key="KeyW" aria-label="Adelante">▲</button><div class="drow"><button class="dkey" data-key="KeyA" aria-label="Izquierda">◀</button><button class="dkey" data-key="KeyD" aria-label="Derecha">▶</button></div><button class="dkey dup" data-key="KeyS" aria-label="Atrás">▼</button><button class="dkey gc-run" data-key="ShiftLeft" aria-label="Mantener para correr">CORRER</button><button class="dkey gc-jump" data-key="Space" aria-label="Saltar">SALTO</button></div>
 <div id="modal"><section class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialogtitle"><button class="close" id="close" aria-label="Cerrar">✕</button><h2 id="dialogtitle"></h2><div id="dialogcontent"></div></section></div><div id="notice" role="status"></div>
 <div id="fail" aria-hidden="true"></div>
 </div>
@@ -1521,7 +1599,7 @@ window.addEventListener('gc-phase2-progress',updateProgress);
 const keys=new Set();
 function toast(text){notice.textContent=text;notice.classList.add('show');clearTimeout(toastTimeout);toastTimeout=setTimeout(()=>notice.classList.remove('show'),2600);}
 function beep(f=670){if(!window.GC_Audio?.effectsOn())return;try{audio=audio||new(window.AudioContext||window.webkitAudioContext)();const o=audio.createOscillator(),g=audio.createGain();o.type='sine';o.frequency.setValueAtTime(f,audio.currentTime);o.frequency.exponentialRampToValueAtTime(f*1.25,audio.currentTime+.12);g.gain.setValueAtTime(Math.max(.003,.05*window.GC_Audio.fxVolume()),audio.currentTime);g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+.19);o.connect(g);g.connect(audio.destination);o.start();o.stop(audio.currentTime+.2)}catch{}}
-function dialog(title,html){$('#dialogtitle').textContent=title;$('#dialogcontent').innerHTML=html;modal.classList.add('show');$('#close').focus();beep();}
+function dialog(title,html){keys.clear();$('#dialogtitle').textContent=title;$('#dialogcontent').innerHTML=html;modal.classList.add('show');$('#close').focus();beep();}
 function closeDialog(){modal.classList.remove('show');}
 function showWorld(index){const w=LEVELS[index];if(!w)return;
  const activated=playing&&near===index;
@@ -1539,15 +1617,15 @@ $('#motion').onclick=()=>{paused=!paused;$('#motion').innerHTML=paused?'<svg cla
 worlds.addEventListener('click',e=>{const btn=e.target.closest('[data-world]');if(btn)showWorld(Number(btn.dataset.world));});
 $('#interact').onclick=()=>{if(near>=0)showWorld(near)};
 try{const nick=localStorage.getItem('generacion-cambio-nickname');if(nick)$('#nickname').textContent=nick.slice(0,24)}catch{}
-window.addEventListener('keydown',e=>{if(window.GC_Phase2?.isOpen?.())return;if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space'].includes(e.code))e.preventDefault();keys.add(e.code);if(e.code==='Escape')closeDialog();if(e.code==='KeyE'&&playing&&near>=0&&!modal.classList.contains('show'))showWorld(near)});
+window.addEventListener('keydown',e=>{if(window.GC_Phase2?.isOpen?.()){keys.clear();return}if(e.code==='Escape'){closeDialog();keys.clear();return}if(!playing||modal.classList.contains('show')||e.target?.closest?.('input,textarea,select,button,[contenteditable]'))return;if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space'].includes(e.code))e.preventDefault();keys.add(e.code);if(e.code==='KeyE'&&!e.repeat&&near>=0)showWorld(near)});
 window.addEventListener('keyup',e=>keys.delete(e.code));window.addEventListener('blur',()=>keys.clear());
-document.querySelectorAll('[data-key]').forEach(btn=>{const code=btn.dataset.key;btn.addEventListener('pointerdown',e=>{e.preventDefault();keys.add(code);btn.setPointerCapture(e.pointerId)});for(const name of ['pointerup','pointercancel','lostpointercapture'])btn.addEventListener(name,()=>keys.delete(code))});
+document.querySelectorAll('[data-key]').forEach(btn=>{const code=btn.dataset.key;btn.addEventListener('pointerdown',e=>{e.preventDefault();if(!playing||window.GC_Phase2?.isOpen?.()||modal.classList.contains('show'))return;keys.add(code);try{btn.setPointerCapture(e.pointerId)}catch{}});for(const name of ['pointerup','pointercancel','lostpointercapture'])btn.addEventListener(name,()=>keys.delete(code))});
 
 // --- THREE-DIMENSIONAL ENGINE ---
 let renderer;
 try{renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,powerPreference:'high-performance'});}catch(e){window.GC_Startup?.failed();throw e;}
-renderer.setPixelRatio(Math.min(window.devicePixelRatio,1.5,Math.sqrt(3500000/Math.max(1,innerWidth*innerHeight))));renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.10;renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
-const viewport=$('#viewport');viewport.appendChild(renderer.domElement);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1));renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.10;renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+const viewport=$('#viewport');viewport.appendChild(renderer.domElement);renderer.domElement.style.touchAction='none';renderer.domElement.addEventListener('webglcontextlost',e=>{e.preventDefault();keys.clear();game.classList.remove('webgl-ready');window.GC_Startup?.failed();});renderer.domElement.addEventListener('webglcontextrestored',()=>{renderer.shadowMap.needsUpdate=true;});
 const scene=new THREE.Scene();scene.fog=new THREE.FogExp2(0x9bb8c8,.0058);
 const camera=new THREE.PerspectiveCamera(52,1,.1,380);camera.position.set(15,13,40);
 scene.add(new THREE.HemisphereLight(0xe8f7ff,0x3f5266,1.65));
@@ -1893,10 +1971,11 @@ async function activateHero(index){
  const token=++heroRequest;const modelFile=HERO_MODELS[index];
  try{
   let asset=heroCache.get(modelFile);
-  if(!asset){asset=loader.loadAsync(MODEL_ROOT+modelFile);heroCache.set(modelFile,asset);}
-  const gltf=await asset;
+  if(!asset){asset=loader.loadAsync(MODEL_ROOT+modelFile).then(makeHeroInstance).catch(error=>{heroCache.delete(modelFile);throw error});heroCache.set(modelFile,asset);}
+  const next=await asset;
   if(token!==heroRequest)return;
-  const next=makeHeroInstance(gltf);
+  if(heroCurrent===next&&characterIsLoaded)return;
+  Object.values(next.clips).forEach(a=>{a.reset();a.enabled=true;a.play();a.setEffectiveWeight(a===next.clips.idle?1:0);});
   if(heroCurrent){characterContainer.remove(heroCurrent.obj);heroCurrent.mixer.stopAllAction();}
   heroCurrent=next;characterContainer.add(next.obj);
   charFallback.visible=false;characterGear.visible=false;scarf.visible=false;
@@ -2155,6 +2234,7 @@ portalObjects.forEach((p,i)=>{
 // Maps are 1K JPG and loaded only when runtime can reach Poly Haven; never blocking gameplay.
 const pbrLoader=new THREE.TextureLoader();pbrLoader.setCrossOrigin('anonymous');
 const pbrBase='https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/';
+let pbrRequested=false;
 const pbrLoad=(slug,suffix,repeatX,repeatY,srgb=false)=>{
  const path=pbrBase+slug+'/'+slug+'_'+suffix+'_1k.jpg';
  return new Promise(resolve=>pbrLoader.load(path,texture=>{
@@ -2187,24 +2267,31 @@ const pbrSets=[
   }
  }]
 ];
-// Optional high-resolution textures are deferred until the player explicitly selects high quality.
-let pbrRequested=false;
-async function loadOptionalPbr(){if(pbrRequested)return;pbrRequested=true;
- for(const [slug,rx,ry,apply] of pbrSets){try{const [diff,norm,rough]=await Promise.all([pbrLoad(slug,'diff',rx,ry,true),pbrLoad(slug,'nor_gl',rx,ry),pbrLoad(slug,'rough',rx,ry)]);await apply(diff,norm,rough);}catch(error){console.warn('PBR optional scan unavailable',slug,error);}}
+async function loadOptionalPBR(){if(pbrRequested)return;pbrRequested=true;
+ for(const [slug,rx,ry,apply] of pbrSets){
+  try{const [diff,norm,rough]=await Promise.all([pbrLoad(slug,'diff',rx,ry,true),pbrLoad(slug,'nor_gl',rx,ry),pbrLoad(slug,'rough',rx,ry)]);await apply(diff,norm,rough);}catch(error){console.warn('PBR optional scan unavailable',slug,error);}
+ }
 }
+function schedulePBR(){if(qualityMode===2&&!pbrRequested){if('requestIdleCallback' in window)requestIdleCallback(loadOptionalPBR,{timeout:3000});else setTimeout(loadOptionalPBR,800)}}
+
 
 // Smooth the camera and avoid clipping into the ground; scripted zoom moves into third-person gameplay.
 // Camera controls with third person movement, run, touch and portal proximity.
 const pressed=new Map();let yaw=0,pitch=.14,distance=10,prevPinch=0;
 renderer.domElement.addEventListener('pointerdown',e=>{pressed.set(e.pointerId,[e.clientX,e.clientY]);renderer.domElement.setPointerCapture(e.pointerId)});
 renderer.domElement.addEventListener('pointermove',e=>{const old=pressed.get(e.pointerId);if(!old)return;pressed.set(e.pointerId,[e.clientX,e.clientY]);if(pressed.size===1){yaw-=(e.clientX-old[0])*.0045;pitch=THREE.MathUtils.clamp(pitch+(e.clientY-old[1])*.0035,-.08,.62)}else{const arr=[...pressed.values()];const pinch=Math.hypot(arr[0][0]-arr[1][0],arr[0][1]-arr[1][1]);if(prevPinch)distance=THREE.MathUtils.clamp(distance+(prevPinch-pinch)*.023,5,19);prevPinch=pinch;}});
-function finishPointer(e){pressed.delete(e.pointerId);prevPinch=0;}renderer.domElement.addEventListener('pointerup',finishPointer);renderer.domElement.addEventListener('pointercancel',finishPointer);
+function finishPointer(e){pressed.delete(e.pointerId);prevPinch=0;}renderer.domElement.addEventListener('pointerup',finishPointer);renderer.domElement.addEventListener('pointercancel',finishPointer);renderer.domElement.addEventListener('lostpointercapture',finishPointer);window.addEventListener('blur',()=>{pressed.clear();prevPinch=0;});
 renderer.domElement.addEventListener('wheel',e=>{e.preventDefault();distance=THREE.MathUtils.clamp(distance+e.deltaY*.012,5,19)},{passive:false});
-let qualityMode=0;
-function applyQuality(){const pixelRatios=[1.5,1,Math.min(window.devicePixelRatio,2)][qualityMode];renderer.setPixelRatio(Math.min(window.devicePixelRatio,pixelRatios));sunshine.shadow.mapSize.set(qualityMode===1?1024:qualityMode===2?3072:2048,qualityMode===1?1024:qualityMode===2?3072:2048);sunshine.shadow.map?.dispose();sunshine.shadow.map=null;leafBillboards.forEach(mesh=>mesh.visible=qualityMode!==1);heroBoulders.visible=qualityMode!==1;fireflies.visible=qualityMode!==1;blades.count=qualityMode===1?Math.min(1800,grassCount):grassCount;renderer.shadowMap.needsUpdate=true;resize();}
+let qualityMode=0,autoScale=1,frameSerial=0,perfFrames=0,perfElapsed=0,lastDraw=0,lastQualityChange=0,lastFrameTime=0,measuredFps=0;
+try{const q=Number(localStorage.getItem('gc-quality-v163'));if(Number.isInteger(q)&&q>=0&&q<=2)qualityMode=q}catch{}
+function pixelRatioFor(width,height){const dpr=window.devicePixelRatio||1,limit=[1700000,850000,4200000][qualityMode];return Math.max(.35,Math.min(dpr,qualityMode===2?2:qualityMode===1?.85:autoScale,Math.sqrt(limit/Math.max(1,width*height))))}
+function applyQuality(){const shadowSize=qualityMode===1?1024:qualityMode===2?3072:1536;if(sunshine.shadow.mapSize.x!==shadowSize){sunshine.shadow.mapSize.set(shadowSize,shadowSize);sunshine.shadow.map?.dispose();sunshine.shadow.map=null;}
+renderer.shadowMap.autoUpdate=qualityMode===2;leafBillboards.forEach(mesh=>mesh.visible=qualityMode!==1);heroBoulders.visible=qualityMode!==1;fireflies.visible=qualityMode!==1;blades.count=qualityMode===1?Math.min(1800,grassCount):grassCount;renderer.shadowMap.needsUpdate=true;resize();schedulePBR();$('#qualityBtn').textContent='GRÁFICOS: '+['AUTO','LIGERO','ALTO'][qualityMode];}
+function sampleQuality(now,elapsed){if(qualityMode!==0||!playing||elapsed<=0||elapsed>1000)return;perfFrames++;perfElapsed+=elapsed;if(perfElapsed<2200)return;measuredFps=1000*perfFrames/perfElapsed;perfFrames=perfElapsed=0;if(now-lastQualityChange<3500)return;let next=autoScale;if(measuredFps<28)next=Math.max(.55,autoScale-.15);else if(measuredFps>52)next=Math.min(1.25,autoScale+.10);if(Math.abs(next-autoScale)>.01){autoScale=next;lastQualityChange=now;resize();}}
+
 
 $('#resetCam').addEventListener('click',()=>{yaw=0;pitch=.14;distance=10;toast('CÁMARA CENTRADA')});
-$('#qualityBtn').addEventListener('click',()=>{qualityMode=(qualityMode+1)%3;applyQuality();if(qualityMode===2)loadOptionalPbr();$('#qualityBtn').textContent='GRÁFICOS: '+['AUTO','LIGERO','ALTO'][qualityMode];});
+$('#qualityBtn').addEventListener('click',()=>{qualityMode=(qualityMode+1)%3;try{localStorage.setItem('gc-quality-v163',String(qualityMode))}catch{}applyQuality();});
 const minimap=$('#minimap'),mini=minimap.getContext('2d');
 function drawMinimap(){if(!playing)return;
  const w=180,h=180;mini.clearRect(0,0,w,h);mini.save();mini.beginPath();mini.arc(90,90,88,0,Math.PI*2);mini.clip();mini.fillStyle='rgba(4,29,45,.95)';mini.fillRect(0,0,w,h);
@@ -2213,11 +2300,11 @@ function drawMinimap(){if(!playing)return;
  LEVELS.forEach((level,i)=>{const x=px(level.x),y=pz(level.z);if(x<3||x>177||y<3||y>177)return;mini.fillStyle='#'+level.color.toString(16);mini.beginPath();mini.arc(x,y,collected.has(i)?5:4,0,Math.PI*2);mini.fill();if(collected.has(i)){mini.lineWidth=1.8;mini.strokeStyle='white';mini.stroke();}});
  mini.save();mini.translate(90,90);mini.rotate(-player.rotation.y);mini.fillStyle='#ffffff';mini.strokeStyle='#174c62';mini.lineWidth=2;mini.beginPath();mini.moveTo(0,-10);mini.lineTo(7,8);mini.lineTo(0,5);mini.lineTo(-7,8);mini.closePath();mini.fill();mini.stroke();mini.restore();mini.restore();
 }
-function resize(){const width=viewport.clientWidth,height=viewport.clientHeight;if(width<1||height<1)return;renderer.setSize(width,height,false);camera.aspect=width/height;camera.fov=width<700?65:52;camera.updateProjectionMatrix();}window.addEventListener('resize',resize);resize();
-const direction=new THREE.Vector3(),target=new THREE.Vector3(),focus=new THREE.Vector3(),clock=new THREE.Clock();let t=0,jumpHeight=0,jumpSpeed=0,spaceWasDown=false;let miniLast=0;
-function animate(){requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.05);if(document.hidden||window.GC_Phase2?.isOpen?.()){keys.clear();return;}if(!paused){t+=dt;characterMixer?.update(dt);water.material.uniforms.time.value=t;spire.rotation.y+=dt*.35;for(const rot of turbines)rot.rotation.z+=dt*1.5;for(const c of clouds)c.position.x+=dt*.15;sunGlow.material.opacity=.72+Math.sin(t*.22)*.08;sunGlow.scale.setScalar(34+Math.sin(t*.35)*1.1);for(const a of auroraBands){a.material.opacity=.12+Math.sin(t*.7+a.userData.phase)*.05;a.rotation.z=Math.sin(t*.25+a.userData.phase)*.06;a.rotation.y=a.userData.baseRot+Math.sin(t*.18+a.userData.phase)*.04;}for(const m of mistPlanes){m.position.y=m.userData.baseY+Math.sin(t*.45+m.userData.phase)*.22;m.position.x+=m.userData.drift*dt;m.material.opacity=.08+Math.sin(t*.55+m.userData.phase)*.04;}for(const tuft of grassTufts){tuft.rotation.y=tuft.userData.baseRot+Math.sin(t*1.2+tuft.userData.phase)*.08;}for(const f of floating)f.position.y=f.userData.baseY+Math.sin(t*.6+f.position.x)*.35;for(const obj of portalObjects){obj.ring.rotation.y+=dt*.28;obj.rim.rotation.x+=dt*.23;for(const p of obj.pts)p.position.y=p.userData.baseY+Math.sin(t*2+p.userData.phase)*.18;}for(const s of sparks)s.position.y=s.userData.baseY+Math.sin(t*1.7+s.userData.phase)*.22;for(const p of fireflies.children)p.position.y=p.userData.y+Math.sin(t*1.12+p.userData.phase)*.17;drone.rotation.y=Math.sin(t*1.3)*.2;}
- const modalOpen=modal.classList.contains('show')||Boolean(window.GC_Phase2?.isOpen?.());let moving=false,running=false;
- if(playing&&!modalOpen){const dx=(Number(keys.has('KeyD')||keys.has('ArrowRight'))-Number(keys.has('KeyA')||keys.has('ArrowLeft'))),dz=(Number(keys.has('KeyS')||keys.has('ArrowDown'))-Number(keys.has('KeyW')||keys.has('ArrowUp')));direction.set(dx,0,dz);moving=direction.lengthSq()>0;running=keys.has('ShiftLeft')||keys.has('ShiftRight');if(moving){direction.normalize().applyAxisAngle(new THREE.Vector3(0,1,0),yaw);const speed=running?12:7.6;target.copy(player.position).addScaledVector(direction,dt*speed);const walkRadius=69;const rr=Math.hypot(target.x,target.z);if(rr>walkRadius){target.x*=walkRadius/rr;target.z*=walkRadius/rr;}player.position.x=target.x;player.position.z=target.z;player.rotation.y=Math.atan2(direction.x,direction.z);}
+let previousSize='';function resize(){const width=Math.max(1,viewport.clientWidth),height=Math.max(1,viewport.clientHeight),ratio=pixelRatioFor(width,height),signature=width+'x'+height+'@'+ratio.toFixed(3);if(signature===previousSize)return;previousSize=signature;renderer.setPixelRatio(ratio);renderer.setSize(width,height,false);camera.aspect=width/height;camera.fov=width<700?65:52;camera.updateProjectionMatrix();renderer.shadowMap.needsUpdate=true;}window.addEventListener('resize',resize);if('ResizeObserver' in window)new ResizeObserver(resize).observe(viewport);applyQuality();
+const direction=new THREE.Vector3(),target=new THREE.Vector3(),focus=new THREE.Vector3(),upAxis=new THREE.Vector3(0,1,0),cameraOffset=new THREE.Vector3(),cameraTarget=new THREE.Vector3(),safeFocus=new THREE.Vector3(),clock=new THREE.Clock();let t=0,jumpHeight=0,jumpSpeed=0,spaceWasDown=false;let miniLast=0;
+function animate(now=performance.now()){requestAnimationFrame(animate);const modalOpen=modal.classList.contains('show')||Boolean(window.GC_Phase2?.isOpen?.());if(document.hidden||modalOpen){keys.clear();clock.getDelta();lastFrameTime=0;return}const interval=playing?0:1000/20;if(now-lastDraw<interval)return;lastDraw=now;const elapsed=lastFrameTime?now-lastFrameTime:0;lastFrameTime=now;sampleQuality(now,elapsed);const dt=Math.min(clock.getDelta(),.065);frameSerial++;if(!paused){t+=dt;characterMixer?.update(dt);water.material.uniforms.time.value=t;spire.rotation.y+=dt*.35;for(const rot of turbines)rot.rotation.z+=dt*1.5;for(const c of clouds)c.position.x+=dt*.15;sunGlow.material.opacity=.72+Math.sin(t*.22)*.08;sunGlow.scale.setScalar(34+Math.sin(t*.35)*1.1);for(const a of auroraBands){a.material.opacity=.12+Math.sin(t*.7+a.userData.phase)*.05;a.rotation.z=Math.sin(t*.25+a.userData.phase)*.06;a.rotation.y=a.userData.baseRot+Math.sin(t*.18+a.userData.phase)*.04;}for(const m of mistPlanes){m.position.y=m.userData.baseY+Math.sin(t*.45+m.userData.phase)*.22;m.position.x+=m.userData.drift*dt;m.material.opacity=.08+Math.sin(t*.55+m.userData.phase)*.04;}for(const tuft of grassTufts){tuft.rotation.y=tuft.userData.baseRot+Math.sin(t*1.2+tuft.userData.phase)*.08;}for(const f of floating)f.position.y=f.userData.baseY+Math.sin(t*.6+f.position.x)*.35;for(const obj of portalObjects){obj.ring.rotation.y+=dt*.28;obj.rim.rotation.x+=dt*.23;for(const p of obj.pts)p.position.y=p.userData.baseY+Math.sin(t*2+p.userData.phase)*.18;}for(const s of sparks)s.position.y=s.userData.baseY+Math.sin(t*1.7+s.userData.phase)*.22;for(const p of fireflies.children)p.position.y=p.userData.y+Math.sin(t*1.12+p.userData.phase)*.17;drone.rotation.y=Math.sin(t*1.3)*.2;}
+ let moving=false,running=false;
+ if(playing&&!modalOpen){const dx=(Number(keys.has('KeyD')||keys.has('ArrowRight'))-Number(keys.has('KeyA')||keys.has('ArrowLeft'))),dz=(Number(keys.has('KeyS')||keys.has('ArrowDown'))-Number(keys.has('KeyW')||keys.has('ArrowUp')));direction.set(dx,0,dz);moving=direction.lengthSq()>0;running=keys.has('ShiftLeft')||keys.has('ShiftRight');if(moving){direction.normalize().applyAxisAngle(upAxis,yaw);const speed=running?12:7.6;target.copy(player.position).addScaledVector(direction,dt*speed);const walkRadius=69;const rr=Math.hypot(target.x,target.z);if(rr>walkRadius){target.x*=walkRadius/rr;target.z*=walkRadius/rr;}player.position.x=target.x;player.position.z=target.z;player.rotation.y=Math.atan2(direction.x,direction.z);}
  // Jump is a small introductory movement mechanic; the player lands on the height-mapped ground.
  const spaceDown=keys.has('Space');if(spaceDown&&!spaceWasDown&&jumpHeight===0)jumpSpeed=6.8;spaceWasDown=spaceDown;
  if(jumpSpeed!==0||jumpHeight>0){jumpHeight+=jumpSpeed*dt;jumpSpeed-=18*dt;if(jumpHeight<=0){jumpHeight=0;jumpSpeed=0;}}
@@ -2254,18 +2341,19 @@ function animate(){requestAnimationFrame(animate);const dt=Math.min(clock.getDel
  heroicRoot.rotation.z=moving?Math.sin(t*(running?13:9))*.014:Math.sin(t*1.3)*.009;
  if(playing){
   focus.set(player.position.x,player.position.y+2.0,player.position.z);
-  const offset=new THREE.Vector3(Math.sin(yaw)*distance,3.2+Math.sin(pitch)*distance,Math.cos(yaw)*distance);
-  camera.position.lerp(focus.clone().add(offset),.11);
+  cameraOffset.set(Math.sin(yaw)*distance,3.2+Math.sin(pitch)*distance,Math.cos(yaw)*distance);cameraTarget.copy(focus).add(cameraOffset);
+  camera.position.lerp(cameraTarget,1-Math.exp(-dt*7));
   // Encuadre libre del área inferior derecha, ocupada por las seis tarjetas de los portales.
   // Solo ajusta el punto de mira; no modifica posiciones del avatar, portales ni controles.
-  const lateralSafe=window.innerWidth<=660?distance*.12:window.innerWidth<=980?distance*.065:0;
-  const safeFocus=focus.clone().add(new THREE.Vector3(Math.cos(yaw),0,-Math.sin(yaw)).multiplyScalar(lateralSafe));
-  safeFocus.y-=window.innerWidth<=660?.20:0;
+  safeFocus.copy(focus); // El escenario tiene su propia celda: el personaje se mantiene centrado.
+  safeFocus.y-=viewport.clientWidth<=500?.12:0;
   camera.lookAt(safeFocus);
 }else{camera.position.lerp(new THREE.Vector3(-9.7+Math.sin(t*.23)*.30,7.35,18.2),.048);camera.lookAt(0,window.innerWidth<=660?(window.innerHeight<=700?-.35:.15):1.50,5.15);}
  if(playing&&performance.now()-miniLast>120){drawMinimap();miniLast=performance.now();}
+ if(!renderer.shadowMap.autoUpdate&&frameSerial%(qualityMode===1?5:3)===0)renderer.shadowMap.needsUpdate=true;
  renderer.render(scene,camera);if(!game.classList.contains("webgl-ready")){game.classList.add("webgl-ready");window.GC_Startup?.ready();}
 }
+window.GC_3D_Diagnostics=Object.freeze({snapshot:()=>({ready:game.classList.contains('webgl-ready'),playing,position:[player.position.x,player.position.y,player.position.z],yaw,pitch,distance,near,signals:collected.size,quality:qualityMode,pixelRatio:renderer.getPixelRatio(),frames:frameSerial,autoFps:measuredFps,drawCalls:renderer.info.render.calls,triangles:renderer.info.render.triangles,canvas:[renderer.domElement.width,renderer.domElement.height]})});
 requestAnimationFrame(animate);
 </script>
 <script>document.getElementById('gc3d-module').addEventListener('error',()=>window.GC_Startup?.failed());</script></body></html>
