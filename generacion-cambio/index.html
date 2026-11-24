@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>GENERACIÓN CAMBIO · Fase 1 · V10 · Edición visual premium</title>
+<title>GENERACIÓN CAMBIO · Fase 1 · V11 · Protagonistas 3D animados</title>
 <meta name="theme-color" content="#071933"><meta name="description" content="Aventura tridimensional interactiva mejorada: descubre seis territorios en un planeta con atmósfera más cinematográfica, agua dinámica y vegetación reforzada.">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Nunito:wght@500;600;700;800;900&display=swap');
@@ -194,6 +194,7 @@
 <div id="modal"><section class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialogtitle"><button class="close" id="close" aria-label="Cerrar">✕</button><h2 id="dialogtitle"></h2><div id="dialogcontent"></div></section></div><div id="notice" role="status"></div>
 <div id="fail"><div class="failcontent"><h2>NO SE PUEDE INICIAR EL MOTOR 3D</h2><p>Comprueba la conexión a Internet y que WebGL esté activado en el navegador. La aplicación necesita Chrome, Edge o un navegador compatible con WebGL.</p></div></div>
 </div>
+<!-- Recursos 3D: Kenney Mini Characters (CC0 1.0). Modelos y animaciones oficiales, redistribuidos con el juego. -->
 <script type="module">
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
@@ -254,12 +255,12 @@ document.querySelectorAll('[data-key]').forEach(btn=>{const code=btn.dataset.key
 // --- THREE-DIMENSIONAL ENGINE ---
 let renderer;
 try{renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,powerPreference:'high-performance'});}catch(e){$('#fail').style.display='flex';throw e;}
-renderer.setPixelRatio(Math.min(window.devicePixelRatio,1.6));renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.16;renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+renderer.setPixelRatio(Math.min(window.devicePixelRatio,1.6));renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.10;renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
 const viewport=$('#viewport');viewport.appendChild(renderer.domElement);
 const scene=new THREE.Scene();scene.fog=new THREE.FogExp2(0x9bb8c8,.0058);
 const camera=new THREE.PerspectiveCamera(52,1,.1,380);camera.position.set(15,13,40);
 scene.add(new THREE.HemisphereLight(0xe8f7ff,0x3f5266,1.65));
-const sunshine=new THREE.DirectionalLight(0xffe4c2,3.35);sunshine.position.set(-40,55,26);sunshine.castShadow=true;sunshine.shadow.mapSize.set(2048,2048);sunshine.shadow.camera.near=2;sunshine.shadow.camera.far=160;sunshine.shadow.camera.left=-72;sunshine.shadow.camera.right=72;sunshine.shadow.camera.top=72;sunshine.shadow.camera.bottom=-72;sunshine.shadow.bias=-.0002;scene.add(sunshine);const rimLight=new THREE.DirectionalLight(0x8ecbff,.72);rimLight.position.set(42,18,-30);scene.add(rimLight);const skyLift=new THREE.HemisphereLight(0xcdf2ff,0x436179,.28);scene.add(skyLift);
+const sunshine=new THREE.DirectionalLight(0xffe4c2,3.35);sunshine.position.set(-40,55,26);sunshine.castShadow=true;sunshine.shadow.mapSize.set(2048,2048);sunshine.shadow.camera.near=2;sunshine.shadow.camera.far=160;sunshine.shadow.camera.left=-72;sunshine.shadow.camera.right=72;sunshine.shadow.camera.top=72;sunshine.shadow.camera.bottom=-72;sunshine.shadow.bias=-.00025;sunshine.shadow.normalBias=.022;sunshine.shadow.radius=2.2;scene.add(sunshine);const rimLight=new THREE.DirectionalLight(0x8ecbff,.72);rimLight.position.set(42,18,-30);scene.add(rimLight);const skyLift=new THREE.HemisphereLight(0xcdf2ff,0x436179,.28);scene.add(skyLift);
 const fill=new THREE.PointLight(0x59eaff,5.8,80,2);fill.position.set(8,14,-8);scene.add(fill);
 const purple=new THREE.PointLight(0x955eff,3.2,65,2);purple.position.set(-25,15,-31);scene.add(purple);
 const material=(c,r=.85,m=.02)=>new THREE.MeshStandardMaterial({color:c,roughness:r,metalness:m});
@@ -566,7 +567,60 @@ for(const side of [-1,1]){const lamp=geoSphere(characterGear,cyanTrim,side*.18,.
 
 let characterMixer=null,idleAction=null,walkAction=null,runAction=null,characterIsLoaded=false;
 const loader=new GLTFLoader();
-setTimeout(()=>toast('Explorador rediseñado listo'),800);
+// V11: tres modelos glTF de personajes con esqueleto real y 32 animaciones originales.
+// Kenney Mini Characters (CC0). Se sirven desde la misma web: sin hotlinks externos.
+const MODEL_ROOT='https://ivanalonsomendez15-cpu.github.io/ivanguys-web/generacion-cambio/assets/characters/';
+const HERO_MODELS=['character-male-a.glb','character-female-a.glb','character-male-e.glb'];
+const heroCache=new Map();let heroCurrent=null,heroRequest=0,heroClip=null;
+const heroLocalLight=new THREE.PointLight(0xb6eaff,.42,5.5,2);heroLocalLight.position.set(-1.4,2.45,1.2);characterContainer.add(heroLocalLight);
+// Sombra suave de contacto para enlazar el modelo con el terreno sin añadir geometría compleja.
+function softShadowTexture(){
+ const c=document.createElement('canvas');c.width=c.height=128;const x=c.getContext('2d');
+ const g=x.createRadialGradient(64,64,3,64,64,63);g.addColorStop(0,'rgba(4,16,26,.45)');g.addColorStop(.28,'rgba(4,16,26,.27)');g.addColorStop(1,'rgba(4,16,26,0)');x.fillStyle=g;x.fillRect(0,0,128,128);
+ const tex=new THREE.CanvasTexture(c);tex.colorSpace=THREE.SRGBColorSpace;return tex;
+}
+const contactShadowMaterial=new THREE.MeshBasicMaterial({map:softShadowTexture(),transparent:true,depthWrite:false,depthTest:true,opacity:.54,polygonOffset:true,polygonOffsetFactor:-1});
+const heroContactShadow=new THREE.Mesh(new THREE.PlaneGeometry(2.2,1.55),contactShadowMaterial);heroContactShadow.rotation.x=-Math.PI/2;scene.add(heroContactShadow);
+const botContactShadow=new THREE.Mesh(new THREE.PlaneGeometry(1.2,.8),contactShadowMaterial.clone());botContactShadow.rotation.x=-Math.PI/2;botContactShadow.material.opacity=.21;scene.add(botContactShadow);
+function makeHeroInstance(gltf){
+ const obj=gltf.scene;
+ obj.traverse(node=>{
+  if(node.isMesh){
+   node.castShadow=true;node.receiveShadow=true;node.frustumCulled=false;
+   if(node.material){node.material=node.material.clone();node.material.roughness=.72;node.material.metalness=.045;node.material.needsUpdate=true;}
+  }
+ });
+ const box=new THREE.Box3().setFromObject(obj);const size=new THREE.Vector3();box.getSize(size);
+ obj.scale.setScalar(2.87/Math.max(.01,size.y));obj.updateMatrixWorld(true);
+ const b=new THREE.Box3().setFromObject(obj);obj.position.y-=b.min.y;
+ obj.rotation.y=Math.PI; // Frente hacia cámara inicial, con control en tercera persona.
+ const mixer=new THREE.AnimationMixer(obj);
+ const clips={};for(const name of ['idle','walk','sprint','jump']){const clip=gltf.animations.find(a=>a.name===name);if(clip){const a=mixer.clipAction(clip);a.enabled=true;a.play();a.setEffectiveWeight(name==='idle'?1:0);clips[name]=a;}}
+ return {obj,mixer,clips};
+}
+async function activateHero(index){
+ const token=++heroRequest;const modelFile=HERO_MODELS[index];
+ try{
+  let asset=heroCache.get(modelFile);
+  if(!asset){asset=loader.loadAsync(MODEL_ROOT+modelFile);heroCache.set(modelFile,asset);}
+  const gltf=await asset;
+  if(token!==heroRequest)return;
+  const next=makeHeroInstance(gltf);
+  if(heroCurrent){characterContainer.remove(heroCurrent.obj);heroCurrent.mixer.stopAllAction();}
+  heroCurrent=next;characterContainer.add(next.obj);
+  charFallback.visible=false;characterGear.visible=false;scarf.visible=false;
+  characterIsLoaded=true;characterMixer=next.mixer;idleAction=next.clips.idle||null;walkAction=next.clips.walk||null;runAction=next.clips.sprint||null;
+  heroLocalLight.color.setHex(LOOKS[index].trim);
+  if(index===selectedLook)toast('PERSONAJE 3D: '+LOOKS[index].name);
+ }catch(error){
+  if(token!==heroRequest)return;
+  console.warn('Modelo 3D CC0 no disponible; personaje interno activo',modelFile,error);
+  if(heroCurrent){characterContainer.remove(heroCurrent.obj);heroCurrent.mixer.stopAllAction();heroCurrent=null;}
+  charFallback.visible=true;characterGear.visible=true;scarf.visible=true;
+  characterIsLoaded=false;characterMixer=null;idleAction=walkAction=runAction=null;
+ }
+}
+
 // Robot acompañante rediseñado: cuerpo más expresivo, anillo, antena y alas.
 const drone=new THREE.Group();scene.add(drone);
 const droneCoreMat=new THREE.MeshStandardMaterial({color:0xe5fbff,roughness:.18,metalness:.46});
@@ -677,6 +731,7 @@ function applyLook(index,persist=true){
  const badge=$('#skinAvatar');if(badge){badge.textContent='';badge.dataset.skin=String(selectedLook);}
  for(const btn of document.querySelectorAll('[data-skin]')){const isSelected=Number(btn.dataset.skin)===selectedLook;btn.classList.toggle('is-selected',isSelected);btn.setAttribute('aria-pressed',String(isSelected));}
  if(persist){try{localStorage.setItem('gc-phase1-look-v9',String(selectedLook))}catch{}}
+ activateHero(selectedLook);
  if(playing)toast('ASPECTO: '+look.name);beep(880);
 }
 document.querySelectorAll('[data-skin]').forEach(btn=>btn.addEventListener('click',()=>applyLook(Number(btn.dataset.skin))));
@@ -869,7 +924,11 @@ function animate(){requestAnimationFrame(animate);const dt=Math.min(clock.getDel
  if(jumpSpeed!==0||jumpHeight>0){jumpHeight+=jumpSpeed*dt;jumpSpeed-=18*dt;if(jumpHeight<=0){jumpHeight=0;jumpSpeed=0;}}
  player.position.y+=((h(player.position.x,player.position.z)+jumpHeight)-player.position.y)*Math.min(1,dt*18);
  near=-1;let best=6.5;LEVELS.forEach((w,i)=>{const d=Math.hypot(w.x-player.position.x,w.z-player.position.z);if(d<best){near=i;best=d;}});$('#interact').classList.toggle('ready',near>=0);if(near>=0)$('#interact').textContent=(collected.has(near)?'VER':'ACTIVAR')+' '+LEVELS[near].short+' · E';}
- if(walkAction){const walkTarget=moving&&!running?1:0;walkAction.weight+=(walkTarget-walkAction.weight)*Math.min(1,dt*10);}if(runAction){const runTarget=moving&&running?1:0;runAction.weight+=(runTarget-runAction.weight)*Math.min(1,dt*10);}if(idleAction)idleAction.weight=Math.max(0,1-(walkAction?.weight||0)-(runAction?.weight||0));
+ if(walkAction){const walkTarget=moving&&!running?1:0;walkAction.weight+=(walkTarget-walkAction.weight)*Math.min(1,dt*8);}if(runAction){const runTarget=moving&&running?1:0;runAction.weight+=(runTarget-runAction.weight)*Math.min(1,dt*8);}if(idleAction)idleAction.weight=Math.max(0,1-(walkAction?.weight||0)-(runAction?.weight||0));
+ if(heroCurrent?.clips.jump){const jumpTarget=jumpHeight>.09?1:0;const a=heroCurrent.clips.jump;a.weight+=(jumpTarget-a.weight)*Math.min(1,dt*11);if(a.weight>.02){if(idleAction)idleAction.weight*=1-a.weight;if(walkAction)walkAction.weight*=1-a.weight;if(runAction)runAction.weight*=1-a.weight;}}
+ if(heroCurrent){heroCurrent.obj.position.y=Math.sin(t*1.55)*.006;}
+ heroContactShadow.position.set(player.position.x,h(player.position.x,player.position.z)+.016,player.position.z);heroContactShadow.material.opacity=.50*Math.max(.18,1-jumpHeight*.27);
+ botContactShadow.position.set(drone.position.x,h(drone.position.x,drone.position.z)+.018,drone.position.z);
  // Animación corporal detallada: zancada, rodillas, brazos contrapuestos y respiración.
  const stride=moving?Math.sin(t*(running?13:9)):0;
  fallbackLegs.forEach((leg,i)=>{
