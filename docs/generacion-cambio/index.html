@@ -593,7 +593,7 @@ function makeHeroInstance(gltf){
  const box=new THREE.Box3().setFromObject(obj);const size=new THREE.Vector3();box.getSize(size);
  obj.scale.setScalar(2.87/Math.max(.01,size.y));obj.updateMatrixWorld(true);
  const b=new THREE.Box3().setFromObject(obj);obj.position.y-=b.min.y;
- obj.rotation.y=Math.PI; // Frente hacia cámara inicial, con control en tercera persona.
+ // Kenney orienta los modelos hacia +Z, como el movimiento del jugador.
  const mixer=new THREE.AnimationMixer(obj);
  const clips={};for(const name of ['idle','walk','sprint','jump']){const clip=gltf.animations.find(a=>a.name===name);if(clip){const a=mixer.clipAction(clip);a.enabled=true;a.play();a.setEffectiveWeight(name==='idle'?1:0);clips[name]=a;}}
  return {obj,mixer,clips};
@@ -627,8 +627,8 @@ const droneCoreMat=new THREE.MeshStandardMaterial({color:0xe5fbff,roughness:.18,
 const droneDarkMat=material(0x103552,.28,.58),droneGlowMat=new THREE.MeshStandardMaterial({color:0x73fff3,emissive:0x29d8cc,emissiveIntensity:.9,roughness:.24,metalness:.35});
 const droneBody=add(new THREE.SphereGeometry(.62,26,20),droneCoreMat,drone);droneBody.scale.set(1.12,.82,.92);
 const droneFace=geoRoundedBox(drone,.92,.34,.12,.06,droneDarkMat,0,.03,.46);
-const droneEyes=[];for(const side of [-1,1]){const eye=geoRoundedBox(drone,.18,.08,.02,.02,droneGlowMat,side*.18,.04,.54);droneEyes.push(eye);}
-const droneMouth=geoRoundedBox(drone,.22,.04,.02,.02,new THREE.MeshStandardMaterial({color:0x97fff4,emissive:0x2dbfb8,emissiveIntensity:.4,roughness:.3}),0,-.08,.54);
+const droneEyes=[];for(const side of [-1,1]){const eye=geoRoundedBox(drone,.18,.08,.02,.02,droneGlowMat,side*.18,.04,.665);droneEyes.push(eye);}
+const droneMouth=geoRoundedBox(drone,.22,.04,.02,.02,new THREE.MeshStandardMaterial({color:0x97fff4,emissive:0x2dbfb8,emissiveIntensity:.4,roughness:.3}),0,-.08,.665);
 const droneHalo=add(new THREE.TorusGeometry(.92,.045,12,64),new THREE.MeshBasicMaterial({color:0x7fefff,transparent:true,opacity:.65}),drone,0,-.02,0);droneHalo.rotation.x=Math.PI/2;
 const droneTop=geoRoundedBox(drone,.36,.12,.36,.04,droneCoreMat,0,.54,0);
 const antenna=add(new THREE.CylinderGeometry(.02,.02,.34,10),droneDarkMat,drone,0,.80,0);const antennaOrb=geoSphere(drone,droneGlowMat,0,1.00,0,.08,.08,.08,14);
@@ -640,6 +640,15 @@ for(const side of [-1,1]){
  const fin=add(new THREE.ConeGeometry(.10,.26,4),droneGlowMat,pivot,side*.52,.01,0);fin.rotation.z=side>0?-Math.PI/2:Math.PI/2;
  add(new THREE.CylinderGeometry(.08,.11,.20,12),droneDarkMat,pivot,0,-.22,0);const thrusterGlow=add(new THREE.ConeGeometry(.08,.22,12),new THREE.MeshBasicMaterial({color:0x7df6ff,transparent:true,opacity:.58}),pivot,0,-.41,0);thrusterGlow.rotation.x=Math.PI;
 }
+const robotGlass=new THREE.MeshPhysicalMaterial({color:0x123957,metalness:.14,roughness:.09,clearcoat:1,clearcoatRoughness:.06,transparent:true,opacity:.87});
+const robotVisor=geoRoundedBox(drone,.95,.37,.09,.055,robotGlass,0,.045,.55);
+for(const side of [-1,1]){
+ const cheek=geoRoundedBox(drone,.095,.13,.025,.018,droneGlowMat,side*.45,-.045,.625);
+ const pod=geoRoundedBox(drone,.18,.35,.33,.035,droneCoreMat,side*.62,.035,0);
+ const axle=new THREE.Mesh(new THREE.CylinderGeometry(.085,.085,.14,16),droneDarkMat);axle.rotation.z=Math.PI/2;axle.position.set(side*.69,.05,0);drone.add(axle);
+}
+const robotChest=geoRoundedBox(drone,.38,.11,.24,.03,droneDarkMat,0,-.425,.10);
+const robotStatus=geoRoundedBox(drone,.18,.025,.026,.008,droneGlowMat,0,-.39,.245);
 const droneLower=geoRoundedBox(drone,.34,.12,.28,.04,droneDarkMat,0,-.42,0);
 const flame=add(new THREE.ConeGeometry(.15,.46,14),new THREE.MeshBasicMaterial({color:0x72f6ff,transparent:true,opacity:.45}),drone,0,-.70,0);flame.rotation.x=Math.PI;
 
