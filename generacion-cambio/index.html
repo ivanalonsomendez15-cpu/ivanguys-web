@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>GENERACIÓN CAMBIO · Fase 1 · V11.1 · Portales sin superposición</title>
+<title>GENERACIÓN CAMBIO · Fase 1 · V11.3 · Interfaz sin superposiciones</title>
 <meta name="theme-color" content="#071933"><meta name="description" content="Aventura tridimensional interactiva mejorada: descubre seis territorios en un planeta con atmósfera más cinematográfica, agua dinámica y vegetación reforzada.">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Nunito:wght@500;600;700;800;900&display=swap');
@@ -225,6 +225,246 @@
   }
 }
 
+
+/* V11.2 — Los seis portales se fijan a la derecha para no invadir a los protagonistas. */
+.worlds{left:auto;right:16px;bottom:16px;transform:none;width:min(31vw,320px);grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.world{min-height:70px;padding:8px 6px 7px}
+.world .emoji{font-size:22px}
+.play .worlds{left:auto;right:14px;bottom:14px;transform:none;width:min(29vw,300px);grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.play .world{min-height:58px;font-size:9px}
+.play .world .emoji{font-size:18px}
+@media(max-width:980px){
+  .worlds{left:auto;right:12px;bottom:12px;width:min(41vw,285px);grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+  .play .worlds{left:auto;right:10px;bottom:10px;width:min(37vw,260px);grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+}
+@media(max-width:660px){
+  .worlds{left:auto!important;right:8px!important;bottom:8px!important;transform:none!important;width:min(49vw,212px)!important;max-width:none;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:4px;padding:6px}
+  .world{min-height:43px;padding:4px 3px;font-size:8px}
+  .world .emoji{font-size:15px;margin:0 0 1px}
+  .play .worlds{left:auto!important;right:8px!important;bottom:8px!important;width:min(49vw,212px)!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:4px}
+  .play .world{min-height:43px;font-size:8px}
+  .play .world .emoji{font-size:15px}
+}
+@media(max-height:460px) and (orientation:landscape){
+  .play .worlds{right:8px;bottom:6px;width:min(34vw,250px);gap:3px;padding:4px}
+  .play .world{min-height:32px;padding:2px;font-size:7px;line-height:1.08}
+  .play .world .emoji{font-size:13px;margin-bottom:0}
+}
+
+
+/* V11.3 — Zonas dedicadas. No se crean, ocultan ni eliminan secciones. */
+#game:not(.play){
+ display:grid; grid-template-columns:minmax(0,1fr) clamp(236px,23vw,320px);
+ grid-template-rows:minmax(max-content,1fr) auto;
+ gap:14px clamp(20px,3vw,52px);
+ padding:100px clamp(14px,3vw,48px) 16px;
+ overflow-x:hidden; overflow-y:auto; align-items:stretch;
+}
+#game:not(.play) .home{
+ grid-area:1/1; position:relative; inset:auto; width:min(690px,100%);
+ height:max-content; align-self:center; transform:none; margin:0;
+}
+#game:not(.play) .profile{
+ grid-area:1/2; position:relative; inset:auto; width:100%; min-width:0;
+ align-self:start; transform:none; margin:0;
+}
+#game:not(.play) .worlds{
+ grid-area:2/2; position:relative; inset:auto; width:100%;max-width:none;
+ justify-self:end;align-self:end;transform:none;
+ display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;padding:8px;
+}
+#game:not(.play) .worlds .world{min-width:0;min-height:60px;font-size:10px;padding:7px 4px;line-height:1.18}
+#game:not(.play) #hint{
+ grid-area:2/1;position:relative;inset:auto;transform:none;
+ width:max-content;max-width:min(100%,400px);margin:0;align-self:end;justify-self:start;
+}
+#game.play{--portals-panel-width:clamp(240px,23vw,315px)}
+#game.play .worlds{
+ left:auto;right:14px;bottom:14px;transform:none;
+ width:var(--portals-panel-width);max-width:none;
+ grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;padding:8px;
+}
+#game.play .world{min-width:0;min-height:57px;padding:6px 4px;font-size:9px;line-height:1.16}
+#game.play .world .emoji{margin-top:1px;margin-bottom:2px}
+#game.play #hint{
+ top:183px;left:50%;right:auto;bottom:auto;transform:translateX(-50%);
+ width:max-content;max-width: min(35vw,400px);font-size:10px;
+}
+#game.play #graphicSettings{left:3%;bottom:16px;top:auto;right:auto}
+#game.play #interact.ready{
+ right:calc(var(--portals-panel-width) + 28px);bottom:18px;top:auto;
+ max-width:min(28vw,260px);min-height:44px;
+}
+@media (max-width:980px) and (min-height:521px){
+ #game:not(.play){grid-template-columns:minmax(0,1fr) minmax(200px,32vw);gap:12px 20px;padding-top:90px}
+ #game:not(.play) .home{width:100%;}
+ #game:not(.play) .worlds .world{min-height:52px;font-size:9px}
+ #game.play{--portals-panel-width:min(34vw,280px)}
+ #game.play #hint{top:192px;max-width:38vw}
+}
+@media (max-width:660px) and (orientation:portrait){
+ #game:not(.play){
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  grid-template-rows:auto auto auto;gap:11px 8px;
+  padding:78px 10px 13px;overflow-y:auto;align-content:start;
+ }
+ #game:not(.play) .home{
+  grid-area:1/1/2/3;position:relative;inset:auto;width:100%;max-width:none;
+  text-align:center;align-self:start;margin:0;
+ }
+ #game:not(.play) .profile{
+  grid-area:2/1;position:relative;inset:auto;width:calc(100% - 7px);max-width:none;
+  padding:9px 7px;border-radius:14px;min-width:0;
+ }
+ #game:not(.play) .profile h2{font-size:10px;margin-bottom:6px;line-height:1.25}
+ #game:not(.play) .profile .avatar-row{gap:5px;align-items:center}
+ #game:not(.play) .profile .avatar{width:30px;height:30px;flex-shrink:0}
+ #game:not(.play) .profile .avatar-row>div:last-child{min-width:0;overflow-wrap:anywhere}
+ #game:not(.play) .profile .avatar-row b{font-size:11px;line-height:1.1}
+ #game:not(.play) .profile .avatar-row small{font-size:9px}
+ #game:not(.play) .profile #rename{font-size:9px;padding:4px 0}
+ #game:not(.play) .profile .statgrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}
+ #game:not(.play) .profile .stat{padding:5px 4px;min-width:0}
+ #game:not(.play) .profile .stat b{font-size:14px}
+ #game:not(.play) .profile .stat small{font-size:8px;line-height:1.2}
+ #game:not(.play) .profile .xp{margin-top:5px}
+ #game:not(.play) .worlds{
+  grid-area:2/2;position:relative;inset:auto;transform:none!important;
+  width:100%!important;max-width:none;justify-self:stretch;align-self:start;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:4px;padding:6px;border-radius:14px;
+ }
+ #game:not(.play) .worlds .world{min-height:53px;padding:5px 2px;font-size:8px;line-height:1.15}
+ #game:not(.play) .worlds .world .emoji{font-size:16px;width:21px;height:21px;margin:0 auto 2px}
+ #game:not(.play) .worlds .world .emoji .world-icon{width:20px;height:20px}
+ #game:not(.play) #hint{
+  grid-area:3/1/4/3;position:relative;inset:auto;transform:none;
+  justify-self:center;align-self:start;max-width:100%;width:max-content;
+  text-align:center;white-space:normal;font-size:9px;
+ }
+ #game.play{--portals-panel-width:min(48vw,208px)}
+ #game.play .worlds{
+  right:7px!important;bottom:8px!important;left:auto!important;
+  transform:none!important;width:var(--portals-panel-width)!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:4px;padding:5px;
+ }
+ #game.play .world{min-height:49px;font-size:8px;padding:4px 2px;line-height:1.15}
+ #game.play .world .emoji{width:19px;height:19px;margin:0 auto 1px}
+ #game.play .world .emoji .world-icon{width:18px;height:18px}
+ #game.play #hint{
+  left:10px;right:auto;top:170px;bottom:auto;transform:none;
+  max-width:calc(50vw - 17px);width:max-content;font-size:9px;
+  padding:6px 7px;line-height:1.35;letter-spacing:.015em;
+ }
+ #game.play #minimap{right:9px;top:86px}
+ #game.play #interact.ready{
+  right:9px;top:203px;bottom:auto;max-width:calc(50vw - 17px);
+  padding:10px 8px;font-size:10px;line-height:1.2;min-height:40px;
+ }
+ #game.play #graphicSettings{
+  left:10px;right:auto;top:auto;bottom:176px;
+  width:calc(50vw - 20px);display:grid;grid-template-columns:1fr;gap:6px;
+ }
+ #game.play #graphicSettings button{width:100%;font-size:9px;min-height:27px;padding:5px 3px}
+ #game.play #dpad{left:10px;bottom:12px;display:block}
+ #game.play .playhud{top:89px;left:10px;max-width:calc(50vw + 14px);min-width:0}
+}
+@media (min-width:661px) and (max-height:520px){
+ #game:not(.play){
+  grid-template-columns:minmax(0,1.35fr) minmax(175px,.84fr) minmax(190px,.86fr);
+  grid-template-rows:auto auto;gap:8px 12px;align-content:start;
+  padding:80px 12px 12px;overflow-y:auto;
+ }
+ #game:not(.play) .home{grid-area:1/1;width:100%;align-self:start}
+ #game:not(.play) .home h1{font-size:clamp(36px,5vw,54px);margin:7px 0}
+ #game:not(.play) .home .eyebrow{font-size:9px;letter-spacing:.04em}
+ #game:not(.play) .home .school{font-size:11px;margin:4px 0}
+ #game:not(.play) .home .tagline{font-size:11px;margin:4px 0 6px}
+ #game:not(.play) .home .start{min-height:38px;padding:8px;font-size:10px}
+ #game:not(.play) .skin-dock{margin-top:7px;padding:4px;gap:4px}
+ #game:not(.play) .skin-choice{min-height:48px;padding:3px}
+ #game:not(.play) .skin-choice .skin-symbol{height:29px;width:30px;margin:0 auto 2px}
+ #game:not(.play) .profile{grid-area:1/2;width:100%;padding:9px;align-self:start}
+ #game:not(.play) .profile h2{font-size:10px;margin-bottom:4px}
+ #game:not(.play) .profile .avatar{width:34px;height:34px}
+ #game:not(.play) .profile .statgrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}
+ #game:not(.play) .profile .stat{padding:4px}
+ #game:not(.play) .profile .stat b{font-size:13px}
+ #game:not(.play) .profile .stat small{font-size:8px}
+ #game:not(.play) .worlds{grid-area:1/3;width:100%;grid-template-columns:repeat(2,minmax(0,1fr));padding:5px;gap:4px;align-self:start}
+ #game:not(.play) .worlds .world{min-height:53px;font-size:8px;padding:4px 2px}
+ #game:not(.play) #hint{grid-area:2/1;justify-self:start;align-self:start;max-width:100%;font-size:9px;line-height:1.2}
+ #game.play{--portals-panel-width:min(30vw,248px)}
+ #game.play .worlds{right:8px;bottom:8px;gap:4px;padding:5px}
+ #game.play .world{min-height:44px;padding:3px 2px;font-size:8px}
+ #game.play #minimap{top:79px;right:9px;width:91px;height:91px}
+ #game.play #hint{left:51%;top:180px;max-width:27vw;padding:7px;font-size:9px}
+ #game.play #interact.ready{bottom:13px;right:calc(var(--portals-panel-width) + 18px);max-width:25vw;top:auto;padding:9px;font-size:10px}
+ #game.play #graphicSettings{left:12px;bottom:14px;top:auto;gap:4px}
+ #game.play #graphicSettings button{font-size:9px;padding:7px}
+}
+@media(max-width:660px) and (orientation:landscape){
+ #game:not(.play){
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:auto auto auto;
+  padding:70px 9px 12px;gap:8px;overflow-y:auto;
+ }
+ #game:not(.play) .home{grid-area:1/1/2/3;width:100%;text-align:center}
+ #game:not(.play) .home h1{font-size:clamp(34px,8vw,46px);margin:6px 0}
+ #game:not(.play) .home .school{font-size:12px}
+ #game:not(.play) .profile{grid-area:2/1;width:100%;padding:8px}
+ #game:not(.play) .worlds{grid-area:2/2;width:100%;grid-template-columns:repeat(2,minmax(0,1fr));padding:5px;gap:4px}
+ #game:not(.play) .world{min-height:45px;font-size:8px}
+ #game:not(.play) #hint{grid-area:3/1/4/3;justify-self:center}
+ #game.play{--portals-panel-width:min(43vw,210px)}
+ #game.play .worlds{right:6px;bottom:6px;gap:3px;padding:4px}
+ #game.play .world{min-height:37px;font-size:7px}
+ #game.play #hint{left:11px;right:auto;top:171px;max-width:45vw;transform:none}
+ #game.play #interact.ready{right:calc(var(--portals-panel-width) + 13px);bottom:10px;max-width:32vw;top:auto}
+ #game.play #graphicSettings{left:9px;bottom:154px;display:flex}
+ #game.play #dpad{left:9px;bottom:7px;display:block;transform:scale(.8);transform-origin:left bottom}
+}
+
+
+/* Ajustes posteriores a la auditoría de 11 tamaños, incluido móvil horizontal. */
+#game .worlds{transition:background-color .18s,border-color .18s,box-shadow .18s}
+#game .home h1{color:#f4fcff}
+#game .home .tagline{color:#e5f9ff}
+@media(min-width:661px) and (max-height:520px){
+ #game.play #minimap{top:90px}
+}
+@media(max-width:660px) and (orientation:landscape){
+ #game:not(.play){padding-top:91px}
+ #game.play .worlds{bottom:6px!important;gap:3px;padding:4px}
+ #game.play .world{min-height:31px;padding:2px 1px;font-size:7px;line-height:1.06}
+ #game.play .world .emoji{width:13px;height:13px;margin:0 auto 1px}
+ #game.play .world .emoji .world-icon{width:13px;height:13px}
+ #game.play #minimap{top:90px;right:8px;width:82px;height:82px}
+ #game.play #hint{left:122px;top:174px;width:min(190px,32vw);max-width:min(190px,32vw);font-size:8px;line-height:1.15;padding:5px}
+ #game.play #graphicSettings{left:124px;top:225px;bottom:auto;width:min(187px,34vw);display:flex;gap:4px}
+ #game.play #graphicSettings button{font-size:8px;padding:6px 4px}
+ #game.play #interact.ready{left:min(201px,36vw);right:auto;top:270px;bottom:auto;max-width:min(136px,24vw);padding:7px 4px;min-height:35px;font-size:9px;line-height:1.1}
+ #game.play #dpad{left:9px;bottom:7px;transform:scale(.80);transform-origin:left bottom}
+}
+
+
+/* Reserva un área de renderizado independiente del panel de portales, evitando tapar al avatar 3D. */
+@media(min-width:661px){
+ #game.play #viewport{right:calc(var(--portals-panel-width) + 28px)}
+ #game.play #viewport:before{background-position:70% center}
+ #game.play::after{
+  content:"";position:absolute;right:0;top:82px;bottom:0;
+  width:calc(var(--portals-panel-width) + 28px);
+  background:linear-gradient(90deg,rgba(6,23,45,.78),rgba(4,19,38,.93));
+  border-left:1px solid rgba(146,232,247,.15);z-index:1;pointer-events:none;
+ }
+}
+@media(max-width:660px) and (orientation:landscape){
+ #game.play #viewport{right:calc(var(--portals-panel-width) + 12px)}
+ #game.play #viewport:before{background-position:73% center}
+ #game.play::after{content:"";position:absolute;right:0;top:80px;bottom:0;width:calc(var(--portals-panel-width) + 12px);background:linear-gradient(90deg,rgba(6,23,45,.82),rgba(4,19,38,.94));border-left:1px solid rgba(146,232,247,.15);z-index:1;pointer-events:none}
+}
+#game .branding strong{color:#ecf8ff}
+
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
 </head>
@@ -290,7 +530,7 @@ function showWorld(index){const w=LEVELS[index];if(!w)return;
  if(activated)discoverSignal(index);
  dialog(w.emoji+' '+w.name,'<p>'+w.area+'</p><div class="meta">🌍 ODS '+w.ods+'</div><p>'+(collected.has(index)?'✦ Baliza de exploración registrada.':'🔒 Portal educativo bloqueado hasta la Fase 2.')+'</p><button class="go" id="goBack">VOLVER AL MUNDO</button>');
 }
-$('#start').onclick=()=>{playing=true;game.classList.add('play');$('#home').classList.add('hidden');toast('✦ MISIÓN: ACTIVA LAS 6 BALIZAS. CAMINA CON WASD / FLECHAS');};
+$('#start').onclick=()=>{playing=true;game.classList.add('play');$('#home').classList.add('hidden');resize();toast('✦ MISIÓN: ACTIVA LAS 6 BALIZAS. CAMINA CON WASD / FLECHAS');};
 $('#close').onclick=closeDialog;
 modal.addEventListener('click',event=>{if(event.target===modal||event.target.id==='goBack')closeDialog();if(event.target.id==='saveAlias'){const input=$('#nameinput'),name=input?.value.trim();if(name){$('#nickname').textContent=name.slice(0,24);try{localStorage.setItem('generacion-cambio-nickname',name.slice(0,24))}catch{}closeDialog();}else toast('Escribe un apodo.')}});
 $('#rename').onclick=()=>dialog('Apodo del explorador','<p>Elige un apodo sin datos personales.</p><input id="nameinput" maxlength="24" autocomplete="off" placeholder="Apodo"><button id="saveAlias" class="go">GUARDAR</button>');
