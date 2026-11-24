@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>GENERACIÓN CAMBIO · Fase 1 · V11.5 · Banda sonora original</title>
+<title>GENERACIÓN CAMBIO · Fase 2 · V12 · Primer trimestre</title>
 <meta name="theme-color" content="#071933"><meta name="description" content="Aventura tridimensional interactiva mejorada: descubre seis territorios en un planeta con atmósfera más cinematográfica, agua dinámica y vegetación reforzada.">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Nunito:wght@500;600;700;800;900&display=swap');
@@ -746,6 +746,93 @@
 @media(max-height:430px) and (orientation:landscape){#gcAudioPanel{top:9px;right:9px;max-height:calc(100dvh - 18px);width:min(340px,48vw);font-size:10px;padding:10px}}
 @media(prefers-reduced-motion:reduce){#gcAudioPanel{animation:none}}
 
+/* GENERACIÓN CAMBIO · Fase 2. Estética heredada de Fase 1. No modifica el Grid del juego. */
+.gc-p2-launch{display:block;margin:10px 0 0;padding:9px 14px;max-width:100%;border:1px solid #a0ffe789;border-radius:11px;background:linear-gradient(130deg,#123f5deb,#0a293fef);box-shadow:0 8px 22px #0006;color:#edfffd;font-weight:900;font-size:12px;letter-spacing:.4px;cursor:pointer;min-height:41px;transition:transform .16s,background .16s,border .16s}
+.gc-p2-launch:hover,.gc-p2-launch:focus-visible{background:#1c5869;transform:translateY(-1px);border-color:#a6ffe9;outline-offset:3px}
+.gc-p2-launch strong{color:#99ffda}
+#worlds .world[data-world="0"]:after,#worlds .world[data-world="3"]:after{content:'MISIÓN';position:absolute;right:3px;bottom:3px;font:900 7px/1.1 Arial,sans-serif;letter-spacing:.6px;color:#b4fff2;background:#062a3ab5;padding:2px 4px;border-radius:4px;border:1px solid #76ffce77;pointer-events:none}
+#gcPhase2[hidden]{display:none!important}
+#gcPhase2{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;box-sizing:border-box;background:rgba(2,10,25,.91);backdrop-filter:blur(13px);padding:clamp(8px,2vw,24px);color:#eefaff;overscroll-behavior:contain;font-family:Inter,system-ui,Arial,sans-serif}
+#gcPhase2 *,#gcPhase2 *:before,#gcPhase2 *:after{box-sizing:border-box}
+#gcPhase2 .p2-shell{width:min(1060px,100%);max-height:min(860px,calc(100dvh - 24px));min-height:min(560px,calc(100dvh - 24px));display:flex;flex-direction:column;overflow:hidden;position:relative;border:1px solid #73d5ed6c;border-radius:23px;background:radial-gradient(ellipse at 84% 0%,#1a547b 0%,#0e2f4d 33%,#07172f 83%);box-shadow:0 25px 90px #000a, inset 0 1px #d0faff20}
+#gcPhase2 .p2-head{display:flex;align-items:center;gap:13px;flex-shrink:0;min-height:73px;padding:15px 19px;border-bottom:1px solid #87dcff34;background:#081a30c9}
+#gcPhase2 .p2-mark{display:grid;place-items:center;flex:0 0 39px;width:39px;height:39px;font-size:20px;border-radius:11px;background:#64ffe12c;border:1px solid #64ffe180}
+#gcPhase2 .p2-brand{min-width:0;flex:1}
+#gcPhase2 .p2-brand strong{display:block;color:#eafffb;font-size:clamp(14px,2.2vw,18px);font-weight:1000;letter-spacing:.4px}
+#gcPhase2 .p2-brand small{display:block;color:#b9d5e6;font-size:10px;letter-spacing:.7px;margin-top:3px}
+#gcPhase2 .p2-close,#gcPhase2 .p2-back{display:grid;place-items:center;flex:0 0 auto;min-height:40px;border:1px solid #b5dfff56;border-radius:10px;background:#ffffff10;color:#e9fbff;font-size:14px;font-weight:900;padding:8px 11px;cursor:pointer}
+#gcPhase2 .p2-back[hidden]{display:none}
+#gcPhase2 .p2-close:hover,#gcPhase2 .p2-back:hover{background:#ffffff25}
+#gcPhase2 button:focus-visible{outline:3px solid #91ffdf;outline-offset:2px}
+#gcPhase2 .p2-content{overflow-y:auto;overflow-x:hidden;min-height:0;flex:1;padding:clamp(15px,2.7vw,30px);scrollbar-color:#32798a #081e35;overscroll-behavior:contain}
+#gcPhase2 .p2-kicker{display:inline-flex;align-items:center;gap:6px;color:#9effd9;font-weight:900;font-size:11px;letter-spacing:1.4px;text-transform:uppercase}
+#gcPhase2 h2{font-family:'Barlow Condensed',Impact,'Arial Narrow',sans-serif;font-weight:900;font-size:clamp(31px,5vw,54px);letter-spacing:.2px;line-height:1.02;margin:10px 0 8px;color:#fff;text-wrap:balance}
+#gcPhase2 h3{font-weight:950;font-size:clamp(17px,2.7vw,24px);margin:0 0 9px;color:#fff;line-height:1.22}
+#gcPhase2 p{line-height:1.5;color:#c7deee;margin:0 0 12px;font-size:clamp(13px,1.5vw,15px)}
+#gcPhase2 .p2-lead{max-width:670px;margin-bottom:19px}
+#gcPhase2 .p2-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:18px 0}
+#gcPhase2 .p2-area-card,#gcPhase2 .p2-mission-card,#gcPhase2 .p2-future{padding:19px;min-width:0;text-align:left;border:1px solid #8edffc5a;background:linear-gradient(135deg,#204968b5,#10324dca);border-radius:15px;color:#fff;box-shadow:0 10px 30px #0004}
+#gcPhase2 .p2-area-card{min-height:182px;cursor:pointer;transition:transform .18s,border-color .18s,background .18s}
+#gcPhase2 .p2-area-card:hover,#gcPhase2 .p2-mission-card:hover{transform:translateY(-2px);border-color:#8cffe1;background:#20566c}
+#gcPhase2 .p2-area-card b{display:block;font-size:22px;margin:11px 0 8px}
+#gcPhase2 .p2-area-card small{color:#e1edf6;font-size:12px;line-height:1.4}
+#gcPhase2 .p2-orb{display:grid;place-items:center;width:44px;height:44px;border-radius:13px;background:color-mix(in srgb,var(--p2-accent),transparent 79%);color:var(--p2-accent);font-size:24px;border:1px solid color-mix(in srgb,var(--p2-accent),transparent 50%)}
+#gcPhase2 .p2-pill{display:inline-flex;padding:5px 9px;border-radius:999px;background:#8fffe91b;border:1px solid #9ef4df58;color:#aeffe4;font-size:10px;font-weight:900;letter-spacing:.6px;margin-bottom:10px}
+#gcPhase2 .p2-term-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:15px 0 23px}
+#gcPhase2 .p2-term{padding:12px 10px;border:1px solid #c7f4ff4d;border-radius:11px;min-width:0;background:#0b2a44;color:#ebf8ff;min-height:65px;font-weight:900;font-size:12px;text-align:left}
+#gcPhase2 .p2-term small{display:block;margin-top:5px;color:#aac6d9;font-size:10px;line-height:1.3}
+#gcPhase2 .p2-term.active{border-color:#92f7ce;background:#144c53;box-shadow:inset 0 0 20px #67ffc01a}
+#gcPhase2 .p2-term:not(.active){opacity:.78}
+#gcPhase2 .p2-theme-head{display:flex;gap:10px;align-items:center;justify-content:space-between;margin:22px 0 10px;flex-wrap:wrap}
+#gcPhase2 .p2-theme-head h3{margin:0;font-size:19px}
+#gcPhase2 .p2-theme-head small{color:#acd1e1}
+#gcPhase2 .p2-missions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+#gcPhase2 .p2-mission-card{cursor:pointer;padding:15px;min-height:128px;position:relative}
+#gcPhase2 .p2-mission-card b{font-size:15px;display:block;line-height:1.3;padding-right:36px}
+#gcPhase2 .p2-mission-card p{font-size:12px;margin:7px 0 8px}
+#gcPhase2 .p2-mission-card small{color:#aaffd7;font-weight:900;font-size:10px}
+#gcPhase2 .p2-mission-card .p2-check{position:absolute;right:12px;top:12px;font-size:21px;color:#94ffd9}
+#gcPhase2 .p2-future{margin-top:13px;background:#0c243c;padding:15px}
+#gcPhase2 .p2-future h3{font-size:17px}
+#gcPhase2 .p2-brief{background:linear-gradient(135deg,#23576b80,#102c4b8c);border:1px solid #98dcfb4d;padding:16px;border-radius:13px;margin:14px 0 18px;line-height:1.5;color:#e7f8ff}
+#gcPhase2 .p2-step-row{display:flex;justify-content:space-between;gap:10px;color:#c8e2ee;font-weight:850;font-size:12px;margin-bottom:9px}
+#gcPhase2 .p2-progressbar{height:9px;border-radius:999px;background:#0a263a;border:1px solid #6bbdb04c;overflow:hidden;margin-bottom:20px}
+#gcPhase2 .p2-progressbar span{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#4dd7dc,#8dffc8);transition:width .26s}
+#gcPhase2 .p2-question{font-weight:900!important;font-size:clamp(19px,3vw,27px)!important;line-height:1.34!important;color:#fff!important;max-width:770px;margin-bottom:18px!important}
+#gcPhase2 .p2-answers{display:grid;grid-template-columns:repeat(1,minmax(0,1fr));gap:11px;max-width:780px}
+#gcPhase2 .p2-answer{width:100%;min-height:60px;padding:13px 16px;text-align:left;display:flex;align-items:center;gap:11px;border:1px solid #aacfea66;background:#15334e;color:#eef9ff;font-weight:800;font-size:clamp(13px,1.8vw,16px);border-radius:12px;cursor:pointer;transition:border-color .13s,background .13s,transform .13s}
+#gcPhase2 .p2-answer:hover:not(:disabled){background:#235474;border-color:#8afad2;transform:translateX(2px)}
+#gcPhase2 .p2-answer:disabled{opacity:.76;cursor:default}
+#gcPhase2 .p2-answer.correct{border-color:#80ffc3;background:#194e49;opacity:1}
+#gcPhase2 .p2-answer.wrong{border-color:#f5ad8b;background:#533944;opacity:1}
+#gcPhase2 .p2-letter{display:grid;place-items:center;flex:0 0 29px;height:29px;border-radius:7px;background:#ffffff19;border:1px solid #dcf8ff40;color:#aaffec;font-size:12px}
+#gcPhase2 .p2-feedback{max-width:780px;margin-top:16px;padding:15px;border:1px solid #83ebd879;background:#143c48;border-radius:13px;color:#eafff4;font-size:14px;line-height:1.55}
+#gcPhase2 .p2-feedback.error{border-color:#ffc68c74;background:#47383b}
+#gcPhase2 .p2-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:17px}
+#gcPhase2 .p2-main-btn,#gcPhase2 .p2-soft-btn{border:1px solid #9ef4d2;border-radius:12px;padding:12px 17px;min-height:44px;background:linear-gradient(135deg,#83ffde,#48c9d1);font-weight:950;font-size:13px;color:#06273b;cursor:pointer}
+#gcPhase2 .p2-soft-btn{background:#133952;color:#dbf4fe;border-color:#9dd8ef77}
+#gcPhase2 .p2-main-btn:hover{filter:brightness(1.09)}
+#gcPhase2 .p2-score{font:900 clamp(45px,10vw,83px)/1 'Barlow Condensed',Impact,sans-serif;color:#9dffda;text-shadow:0 0 32px #76ffd34e;margin:14px 0}
+#gcPhase2 .p2-footer{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 19px;min-height:49px;border-top:1px solid #92f0eb36;background:#07172b;font-size:11px;color:#c0dfec;flex-wrap:wrap}
+#gcPhase2 .p2-footer strong{color:#adffe3}
+@media(max-width:700px){
+ #gcPhase2{padding:5px}
+ #gcPhase2 .p2-shell{border-radius:14px;max-height:calc(100dvh - 10px);min-height:calc(100dvh - 10px)}
+ #gcPhase2 .p2-head{min-height:58px;padding:9px;gap:7px}
+ #gcPhase2 .p2-mark{width:32px;height:32px;flex-basis:32px;font-size:17px}
+ #gcPhase2 .p2-brand strong{font-size:13px}
+ #gcPhase2 .p2-brand small{font-size:8px}
+ #gcPhase2 .p2-close,#gcPhase2 .p2-back{min-height:34px;padding:5px 8px;font-size:12px}
+ #gcPhase2 .p2-content{padding:13px}
+ #gcPhase2 .p2-grid,#gcPhase2 .p2-missions{grid-template-columns:1fr}
+ #gcPhase2 .p2-area-card{min-height:135px}
+ #gcPhase2 .p2-term-row{gap:5px}
+ #gcPhase2 .p2-term{padding:9px 6px;font-size:10px;min-height:57px}
+ #gcPhase2 .p2-footer{padding:8px 10px;font-size:9px}
+}
+@media(max-height:420px) and (orientation:landscape){#gcPhase2 .p2-shell{max-height:calc(100dvh - 6px);min-height:calc(100dvh - 6px)}#gcPhase2 .p2-head{min-height:46px;padding:5px 11px}#gcPhase2 .p2-content{padding:12px}#gcPhase2 .p2-footer{min-height:32px;padding:5px 11px}#gcPhase2 h2{font-size:30px;margin:3px 0 5px}}
+@media(prefers-reduced-motion:reduce){#gcPhase2 *,#gcPhase2 *:before{transition:none!important;animation:none!important}}
+
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
 </head>
@@ -764,6 +851,7 @@
 </section>
 
 <section class="home" id="home"><div class="eyebrow">✦ UN MUNDO POR DESCUBRIR</div><h1>GENERACIÓN <em>CAMBIO</em></h1><div class="school">6º PRIMARIA CP CARMEN RUIZ-TILVE</div><p class="tagline">Explora, aprende y cambia el mundo.</p><button class="start" id="start">COMENZAR AVENTURA&nbsp;&nbsp; ➜</button>
+<button id="gc-phase2-open" class="gc-p2-launch" type="button">✦ MISIONES EDUCATIVAS <strong>· 1.º TRIMESTRE</strong></button>
 <div class="skin-dock" role="group" aria-label="Elegir personaje">
 <button class="skin-choice is-selected" data-skin="0" style="--skin-color:#4ce9ea" aria-pressed="true"><span class="skin-symbol"></span><b>NEXO</b></button>
 <button class="skin-choice" data-skin="1" style="--skin-color:#c390ff" aria-pressed="false"><span class="skin-symbol"></span><b>NOVA</b></button>
@@ -776,6 +864,13 @@
 <div id="graphicSettings"><button id="resetCam">CENTRAR CÁMARA</button><button id="qualityBtn">GRÁFICOS: AUTO</button></div><div id="dpad"><button class="dkey dup" data-key="KeyW" aria-label="Adelante">▲</button><div class="drow"><button class="dkey" data-key="KeyA" aria-label="Izquierda">◀</button><button class="dkey" data-key="KeyD" aria-label="Derecha">▶</button></div><button class="dkey dup" data-key="KeyS" aria-label="Atrás">▼</button></div>
 <div id="modal"><section class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialogtitle"><button class="close" id="close" aria-label="Cerrar">✕</button><h2 id="dialogtitle"></h2><div id="dialogcontent"></div></section></div><div id="notice" role="status"></div>
 <div id="fail"><div class="failcontent"><h2>NO SE PUEDE INICIAR EL MOTOR 3D</h2><p>Comprueba la conexión a Internet y que WebGL esté activado en el navegador. La aplicación necesita Chrome, Edge o un navegador compatible con WebGL.</p></div></div>
+</div>
+<div id="gcPhase2" hidden role="dialog" aria-modal="true" aria-label="Misiones educativas de Generación Cambio">
+ <section class="p2-shell" aria-labelledby="gcP2Heading">
+  <header class="p2-head"><span class="p2-mark" aria-hidden="true">✦</span><div class="p2-brand"><strong id="gcP2Heading">GENERACIÓN CAMBIO · FASE 2</strong><small>LABORATORIO DE MISIONES · AGENDA 2030</small></div><button id="gcP2Back" class="p2-back" hidden type="button" aria-label="Volver al menú de misiones">← VOLVER</button><button id="gcP2Close" class="p2-close" type="button" aria-label="Cerrar misiones">✕ CERRAR</button></header>
+  <main id="gcP2Content" class="p2-content" tabindex="-1"></main>
+  <footer id="gcP2Footer" class="p2-footer" aria-live="polite"></footer>
+ </section>
 </div>
 <!-- Recursos 3D: Kenney Mini Characters (CC0 1.0). Modelos y animaciones oficiales, redistribuidos con el juego. -->
 <script id="gc-original-audio">
@@ -908,6 +1003,224 @@ window.GC_Audio=Object.freeze({enterGame,celebrate,fxVolume,effectsOn,setEnabled
 updateStatus();
 })();
 </script>
+<script>
+/* GENERACIÓN CAMBIO · Fase 2 · Banco original de misiones.
+   Base didáctica: dos dosieres de primer trimestre facilitados por la docente.
+   No hay preguntas de los trimestres 2 y 3 hasta recibir sus materiales. */
+const GC_P2_DATA = {
+ naturales: {
+  label:'Ciencias Naturales', color:'#79ffc0', icon:'◈', portal:0, ods:'3 · 4',
+  themes:[
+   {title:'La función de relación en el ser humano', source:'Ciencias Naturales · Tema 1 · 1.er trimestre', missions:[
+    {id:'n1a', title:'Laboratorio de estímulos', subtitle:'Conecta el entorno, los receptores y la respuesta.', ods:'3, 4', brief:'El prototipo del inventor debe reaccionar a las señales del entorno. Identifica el recorrido de la información.', questions:[
+     ['Un semáforo cambia a verde. ¿Qué función vital permite verlo y reaccionar?',['Nutrición','Relación','Reproducción'],1,'La función de relación capta estímulos, los procesa y permite dar una respuesta.'],
+     ['¿Cuál de estos cambios es un estímulo?',['Una variación de temperatura','La elaboración de una respuesta','Un movimiento voluntario'],0,'Un estímulo es un cambio que un receptor puede detectar.'],
+     ['El sensor del prototipo detecta luz. ¿Qué receptor está imitando?',['Quimiorreceptor','Mecanorreceptor','Fotorreceptor'],2,'Los fotorreceptores son sensibles a la luz.'],
+     ['Para dar un paso al recibir la orden, ¿qué aparato participa directamente?',['Aparato locomotor','Aparato digestivo','Aparato excretor'],0,'Los músculos y huesos del aparato locomotor ejecutan movimientos.']
+    ]},
+    {id:'n1b', title:'La cámara de los sentidos', subtitle:'Vista, oído, equilibrio, gusto, olfato y tacto.', ods:'3, 4', brief:'Un dron explorador necesita sensores para orientarse. Elige las piezas que cumplirían cada función.', questions:[
+     ['¿Qué dos sentidos se localizan en el oído?',['Gusto y olfato','Audición y equilibrio','Vista y tacto'],1,'El oído participa tanto en la audición como en el equilibrio.'],
+     ['¿Qué estructura del ojo transforma la luz en señales nerviosas?',['Retina','Párpado','Cristalino'],0,'Los conos y bastones de la retina detectan luz.'],
+     ['¿Qué receptor está relacionado con sabores y olores?',['Mecanorreceptor','Quimiorreceptor','Fotorreceptor'],1,'El gusto y el olfato utilizan quimiorreceptores.'],
+     ['Una persona nota frío en la mano. ¿Dónde están esos receptores?',['En la piel','Solo en las uñas','Solo en los huesos'],0,'La piel contiene receptores capaces de detectar temperatura y otros estímulos.']
+    ]},
+    {id:'n1c', title:'Red de neuronas', subtitle:'El cerebro recibe mensajes y coordina respuestas.', ods:'3, 4', brief:'Reconstruye las conexiones del centro de mando del laboratorio sin perder ninguna señal.', questions:[
+     ['¿Qué parte de la neurona recibe señales de otras neuronas?',['Axón','Dendritas','Tendones'],1,'Las dendritas reciben información; el axón transmite el impulso nervioso.'],
+     ['¿Cómo se llama el proceso de comunicación entre neuronas?',['Digestión','Sinapsis','Ovulación'],1,'La sinapsis es el proceso de transmisión entre neuronas.'],
+     ['¿Qué órganos forman el sistema nervioso central?',['Encéfalo y médula espinal','Músculos y tendones','Ojos y oídos'],0,'El sistema nervioso central está formado por el encéfalo y la médula espinal.'],
+     ['¿Qué parte del encéfalo coordina los movimientos?',['Cerebelo','Páncreas','Tiroides'],0,'El cerebelo participa en la coordinación de los movimientos corporales.']
+    ]},
+    {id:'n1d', title:'Movimiento y mensajes', subtitle:'Músculos, tendones, nervios y hormonas.', ods:'3, 4', brief:'Construye un brazo robótico y su sistema de órdenes. Comprueba qué piezas y mensajes necesita.', questions:[
+     ['¿Qué estructura une un músculo con un hueso?',['Neurona','Tendón','Glándula'],1,'Los tendones mantienen los músculos unidos a los huesos.'],
+     ['Los nervios que llevan órdenes hacia los músculos son…',['Motores','Sensitivos','Gustativos'],0,'Los nervios motores llevan información del sistema nervioso central a los órganos de respuesta.'],
+     ['¿Qué glándula produce insulina?',['Páncreas','Tiroides','Hipotálamo'],0,'El páncreas produce insulina, que regula la glucosa en sangre.'],
+     ['En comparación con una respuesta nerviosa, una respuesta hormonal suele ser…',['Más lenta y duradera','Instantánea y muy breve','Siempre un movimiento muscular'],0,'Las hormonas viajan por la sangre; su efecto suele ser más lento y duradero.']
+    ]}
+   ]},
+   {title:'La función de reproducción en el ser humano', source:'Ciencias Naturales · Tema 2 · 1.er trimestre', missions:[
+    {id:'n2a', title:'Ciencia de la vida', subtitle:'Las células y los órganos de la reproducción.', ods:'3, 4, 5', brief:'Completa un archivo científico sobre las células y estructuras que intervienen en la reproducción humana.', questions:[
+     ['¿Cómo se llaman las dos células sexuales humanas?',['Neurona y glóbulo rojo','Óvulo y espermatozoide','Tendón y hormona'],1,'En la reproducción sexual humana intervienen óvulos y espermatozoides.'],
+     ['¿Qué órganos producen los óvulos?',['Ovarios','Pulmones','Riñones'],0,'Los ovarios producen los óvulos.'],
+     ['¿Qué órganos producen los espermatozoides?',['Testículos','Tiroides','Cerebelo'],0,'Los testículos producen espermatozoides.'],
+     ['¿Qué órgano alberga y protege al embrión durante el embarazo?',['Estómago','Útero','Vejiga'],1,'El útero es el órgano donde se desarrolla el embarazo.']
+    ]},
+    {id:'n2b', title:'Etapas de un nuevo comienzo', subtitle:'Fecundación, embarazo y nacimiento.', ods:'3, 4', brief:'Prepara una línea de tiempo científica para explicar, con respeto, las etapas de la reproducción humana.', questions:[
+     ['¿Cuál es el orden general de las etapas?',['Parto → embarazo → fecundación','Fecundación → embarazo → parto','Embarazo → parto → fecundación'],1,'La fecundación es la unión de las células sexuales; después transcurre el embarazo y finalmente el parto.'],
+     ['¿Qué estructura lleva oxígeno y nutrientes desde la placenta al feto?',['Cordón umbilical','Nervio auditivo','Esófago'],0,'El cordón umbilical conecta al feto con la placenta.'],
+     ['¿Para qué sirve principalmente el líquido amniótico?',['Para proteger al embrión o feto','Para digerir alimentos','Para producir hormonas'],0,'El líquido amniótico ayuda a proteger durante el desarrollo.'],
+     ['¿Cuál es una duración aproximada habitual del embarazo humano?',['Unas 40 semanas','Tres semanas','Cinco años'],0,'La gestación dura aproximadamente nueve meses, unas 40 semanas.']
+    ]},
+    {id:'n2c', title:'Cambios y autocuidado', subtitle:'Pubertad, menstruación, respeto y salud.', ods:'3, 4, 5', brief:'Ayuda al laboratorio a crear mensajes de salud respetuosos para que nadie se sienta excluido.', questions:[
+     ['Durante la pubertad, los cambios…',['Son idénticos y suceden a la vez','Pueden ocurrir a ritmos diferentes','Solo son cambios físicos'],1,'La pubertad implica cambios físicos, emocionales y sociales, y no ocurre al mismo ritmo para todas las personas.'],
+     ['La menstruación es…',['Un proceso del ciclo menstrual','Una enfermedad contagiosa','Una función de la vista'],0,'La menstruación forma parte del ciclo menstrual; no es una enfermedad.'],
+     ['Si alguien tiene dudas o molestias importantes relacionadas con la pubertad, ¿qué es adecuado?',['Ocultarlo siempre','Consultar con personal sanitario o un adulto de confianza','Hacer caso a cualquier rumor'],1,'Buscar información fiable y ayuda cuando hace falta es una forma de autocuidado.'],
+     ['¿Qué actitud promueve una educación afectivo-sexual respetuosa?',['Burlarse de los cambios ajenos','Respetar la intimidad y los diferentes ritmos','Compartir datos privados de otras personas'],1,'El respeto, la privacidad y la información fiable son fundamentales.']
+    ]}
+   ]}
+  ]
+ },
+ sociales:{
+  label:'Ciencias Sociales',color:'#ffd583',icon:'▣',portal:3,ods:'8 · 10 · 12',
+  themes:[
+   {title:'La economía y la distribución de la riqueza',source:'Ciencias Sociales · Tema 1 · 1.er trimestre',missions:[
+    {id:'s1a',title:'Inventores con presupuesto',subtitle:'Economía, intercambio, dinero y gastos.',ods:'8, 12',brief:'El laboratorio dispone de recursos limitados. Tendrás que decidir cómo utilizar el dinero de forma responsable.',questions:[
+     ['¿Qué estudia la economía?',['Cómo satisfacer necesidades con recursos disponibles','Solo cómo fabricar monedas','Solamente las exportaciones'],0,'La economía analiza cómo utilizar los recursos para satisfacer necesidades.'],
+     ['Antes de generalizarse el dinero, ¿qué sistema se usaba para intercambiar productos?',['Trueque','Impuestos','Crédito'],0,'El trueque permite intercambiar productos directamente.'],
+     ['¿Cuál sería un gasto fijo de una familia?',['Alquiler mensual','Una revista comprada ocasionalmente','Un regalo inesperado'],0,'El alquiler mensual es un ejemplo de gasto fijo.'],
+     ['¿Qué permite afrontar gastos imprevistos en el futuro?',['Ahorrar de forma adecuada','Gastar todo inmediatamente','Comprar siempre lo más caro'],0,'El ahorro facilita afrontar imprevistos y planificar necesidades futuras.']
+    ]},
+    {id:'s1b',title:'Los cuatro agentes',subtitle:'Hogares, empresas, Estado y bancos.',ods:'8, 10',brief:'La ciudad necesita que sus agentes económicos colaboren. Identifica la función de cada uno.',questions:[
+     ['¿Qué agente económico produce bienes o servicios?',['Las empresas','Los semáforos','Los océanos'],0,'Las empresas producen bienes o prestan servicios.'],
+     ['¿Qué agente recauda impuestos y ofrece servicios públicos?',['El Estado','Solo los hogares','Solo los bancos'],0,'El Estado recauda impuestos y ofrece servicios públicos.'],
+     ['¿Qué agente recibe y gestiona dinero de su clientela?',['Los bancos','Los árboles','Las nubes'],0,'Los bancos gestionan el dinero depositado por sus clientes.'],
+     ['Una familia compra comida y ahorra parte de sus ingresos. ¿Qué agente es?',['Un hogar','Una mina','Una industria'],0,'Los hogares consumen, trabajan y pueden ahorrar o invertir.']
+    ]},
+    {id:'s1c',title:'El mercado en equilibrio',subtitle:'Oferta, demanda, ingresos y riqueza.',ods:'8, 10',brief:'Observa cómo cambia el mercado de una ciudad y toma decisiones para no dejar a nadie atrás.',questions:[
+     ['En un mercado, la oferta es…',['La cantidad de bienes y servicios ofrecidos','Las ganas de comprar de los consumidores','La renta de una familia'],0,'La oferta indica cuántos bienes o servicios se ponen a la venta.'],
+     ['La demanda es…',['La cantidad que las personas desean comprar','La cantidad que ya se ha fabricado','La cantidad de impuestos'],0,'La demanda se refiere a la cantidad que los consumidores están dispuestos a adquirir.'],
+     ['¿Qué ejemplo representa un ingreso?',['El salario recibido por un trabajo','Un parque público','Un bosque protegido'],0,'Un salario es dinero que se recibe por realizar una actividad productiva.'],
+     ['¿Qué describe mejor la equidad social?',['Ofrecer apoyos según las necesidades para reducir desigualdades','Dar exactamente el mismo objeto a todo el mundo','Concentrar los recursos en una sola persona'],0,'La equidad trata de reducir situaciones de exclusión y ampliar oportunidades.']
+    ]},
+    {id:'s1d',title:'Consumo para el futuro',subtitle:'Calidad de vida, comercio justo y economía circular.',ods:'10, 12, 13',brief:'Elige cómo equipar el laboratorio de forma que las decisiones económicas también cuiden a las personas y al planeta.',questions:[
+     ['¿Qué elección refleja consumo responsable?',['Comprar productos respetando el medioambiente y los derechos humanos','Elegir siempre la opción más contaminante','Comprar sin pensar si se necesita'],0,'El consumo responsable considera las consecuencias sociales y ambientales.'],
+     ['La calidad de vida incluye…',['Bienestar físico, mental y social','Solo la cantidad de objetos','Solo el dinero en el banco'],0,'La calidad de vida no se reduce a las posesiones materiales.'],
+     ['¿Qué propone la economía circular?',['Reutilizar y reciclar materiales','Usar una sola vez y tirar','Extraer recursos ilimitadamente'],0,'La economía circular intenta aprovechar materiales y reducir residuos.'],
+     ['¿Por qué es importante proteger los ecosistemas?',['Porque las personas dependen de ellos para vivir','Porque nunca cambian','Porque no tienen relación con el bienestar'],0,'Los ecosistemas sanos sostienen la vida y el bienestar humano.']
+    ]}
+   ]},
+   {title:'Los sectores económicos y el desarrollo sostenible',source:'Ciencias Sociales · Tema 2 · 1.er trimestre',missions:[
+    {id:'s2a',title:'La ciudad que produce',subtitle:'Sectores primario, secundario y terciario.',ods:'8, 9, 12',brief:'Clasifica los trabajos que necesita la ciudad sostenible del futuro.',questions:[
+     ['Cultivar hortalizas corresponde al sector…',['Primario','Secundario','Terciario'],0,'El sector primario obtiene recursos de la naturaleza.'],
+     ['Transformar madera en muebles en una fábrica pertenece al sector…',['Terciario','Secundario','Primario'],1,'El sector secundario transforma materias primas en productos.'],
+     ['Ofrecer atención sanitaria pertenece al sector…',['Primario','Terciario','Secundario'],1,'El sector terciario presta servicios.'],
+     ['¿Qué sector incluye construcción e industria?',['Secundario','Primario','Terciario'],0,'La construcción y la industria se sitúan en el sector secundario.']
+    ]},
+    {id:'s2b',title:'Recursos con futuro',subtitle:'Agricultura, ganadería, pesca y bosques.',ods:'2, 12, 14, 15',brief:'El laboratorio pide que asegures alimentos y recursos sin dañar los ecosistemas.',questions:[
+     ['¿Qué ayuda a mejorar la sostenibilidad agrícola?',['Cuidar suelo y agua y diversificar cultivos','Desperdiciar el agua','Agotar siempre el suelo'],0,'La agricultura sostenible busca producir sin comprometer los recursos futuros.'],
+     ['¿Qué riesgo se asocia a la ganadería intensiva según el dossier?',['Pérdida de biodiversidad de razas autóctonas','Aumento garantizado de biodiversidad','Desaparición del consumo de agua'],0,'El documento explica que privilegiar pocas razas puede reducir la biodiversidad ganadera.'],
+     ['¿Qué problema perjudica a los ecosistemas pesqueros?',['Residuos plásticos y vertidos','Restauración de hábitats','Protección de ríos'],0,'La contaminación marina dificulta la vida de numerosas especies.'],
+     ['¿Qué actividad se conoce como silvicultura?',['Aprovechamiento y gestión de bosques','Fabricación de vehículos','Venta de entradas de cine'],0,'La silvicultura se ocupa de los recursos forestales y su gestión.']
+    ]},
+    {id:'s2c',title:'Energía y transformación',subtitle:'Energías renovables, minería, industria y turismo.',ods:'7, 8, 9, 11',brief:'Decide qué actividades y tecnologías pueden impulsar una ciudad próspera y sostenible.',questions:[
+     ['¿Cuál de estas fuentes de energía es renovable?',['Viento','Carbón','Petróleo'],0,'La energía eólica aprovecha el viento, una fuente renovable.'],
+     ['¿Dónde se extraen minerales de la corteza terrestre?',['En explotaciones mineras','Solo en bibliotecas','Solo en industrias textiles'],0,'La minería obtiene materias primas minerales.'],
+     ['¿Cuál es la diferencia principal entre industria y artesanía?',['La artesanía trabaja de forma más manual','La industria no utiliza materiales','La artesanía solo ofrece servicios médicos'],0,'La artesanía fabrica productos principalmente con trabajo manual y herramientas.'],
+     ['Visitar un parque natural siguiendo rutas de senderismo es turismo…',['Rural','Exclusivamente de sol y playa','Industrial'],0,'El turismo rural incluye actividades relacionadas con la naturaleza.']
+    ]}
+   ]}
+  ]
+ }
+};
+
+/* Fase 2 · Motor de retos independiente de WebGL. Accesible incluso cuando falla la carga 3D. */
+(function(){
+ 'use strict';
+ const DATA=GC_P2_DATA;
+ const overlay=document.getElementById('gcPhase2');
+ const content=document.getElementById('gcP2Content');
+ const back=document.getElementById('gcP2Back');
+ const closeButton=document.getElementById('gcP2Close');
+ const footer=document.getElementById('gcP2Footer');
+ const opener=document.getElementById('gc-phase2-open');
+ const storeKey='generacion-cambio-fase2-progreso-1t-v1';
+ const state={view:'home',area:'naturales',missionId:'',step:0,points:0,answered:false,lastFocus:null,chosen:-1};
+ let saved={};
+ try{const value=JSON.parse(localStorage.getItem(storeKey)||'{}');if(value&&typeof value==='object'&&!Array.isArray(value))saved=value;}catch{}
+ const ALL=Object.entries(DATA).flatMap(([area,meta])=>meta.themes.flatMap((theme,ti)=>theme.missions.map((mission,mi)=>({...mission,area,themeIndex:ti,missionIndex:mi,themeName:theme.title}))));
+ const byId=id=>ALL.find(m=>m.id===id);
+ const doneCount=()=>ALL.filter(m=>Boolean(saved[m.id])).length;
+ const getXp=()=>ALL.reduce((acc,m)=>acc+(saved[m.id]?25+5*Math.min(m.questions.length,Number(saved[m.id].score)||0):0),0);
+ const esc=x=>String(x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const persist=()=>{try{localStorage.setItem(storeKey,JSON.stringify(saved))}catch{}window.dispatchEvent(new CustomEvent('gc-phase2-progress'))};
+ const badge=m=>saved[m.id]?'✓ COMPLETADA':'● SIN COMPLETAR';
+ const head=(tag,title,lead)=>`<span class="p2-kicker">✦ ${esc(tag)}</span><h2>${esc(title)}</h2><p class="p2-lead">${esc(lead)}</p>`;
+ const termRow=()=>`<div class="p2-term-row" aria-label="Trimestres"><div class="p2-term active" aria-current="true">1.º TRIMESTRE<small>Contenido disponible</small></div><div class="p2-term" aria-disabled="true">2.º TRIMESTRE<small>Pendiente de materiales</small></div><div class="p2-term" aria-disabled="true">3.º TRIMESTRE<small>Pendiente de materiales</small></div></div>`;
+ const updateFooter=()=>{const done=doneCount();footer.innerHTML=`<span>✦ FASE 2 · <strong>${done} / ${ALL.length} misiones</strong> del primer trimestre</span><span><strong>${getXp()} XP</strong> de aprendizaje · Guardado en este navegador</span>`;};
+ function moveView(view){state.view=view;state.answered=false;state.chosen=-1;render();content.scrollTop=0;}
+ function renderHome(){
+  content.innerHTML=head('El laboratorio del conocimiento','MISIONES DEL CAMBIO','Dos áreas · tres trimestres por área. Solo se han activado las misiones basadas en los materiales del primer trimestre.')+
+  `<div class="p2-grid">${Object.entries(DATA).map(([key,area])=>{
+    const missions=area.themes.flatMap(t=>t.missions);const n=missions.filter(m=>saved[m.id]).length;
+    return `<button class="p2-area-card" data-p2-area="${key}" style="--p2-accent:${area.color}"><span class="p2-orb">${area.icon}</span><b>${esc(area.label)}</b><small>1.º trimestre · ${n} de ${missions.length} misiones completadas<br>ODS ${esc(area.ods)} · 2.º y 3.º trimestre por incorporar</small></button>`;
+   }).join('')}</div><div class="p2-future"><h3>🧭 Tu ruta de aprendizaje</h3><p>Abre Naturaleza Viva para Ciencias Naturales y Laboratorio del Tiempo para Ciencias Sociales. Puedes completar las misiones en el orden que elijas, volver a ellas y mejorar tus resultados.</p></div>`;
+ }
+ function renderArea(){
+  const area=DATA[state.area];const missions=area.themes.flatMap(t=>t.missions);const n=missions.filter(m=>saved[m.id]).length;
+  content.innerHTML=head('Portal de aprendizaje · '+area.label,area.label.toUpperCase(),`Primer trimestre: ${n} de ${missions.length} misiones superadas. Los temas se corresponden con los dos documentos aportados para esta área.`)+termRow()+
+  area.themes.map((theme,idx)=>`<section class="p2-theme" aria-label="${esc(theme.title)}"><div class="p2-theme-head"><h3>TEMA ${idx+1} · ${esc(theme.title)}</h3><small>${theme.missions.filter(m=>saved[m.id]).length}/${theme.missions.length} superadas</small></div><p>${esc(theme.source)}</p><div class="p2-missions">${theme.missions.map((m,mi)=>`<button class="p2-mission-card" data-p2-mission="${m.id}"><b>${idx+1}.${mi+1} ${esc(m.title)}</b><p>${esc(m.subtitle)}</p><small>✦ ODS ${esc(m.ods)} · ${badge(m)}</small>${saved[m.id]?'<span class="p2-check" aria-hidden="true">✓</span>':''}</button>`).join('')}</div></section>`).join('')+
+  `<div class="p2-future"><h3>Próximos trimestres</h3><p>El 2.º y el 3.º trimestre están previstos, pero sus misiones se incorporarán cuando se faciliten los contenidos correspondientes. No hay lecciones inventadas ni pruebas vacías.</p></div>`;
+ }
+ function renderQuestion(){
+  const mission=byId(state.missionId);if(!mission){moveView('area');return}
+  const q=mission.questions[state.step],n=mission.questions.length;
+  content.innerHTML=`<span class="p2-kicker">${esc(DATA[mission.area].label)} · TEMA ${mission.themeIndex+1} · ODS ${esc(mission.ods)}</span><h2>${esc(mission.title)}</h2>`+
+  (state.step===0?`<div class="p2-brief">✦ <strong>ENCARGO DEL INVENTOR</strong><p style="margin:6px 0 0">${esc(mission.brief)}</p></div>`:'')+
+  `<div class="p2-step-row"><span>RETO ${state.step+1} DE ${n}</span><span>${state.points} aciertos al primer intento</span></div><div class="p2-progressbar"><span style="width:${Math.round((state.step/n)*100)}%"></span></div>`+
+  `<p class="p2-question" id="gcP2Question">${esc(q[0])}</p><div class="p2-answers" role="group" aria-labelledby="gcP2Question">${q[1].map((answer,i)=>`<button class="p2-answer" data-p2-answer="${i}"><span class="p2-letter">${'ABC'[i]}</span><span>${esc(answer)}</span></button>`).join('')}</div>`+
+  '<div id="gcP2Feedback" aria-live="polite"></div><div id="gcP2Actions" class="p2-actions"></div>';
+ }
+ function answer(index){
+  if(state.view!=='question'||state.answered)return;
+  const m=byId(state.missionId),q=m.questions[state.step];if(!q||index<0||index>=q[1].length)return;
+  state.answered=true;state.chosen=index;
+  const correct=index===q[2];if(correct)state.points++;
+  const buttons=[...content.querySelectorAll('[data-p2-answer]')];buttons.forEach((b,i)=>{b.disabled=true;if(i===q[2])b.classList.add('correct');if(i===index&&!correct)b.classList.add('wrong')});
+  content.querySelector('#gcP2Feedback').innerHTML=`<div class="p2-feedback ${correct?'':'error'}"><strong>${correct?'✓ ¡BIEN RESUELTO!':'↗ APRENDEMOS DEL INTENTO'}</strong><br>${esc(q[3])}${correct?'':'<br><strong>La respuesta correcta está señalada en verde.</strong>'}</div>`;
+  content.querySelector('#gcP2Actions').innerHTML=`<button class="p2-main-btn" data-p2-next>${state.step===m.questions.length-1?'FINALIZAR MISIÓN':'SIGUIENTE RETO →'}</button>`;
+  content.querySelector('[data-p2-next]')?.focus({preventScroll:true});
+ }
+ function next(){
+  if(state.view!=='question'||!state.answered)return;
+  const m=byId(state.missionId);if(state.step+1<m.questions.length){state.step++;state.answered=false;renderQuestion();content.scrollTop=0;return}
+  const prev=saved[m.id];saved[m.id]={score:Math.max(state.points,Number(prev?.score)||0),total:m.questions.length};persist();
+  if(window.GC_Audio?.celebrate)window.GC_Audio.celebrate(doneCount()===ALL.length);
+  state.view='result';render();content.scrollTop=0;
+ }
+ function renderResult(){
+  const m=byId(state.missionId),perfect=state.points===m.questions.length;
+  content.innerHTML=head('Misión terminada','¡MISIÓN COMPLETADA!',`Has investigado ${m.title.toLowerCase()} y puedes repetirla para mejorar tu puntuación.`)+
+  `<div class="p2-score">${state.points} / ${m.questions.length}</div><p>${perfect?'¡Excelente! Has resuelto todos los retos al primer intento.':'Has terminado los retos. Revisa las explicaciones y vuelve cuando quieras: aprender también es mejorar.'}</p><div class="p2-brief"><strong>✦ PROGRESO GUARDADO</strong><p style="margin:7px 0 0">Las misiones completadas se recuerdan en este navegador. La aventura de los seis portales sigue disponible tal como estaba.</p></div>`+
+  `<div class="p2-actions"><button class="p2-main-btn" data-p2-replay>REPETIR MISIÓN</button><button class="p2-soft-btn" data-p2-back-area>VER LAS MISIONES</button></div>`;
+ }
+ function render(){
+  back.hidden=state.view==='home';
+  if(state.view==='home')renderHome();
+  if(state.view==='area')renderArea();
+  if(state.view==='question')renderQuestion();
+  if(state.view==='result')renderResult();
+  updateFooter();
+ }
+ function openHome(){if(overlay.hidden)state.lastFocus=document.activeElement;overlay.hidden=false;document.body.classList.add('gc-p2-open');moveView('home');closeButton.focus({preventScroll:true});}
+ function openArea(key){if(!Object.hasOwn(DATA,key))return;if(overlay.hidden)state.lastFocus=document.activeElement;overlay.hidden=false;document.body.classList.add('gc-p2-open');state.area=key;moveView('area');closeButton.focus({preventScroll:true});}
+ function openMission(id){const m=byId(id);if(!m)return;state.area=m.area;state.missionId=id;state.step=0;state.points=0;window.GC_Audio?.enterGame?.();moveView('question');}
+ function close(){overlay.hidden=true;document.body.classList.remove('gc-p2-open');state.lastFocus?.focus?.({preventScroll:true});}
+ function goBack(){if(state.view==='home'){close();return}if(state.view==='area'){moveView('home');return}moveView('area')}
+ overlay.addEventListener('click',ev=>{
+  const target=ev.target.closest('button');if(!target)return;
+  if(target.dataset.p2Area)openArea(target.dataset.p2Area);
+  else if(target.dataset.p2Mission)openMission(target.dataset.p2Mission);
+  else if(target.hasAttribute('data-p2-answer'))answer(Number(target.dataset.p2Answer));
+  else if(target.hasAttribute('data-p2-next'))next();
+  else if(target.hasAttribute('data-p2-replay'))openMission(state.missionId);
+  else if(target.hasAttribute('data-p2-back-area'))moveView('area');
+ });
+ opener?.addEventListener('click',openHome);
+ closeButton.addEventListener('click',close);back.addEventListener('click',goBack);
+ overlay.addEventListener('keydown',ev=>{
+  if(ev.key==='Escape'){ev.preventDefault();ev.stopPropagation();close();return;}
+  if(ev.key==='Tab'){
+   const focusable=[...overlay.querySelectorAll('button:not(:disabled):not([hidden])')].filter(el=>el.getClientRects().length);
+   if(!focusable.length)return;
+   const first=focusable[0],last=focusable[focusable.length-1];
+   if(ev.shiftKey&&document.activeElement===first){ev.preventDefault();last.focus();}
+   else if(!ev.shiftKey&&document.activeElement===last){ev.preventDefault();first.focus();}
+  }
+ });
+ window.GC_Phase2=Object.freeze({openHome,openArea,openMission,close,isOpen:()=>!overlay.hidden,getCompletedCount:doneCount,getXp,getTotalCount:()=>ALL.length,debug:()=>({view:state.view,area:state.area,mission:state.missionId,step:state.step,completed:doneCount(),xp:getXp()})});
+ updateFooter();
+})();
+
+</script>
 <script type="module">
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
@@ -928,7 +1241,7 @@ let playing=false,paused=window.matchMedia('(prefers-reduced-motion:reduce)').ma
 const collected=new Set();let completed=false;
 try{const raw=JSON.parse(localStorage.getItem('gc-phase1-signals-v3')||'[]');if(Array.isArray(raw))raw.filter(n=>Number.isInteger(n)&&n>=0&&n<6).forEach(n=>collected.add(n));}catch{}
 function updateProgress(){
- const n=collected.size;$('#signalCount').textContent=n+'/6';$('#xpValue').textContent=n*20;$('#badgeValue').textContent=n===6?'1':'0';$('#missionValue').textContent=n===6?'1':'0';$('#levelValue').textContent=n===6?'02':'01';$('#xpFill').style.width=(n===6?'100':n*20)+'%';
+ const n=collected.size;const p2xp=window.GC_Phase2?.getXp?.()||0;const p2count=window.GC_Phase2?.getCompletedCount?.()||0;const totalXp=n*20+p2xp;$('#signalCount').textContent=n+'/6';$('#xpValue').textContent=totalXp;$('#badgeValue').textContent=(n===6?1:0)+Math.floor(p2count/7);$('#missionValue').textContent=(n===6?1:0)+p2count;$('#levelValue').textContent=String(1+Math.floor(totalXp/140)).padStart(2,'0');$('#xpFill').style.width=(totalXp%140/140*100)+'%';
  const pips=$$('#signalPips i');for(let i=0;i<6;i++)pips[i]?.classList.toggle('on',collected.has(i));
  $$('.world').forEach((el,i)=>el.classList.toggle('found',collected.has(i)));
 }
@@ -941,6 +1254,7 @@ function discoverSignal(index){
  return true;
 }
 updateProgress();
+window.addEventListener('gc-phase2-progress',updateProgress);
 const keys=new Set();
 function toast(text){notice.textContent=text;notice.classList.add('show');clearTimeout(toastTimeout);toastTimeout=setTimeout(()=>notice.classList.remove('show'),2600);}
 function beep(f=670){if(!window.GC_Audio?.effectsOn())return;try{audio=audio||new(window.AudioContext||window.webkitAudioContext)();const o=audio.createOscillator(),g=audio.createGain();o.type='sine';o.frequency.setValueAtTime(f,audio.currentTime);o.frequency.exponentialRampToValueAtTime(f*1.25,audio.currentTime+.12);g.gain.setValueAtTime(Math.max(.003,.05*window.GC_Audio.fxVolume()),audio.currentTime);g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+.19);o.connect(g);g.connect(audio.destination);o.start();o.stop(audio.currentTime+.2)}catch{}}
@@ -949,18 +1263,20 @@ function closeDialog(){modal.classList.remove('show');}
 function showWorld(index){const w=LEVELS[index];if(!w)return;
  const activated=playing&&near===index;
  if(activated)discoverSignal(index);
- dialog(w.emoji+' '+w.name,'<p>'+w.area+'</p><div class="meta">🌍 ODS '+w.ods+'</div><p>'+(collected.has(index)?'✦ Baliza de exploración registrada.':'🔒 Portal educativo bloqueado hasta la Fase 2.')+'</p><button class="go" id="goBack">VOLVER AL MUNDO</button>');
+ const area=index===0?'naturales':index===3?'sociales':null;
+ const educational=area?'<p>✦ Misiones del primer trimestre activadas. Los trimestres segundo y tercero se abrirán cuando lleguen sus materiales.</p><button class="go" data-gc-phase2="'+area+'">✦ ENTRAR A LAS MISIONES</button>':'<p>Las misiones de este territorio se incorporarán en una fase posterior.</p>';
+ dialog(w.emoji+' '+w.name,'<p>'+w.area+'</p><div class="meta">🌍 ODS '+w.ods+'</div><p>'+(collected.has(index)?'✦ Baliza de exploración registrada.':'Explora para activar la baliza de este territorio.')+'</p>'+educational+'<button class="go" id="goBack">VOLVER AL MUNDO</button>');
 }
 $('#start').onclick=()=>{playing=true;window.GC_Audio?.enterGame();game.classList.add('play');$('#home').classList.add('hidden');resize();toast('✦ MISIÓN: ACTIVA LAS 6 BALIZAS. CAMINA CON WASD / FLECHAS');};
 $('#close').onclick=closeDialog;
-modal.addEventListener('click',event=>{if(event.target===modal||event.target.id==='goBack')closeDialog();if(event.target.id==='saveAlias'){const input=$('#nameinput'),name=input?.value.trim();if(name){$('#nickname').textContent=name.slice(0,24);try{localStorage.setItem('generacion-cambio-nickname',name.slice(0,24))}catch{}closeDialog();}else toast('Escribe un apodo.')}});
+modal.addEventListener('click',event=>{const study=event.target.closest('[data-gc-phase2]');if(study){closeDialog();window.GC_Phase2?.openArea(study.dataset.gcPhase2);return;}if(event.target===modal||event.target.id==='goBack')closeDialog();if(event.target.id==='saveAlias'){const input=$('#nameinput'),name=input?.value.trim();if(name){$('#nickname').textContent=name.slice(0,24);try{localStorage.setItem('generacion-cambio-nickname',name.slice(0,24))}catch{}closeDialog();}else toast('Escribe un apodo.')}});
 $('#rename').onclick=()=>dialog('Apodo del explorador','<p>Elige un apodo sin datos personales.</p><input id="nameinput" maxlength="24" autocomplete="off" placeholder="Apodo"><button id="saveAlias" class="go">GUARDAR</button>');
-$('#info').onclick=()=>dialog('GENERACIÓN CAMBIO','<p>6º Primaria · CP Carmen Ruiz-Tilve</p><p>Fase 1: explora el escenario y conoce los seis portales. Las misiones educativas llegarán después.</p>');
+$('#info').onclick=()=>dialog('GENERACIÓN CAMBIO','<p>6º Primaria · CP Carmen Ruiz-Tilve</p><p>Fase 2: sigue explorando los seis portales y resuelve las misiones del primer trimestre de Ciencias Naturales y Ciencias Sociales.</p>');
 $('#motion').onclick=()=>{paused=!paused;$('#motion').innerHTML=paused?'<svg class="ui-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 5 11 7-11 7V5Z"/></svg>':'<svg class="ui-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="5" height="16" rx="1"/><rect x="14" y="4" width="5" height="16" rx="1"/></svg>';toast(paused?'Animaciones pausadas':'Animaciones reanudadas');};
 worlds.addEventListener('click',e=>{const btn=e.target.closest('[data-world]');if(btn)showWorld(Number(btn.dataset.world));});
 $('#interact').onclick=()=>{if(near>=0)showWorld(near)};
 try{const nick=localStorage.getItem('generacion-cambio-nickname');if(nick)$('#nickname').textContent=nick.slice(0,24)}catch{}
-window.addEventListener('keydown',e=>{if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space'].includes(e.code))e.preventDefault();keys.add(e.code);if(e.code==='Escape')closeDialog();if(e.code==='KeyE'&&playing&&near>=0&&!modal.classList.contains('show'))showWorld(near)});
+window.addEventListener('keydown',e=>{if(window.GC_Phase2?.isOpen?.())return;if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space'].includes(e.code))e.preventDefault();keys.add(e.code);if(e.code==='Escape')closeDialog();if(e.code==='KeyE'&&playing&&near>=0&&!modal.classList.contains('show'))showWorld(near)});
 window.addEventListener('keyup',e=>keys.delete(e.code));window.addEventListener('blur',()=>keys.clear());
 document.querySelectorAll('[data-key]').forEach(btn=>{const code=btn.dataset.key;btn.addEventListener('pointerdown',e=>{e.preventDefault();keys.add(code);btn.setPointerCapture(e.pointerId)});for(const name of ['pointerup','pointercancel','lostpointercapture'])btn.addEventListener(name,()=>keys.delete(code))});
 
@@ -1638,7 +1954,7 @@ function drawMinimap(){if(!playing)return;
 function resize(){const width=viewport.clientWidth,height=viewport.clientHeight;renderer.setSize(width,height,false);camera.aspect=width/height;camera.fov=width<700?65:52;camera.updateProjectionMatrix();}window.addEventListener('resize',resize);resize();
 const direction=new THREE.Vector3(),target=new THREE.Vector3(),focus=new THREE.Vector3(),clock=new THREE.Clock();let t=0,jumpHeight=0,jumpSpeed=0,spaceWasDown=false;let miniLast=0;
 function animate(){requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.05);if(!paused){t+=dt;characterMixer?.update(dt);water.material.uniforms.time.value=t;spire.rotation.y+=dt*.35;for(const rot of turbines)rot.rotation.z+=dt*1.5;for(const c of clouds)c.position.x+=dt*.15;sunGlow.material.opacity=.72+Math.sin(t*.22)*.08;sunGlow.scale.setScalar(34+Math.sin(t*.35)*1.1);for(const a of auroraBands){a.material.opacity=.12+Math.sin(t*.7+a.userData.phase)*.05;a.rotation.z=Math.sin(t*.25+a.userData.phase)*.06;a.rotation.y=a.userData.baseRot+Math.sin(t*.18+a.userData.phase)*.04;}for(const m of mistPlanes){m.position.y=m.userData.baseY+Math.sin(t*.45+m.userData.phase)*.22;m.position.x+=m.userData.drift*dt;m.material.opacity=.08+Math.sin(t*.55+m.userData.phase)*.04;}for(const tuft of grassTufts){tuft.rotation.y=tuft.userData.baseRot+Math.sin(t*1.2+tuft.userData.phase)*.08;}for(const f of floating)f.position.y=f.userData.baseY+Math.sin(t*.6+f.position.x)*.35;for(const obj of portalObjects){obj.ring.rotation.y+=dt*.28;obj.rim.rotation.x+=dt*.23;for(const p of obj.pts)p.position.y=p.userData.baseY+Math.sin(t*2+p.userData.phase)*.18;}for(const s of sparks)s.position.y=s.userData.baseY+Math.sin(t*1.7+s.userData.phase)*.22;for(const p of fireflies.children)p.position.y=p.userData.y+Math.sin(t*1.12+p.userData.phase)*.17;drone.rotation.y=Math.sin(t*1.3)*.2;}
- const modalOpen=modal.classList.contains('show');let moving=false,running=false;
+ const modalOpen=modal.classList.contains('show')||Boolean(window.GC_Phase2?.isOpen?.());let moving=false,running=false;
  if(playing&&!modalOpen){const dx=(Number(keys.has('KeyD')||keys.has('ArrowRight'))-Number(keys.has('KeyA')||keys.has('ArrowLeft'))),dz=(Number(keys.has('KeyS')||keys.has('ArrowDown'))-Number(keys.has('KeyW')||keys.has('ArrowUp')));direction.set(dx,0,dz);moving=direction.lengthSq()>0;running=keys.has('ShiftLeft')||keys.has('ShiftRight');if(moving){direction.normalize().applyAxisAngle(new THREE.Vector3(0,1,0),yaw);const speed=running?12:7.6;target.copy(player.position).addScaledVector(direction,dt*speed);const walkRadius=69;const rr=Math.hypot(target.x,target.z);if(rr>walkRadius){target.x*=walkRadius/rr;target.z*=walkRadius/rr;}player.position.x=target.x;player.position.z=target.z;player.rotation.y=Math.atan2(direction.x,direction.z);}
  // Jump is a small introductory movement mechanic; the player lands on the height-mapped ground.
  const spaceDown=keys.has('Space');if(spaceDown&&!spaceWasDown&&jumpHeight===0)jumpSpeed=6.8;spaceWasDown=spaceDown;
