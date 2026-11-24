@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>GENERACIÓN CAMBIO · Fase 2 · V17.4 · Prueba automática 3D · 1.º trimestre</title>
+<title>GENERACIÓN CAMBIO · Fase 2 · V17.5 · Prueba automática 3D · 1.º trimestre</title>
 <meta name="theme-color" content="#071933"><meta name="description" content="Aventura tridimensional interactiva mejorada: descubre seis territorios en un planeta con atmósfera más cinematográfica, agua dinámica y vegetación reforzada.">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&amp;family=Nunito:wght@500;600;700;800;900&amp;display=swap" media="print" onload="this.media='all'">
 <style>
@@ -940,7 +940,7 @@
 #gcPhase2 .p2-footer{overflow-wrap:anywhere}
 </style>
 </head>
-<body><pre id="qa-live" style="position:fixed;z-index:1000000;top:0;left:0;width:95%;max-height:70vh;overflow:auto;background:#fff;color:#111;font:12px monospace;padding:8px;white-space:pre-wrap">ESPERANDO WEBGL</pre><script>window.addEventListener("error",e=>{const p=document.getElementById("qa-live");if(p)p.textContent+="\nERROR: "+(e.message||"recurso no cargado")});setTimeout(()=>{const p=document.getElementById("qa-live");if(p&&!window.GC_Performance?.status().ready)p.textContent+="\nSIN FOTOGRAMA TRAS 20 SEGUNDOS"},20000)</script>
+<body><pre id="qa-live" style="position:fixed;z-index:1000000;top:0;left:0;width:95%;max-height:80vh;overflow:auto;background:#fff;color:#111;font:12px monospace;padding:8px;white-space:pre-wrap">ESPERANDO WEBGL</pre><script>window.qaErrors=[];window.addEventListener("error",e=>{const msg="ERROR: "+(e.message||"recurso no cargado");window.qaErrors.push(msg);document.getElementById("qa-live").textContent+="\n"+msg});window.addEventListener("unhandledrejection",e=>{window.qaErrors.push(String(e.reason))});setTimeout(()=>{const p=document.getElementById("qa-live");if(p&&!window.GC_Performance?.status().ready)p.textContent+="\nSIN FOTOGRAMA TRAS 35 SEGUNDOS"},35000)</script>
 <div id="game">
 <div id="viewport" aria-label="Mundo tridimensional interactivo"></div><div class="veil"></div><div class="heroSpot" aria-hidden="true"></div>
 <header class="topbar"><div class="branding"><div class="logo"><svg class="ui-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c-4 5-4 13 0 18M12 3c4 5 4 13 0 18M5.8 6.8h12.4M5.8 17.2h12.4"/></svg></div><div><strong>GENERACIÓN CAMBIO</strong><small>6º PRIMARIA CP CARMEN RUIZ-TILVE</small></div></div><div class="actions"><button id="skinCycle" aria-label="Cambiar personaje" title="Cambiar personaje"><svg class="ui-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 4-4.5 2L2 12l5 2v7h10v-7l5-2-1.5-6L16 4c-.4 1.8-1.8 3-4 3S8.4 5.8 8 4Z"/></svg></button><button id="sound" aria-label="Sonido" title="Sonido"><svg class="ui-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="m16 9 5 6m0-6-5 6"/></svg></button><button id="gcAudioSettings" type="button" title="Ajustar música y efectos" aria-label="Ajustes de música y efectos" aria-expanded="false" aria-controls="gcAudioPanel"><svg class="ui-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/><circle cx="9" cy="7" r="2" fill="#15415b"/><circle cx="16" cy="12" r="2" fill="#15415b"/><circle cx="11" cy="17" r="2" fill="#15415b"/></svg></button><button id="motion" aria-label="Pausar animación" title="Animación"><svg class="ui-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="5" height="16" rx="1"/><rect x="14" y="4" width="5" height="16" rx="1"/></svg></button><button id="info" aria-label="Información" title="Información"><svg class="ui-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.8v.4"/></svg></button></div></header>
@@ -1559,7 +1559,7 @@ const WORLD_ICONS=['<svg class="world-icon" viewBox="0 0 24 24" width="24" heigh
 worlds.replaceChildren();LEVELS.forEach((world,index)=>{const btn=document.createElement('button');btn.className='world';btn.style.setProperty('--c','#'+world.color.toString(16));btn.dataset.world=index;btn.innerHTML='<span class="emoji">'+WORLD_ICONS[index]+'</span>'+world.short;worlds.appendChild(btn);});
 let playing=false,paused=window.matchMedia('(prefers-reduced-motion:reduce)').matches,audio=null,near=-1,toastTimeout=null;
 const collected=new Set();let completed=false;
-try{const raw=JSON.parse(localStorage.getItem('gc-qa-v174-signals-test')||'[]');if(Array.isArray(raw))raw.filter(n=>Number.isInteger(n)&&n>=0&&n<6).forEach(n=>collected.add(n));}catch{}
+try{const raw=JSON.parse(localStorage.getItem('gc-qa-v175-signals-test')||'[]');if(Array.isArray(raw))raw.filter(n=>Number.isInteger(n)&&n>=0&&n<6).forEach(n=>collected.add(n));}catch{}
 function updateProgress(){
  const n=collected.size;const p2xp=window.GC_Phase2?.getXp?.()||0;const p2count=window.GC_Phase2?.getCompletedCount?.()||0;const totalXp=n*20+p2xp;$('#signalCount').textContent=n+'/6';$('#xpValue').textContent=totalXp;$('#badgeValue').textContent=(n===6?1:0)+Math.floor(p2count/7);$('#missionValue').textContent=(n===6?1:0)+p2count+(window.GC_Phase2?.getResearchCompletedCount?.()||0);$('#levelValue').textContent=String(1+Math.floor(totalXp/140)).padStart(2,'0');$('#xpFill').style.width=(totalXp%140/140*100)+'%';
  const pips=$$('#signalPips i');for(let i=0;i<6;i++)pips[i]?.classList.toggle('on',collected.has(i));
@@ -1568,7 +1568,7 @@ function updateProgress(){
 const $$=s=>[...document.querySelectorAll(s)];
 function discoverSignal(index){
  if(!playing||near!==index||collected.has(index))return false;
- collected.add(index);try{localStorage.setItem('gc-qa-v174-signals-test',JSON.stringify([...collected]));}catch{}
+ collected.add(index);try{localStorage.setItem('gc-qa-v175-signals-test',JSON.stringify([...collected]));}catch{}
  updateProgress();window.GC_Audio?.celebrate(collected.size===6);beep(1000);toast('✦ BALIZA ACTIVADA · +20 XP · '+collected.size+'/6');
  if(collected.size===6){completed=true;setTimeout(()=>dialog('¡MISIÓN DE EXPLORACIÓN COMPLETADA!','<p>Has localizado las seis balizas de los seis territorios.</p><p>✦ Insignia conseguida: CARTÓGRAFO DEL CAMBIO</p><button class="go" id="goBack">CONTINUAR EXPLORANDO</button>'),700)}
  return true;
@@ -2256,17 +2256,17 @@ renderer.domElement.addEventListener('pointerdown',e=>{if(!playing||modal.classL
 renderer.domElement.addEventListener('pointermove',e=>{const old=pressed.get(e.pointerId);if(!old)return;pressed.set(e.pointerId,[e.clientX,e.clientY]);if(pressed.size===1){yaw-=(e.clientX-old[0])*.0045;pitch=THREE.MathUtils.clamp(pitch+(e.clientY-old[1])*.0035,-.08,.62)}else{const arr=[...pressed.values()];const pinch=Math.hypot(arr[0][0]-arr[1][0],arr[0][1]-arr[1][1]);if(prevPinch)distance=THREE.MathUtils.clamp(distance+(prevPinch-pinch)*.023,5,19);prevPinch=pinch;}});
 function finishPointer(e){pressed.delete(e.pointerId);prevPinch=0;}renderer.domElement.addEventListener('pointerup',finishPointer);renderer.domElement.addEventListener('pointercancel',finishPointer);renderer.domElement.addEventListener('lostpointercapture',finishPointer);window.addEventListener('blur',()=>{pressed.clear();prevPinch=0;});
 renderer.domElement.addEventListener('wheel',e=>{if(!playing)return;e.preventDefault();distance=THREE.MathUtils.clamp(distance+e.deltaY*.012,5,19)},{passive:false});
-let qualityMode=0,autoTier=matchMedia('(pointer:coarse)').matches?1:0,qualityApplied=-1;
+let qualityMode=0,autoTier=1,qualityApplied=-1;
 function chooseTier(mode,auto){return mode===0?auto:mode===1?1:2}
 function renderRatio(w,h,dpr,tier){const cap=[1.35,.85,2][tier],budget=[2500000,1100000,8300000][tier];return Math.min(Math.max(.1,dpr||1),cap,Math.sqrt(budget/Math.max(1,w*h)));}
 function applyQuality(){const tier=chooseTier(qualityMode,autoTier);if(tier===qualityApplied)return;qualityApplied=tier;renderer.shadowMap.enabled=tier!==1;renderer.shadowMap.autoUpdate=tier===2;const shadow=[1536,768,3072][tier];sunshine.shadow.mapSize.set(shadow,shadow);sunshine.shadow.map?.dispose();sunshine.shadow.map=null;leafBillboards.forEach(mesh=>mesh.visible=tier!==1);heroBoulders.visible=tier!==1;fireflies.visible=tier!==1;blades.count=tier===1?Math.min(1800,grassCount):grassCount;grassTufts.forEach((g,i)=>g.visible=tier!==1||i%4===0);sparks.forEach((g,i)=>g.visible=tier!==1||i%5===0);mistPlanes.forEach((g,i)=>g.visible=tier!==1||i%3===0);renderer.shadowMap.needsUpdate=true;resize();if(scansStarted&&tier!==1)setTimeout(loadScans,0);}
 let perfStart=0,perfFrames=0,perfFPS=0,slowWindows=0,fastWindows=0,qualityChangedAt=0;
-function samplePerformance(now){if(!perfStart){perfStart=now;return;}perfFrames++;if(now-perfStart<2200)return;perfFPS=Math.round(perfFrames*1000/(now-perfStart));perfFrames=0;perfStart=now;if(qualityMode!==0)return;slowWindows=perfFPS<25?slowWindows+1:0;fastWindows=perfFPS>(qualityApplied===1?28:52)?fastWindows+1:0;if(now-qualityChangedAt<7000)return;if(autoTier===0&&slowWindows>=2){autoTier=1;qualityChangedAt=now;slowWindows=0;applyQuality();}}
+function samplePerformance(now){if(!perfStart){perfStart=now;return;}perfFrames++;if(now-perfStart<2200)return;perfFPS=Math.round(perfFrames*1000/(now-perfStart));perfFrames=0;perfStart=now;if(qualityMode!==0)return;slowWindows=perfFPS<25?slowWindows+1:0;fastWindows=perfFPS>(qualityApplied===1?28:52)?fastWindows+1:0;if(now-qualityChangedAt<7000)return;if(autoTier===0&&slowWindows>=2){autoTier=1;qualityChangedAt=now;slowWindows=0;applyQuality();}else if(autoTier===1&&fastWindows>=6&&!matchMedia('(pointer:coarse)').matches&&qualityChangedAt===0){autoTier=0;qualityChangedAt=now;fastWindows=0;applyQuality();}}
 function resetPerformance(){perfStart=0;perfFrames=0;slowWindows=0;fastWindows=0}
 
 
 $('#resetCam').addEventListener('click',()=>{yaw=0;pitch=.14;distance=10;toast('CÁMARA CENTRADA')});
-$('#qualityBtn').addEventListener('click',()=>{qualityMode=(qualityMode+1)%3;if(qualityMode===0)autoTier=matchMedia('(pointer:coarse)').matches?1:0;resetPerformance();applyQuality();$('#qualityBtn').textContent='GRÁFICOS: '+['AUTO','LIGERO','ALTO'][qualityMode];});
+$('#qualityBtn').addEventListener('click',()=>{qualityMode=(qualityMode+1)%3;if(qualityMode===0)autoTier=1;resetPerformance();applyQuality();$('#qualityBtn').textContent='GRÁFICOS: '+['AUTO','LIGERO','ALTO'][qualityMode];});
 const minimap=$('#minimap'),mini=minimap.getContext('2d');
 function drawMinimap(){if(!playing)return;
  const w=180,h=180;mini.clearRect(0,0,w,h);mini.save();mini.beginPath();mini.arc(90,90,88,0,Math.PI*2);mini.clip();mini.fillStyle='rgba(4,29,45,.95)';mini.fillRect(0,0,w,h);
@@ -2326,38 +2326,34 @@ let renderAt=0,wasSuspended=false,contextLost=false,lastShadowAt=0;function anim
   camera.lookAt(safeFocus);
 }else{camera.position.lerp(idleCam.set(-9.7+Math.sin(t*.23)*.30,7.35,18.2),1-Math.exp(-2.9*dt));camera.lookAt(0,window.innerWidth<=660?(window.innerHeight<=700?-.35:.15):1.50,5.15);}
  if(playing&&performance.now()-miniLast>120){drawMinimap();miniLast=performance.now();}
- if(qualityApplied===0&&now-lastShadowAt>=125){renderer.shadowMap.needsUpdate=true;lastShadowAt=now;}renderer.render(scene,camera);if(!game.classList.contains("webgl-ready")){game.classList.add("webgl-ready");window.GC_Startup?.ready();}
+ if(qualityApplied===0&&now-lastShadowAt>=125){renderer.shadowMap.needsUpdate=true;lastShadowAt=now;}try{renderer.render(scene,camera)}catch(error){console.error('Render 3D:',error);window.GC_Startup?.failed();return;}if(!game.classList.contains("webgl-ready")){game.classList.add("webgl-ready");window.GC_Startup?.ready();}
 }
 window.GC_Performance=Object.freeze({status:()=>({mode:['AUTO','LIGERO','ALTO'][qualityMode],tier:qualityApplied,fps:perfFPS,drawCalls:renderer.info.render.calls,triangles:renderer.info.render.triangles,pixelRatio:renderer.getPixelRatio(),bufferWidth:renderer.domElement.width,bufferHeight:renderer.domElement.height,ready:game.classList.contains('webgl-ready')})});
-renderer.domElement.addEventListener('webglcontextlost',e=>{e.preventDefault();contextLost=true;keys.clear();game.classList.remove('webgl-ready');window.GC_Startup?.failed();});
-renderer.domElement.addEventListener('webglcontextrestored',()=>{contextLost=false;keys.clear();pressed.clear();lastWidth=0;lastHeight=0;resize();renderer.shadowMap.needsUpdate=true;});
+renderer.domElement.addEventListener('webglcontextlost',e=>{e.preventDefault();contextLost=true;keys.clear();pressed.clear();game.classList.remove('webgl-ready');window.GC_Startup?.failed();});
+renderer.domElement.addEventListener('webglcontextrestored',()=>{contextLost=false;keys.clear();pressed.clear();qualityMode=0;autoTier=1;qualityApplied=-1;$('#qualityBtn').textContent='GRÁFICOS: AUTO';lastWidth=0;lastHeight=0;applyQuality();renderer.shadowMap.needsUpdate=true;});
 requestAnimationFrame(animate);
 
 const qaEl=document.getElementById('qa-live'),qaLines=[];
-function qaLog(label,ok,detail=''){qaLines.push((ok?'OK ':'FALLO ')+label+(detail?' '+detail:''));qaEl.textContent=qaLines.join('\n')}
-function qaFrame(){return new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))}
+function qaLog(label,ok,detail=''){qaLines.push((ok?'OK ':'FALLO ')+label+(detail?' '+detail:''));qaEl.textContent=qaLines.join('\n')+'\n'+(window.qaErrors||[]).join('\n')}
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+async function until(f,ms=35000){const end=performance.now()+ms;while(!f()&&performance.now()<end)await wait(150);return f()}
 async function qaRun(){try{
- await qaFrame();
- qaLog('WebGL',game.classList.contains('webgl-ready')&&renderer.info.render.calls>0,JSON.stringify(window.GC_Performance.status()));
+ let ready=await until(()=>window.GC_Performance?.status().ready);
+ qaLog('WebGL',ready,JSON.stringify(window.GC_Performance.status()));if(!ready){qaEl.textContent+='\nFIN QA';return}
  document.getElementById('start').click();qaLog('Inicio',playing);
- qualityMode=1;applyQuality();await qaFrame();
- qaLog('Ligero',qualityApplied===1&&!renderer.shadowMap.enabled,JSON.stringify(window.GC_Performance.status()));
- // Test the two research areas first, then the four academic portals.
+ qualityMode=1;applyQuality();qaLog('Ligero',qualityApplied===1&&!renderer.shadowMap.enabled);
  for(const i of [4,5,0,1,2,3]){
   player.position.set(LEVELS[i].x,h(LEVELS[i].x,LEVELS[i].z),LEVELS[i].z);
-  await qaFrame();
-  qaLog('Proximidad '+i,near===i);
-  window.dispatchEvent(new KeyboardEvent('keydown',{code:'KeyE',bubbles:true}));
-  window.dispatchEvent(new KeyboardEvent('keyup',{code:'KeyE',bubbles:true}));
+  const nearOk=await until(()=>near===i,3000);qaLog('Proximidad '+i,nearOk);
+  if(nearOk){window.dispatchEvent(new KeyboardEvent('keydown',{code:'KeyE',bubbles:true}));window.dispatchEvent(new KeyboardEvent('keyup',{code:'KeyE',bubbles:true}));}else showWorld(i);
   const link=modal.querySelector('[data-gc-phase2]');if(link)link.click();
   const dbg=window.GC_Phase2.debug();
   qaLog('Portal '+i,window.GC_Phase2.isOpen(),JSON.stringify({view:dbg.view,area:dbg.area,cards:document.querySelectorAll('.r15-card,[data-p2-mission]').length}));
   window.GC_Phase2.close();closeDialog();
  }
- const pos=player.position.clone();keys.add('KeyW');await qaFrame();await qaFrame();keys.delete('KeyW');qaLog('Movimiento',player.position.distanceTo(pos)>0);
+ await wait(800);closeDialog();const pos=player.position.clone();keys.add('KeyW');await until(()=>player.position.distanceTo(pos)>.05,2500);keys.delete('KeyW');qaLog('Movimiento',player.position.distanceTo(pos)>.05);
  yaw=1;distance=15;document.getElementById('resetCam').click();qaLog('Cámara',yaw===0&&distance===10);
- await new Promise(r=>setTimeout(r,2500));
- qaLog('Rendimiento medido',perfFPS>0,JSON.stringify(window.GC_Performance.status()));qaEl.textContent+='\nFIN QA';
+ await until(()=>perfFPS>0,6000);qaLog('Rendimiento medido',perfFPS>0,JSON.stringify(window.GC_Performance.status()));qaEl.textContent+='\nFIN QA';
 }catch(e){qaLog('Excepción',false,String(e));qaEl.textContent+='\nFIN QA'}}
 setTimeout(qaRun,200);
 
