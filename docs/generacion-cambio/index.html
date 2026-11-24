@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>GENERACIÓN CAMBIO · Fase 1 · V11.3 · Interfaz sin superposiciones</title>
+<title>GENERACIÓN CAMBIO · Fase 1 · V11.4 · Auditoría y maquetación profesional</title>
 <meta name="theme-color" content="#071933"><meta name="description" content="Aventura tridimensional interactiva mejorada: descubre seis territorios en un planeta con atmósfera más cinematográfica, agua dinámica y vegetación reforzada.">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Nunito:wght@500;600;700;800;900&display=swap');
@@ -465,6 +465,254 @@
 }
 #game .branding strong{color:#ecf8ff}
 
+/* V11.4. Maquetación estructural de la Fase 1.
+   Conserva el DOM, los seis mundos y los eventos. Cada bloque jugable dispone
+   de una celda de Grid: no se calculan posiciones mediante superposiciones. */
+#game:not(.play){
+  overscroll-behavior:contain;
+  scrollbar-gutter:stable;
+  scroll-padding-block:80px 20px;
+}
+#game:not(.play) .home,#game:not(.play) .profile,#game:not(.play) .worlds,
+#game:not(.play) #hint{min-width:0;box-sizing:border-box}
+#game:not(.play) .home h1{overflow-wrap:normal;max-width:100%}
+#game:not(.play) .stat,#game:not(.play) .skin-choice,
+#game:not(.play) .world{min-width:0;box-sizing:border-box}
+#game:not(.play) .world{overflow-wrap:break-word}
+@media(max-width:660px) and (orientation:portrait){
+  #game:not(.play){padding-bottom:max(22px,env(safe-area-inset-bottom))}
+  #game:not(.play) .home{max-width:100%;min-width:0}
+  #game:not(.play) .home h1{font-size:clamp(35px,13vw,62px);line-height:.95}
+  #game:not(.play) .worlds{width:100%!important}
+}
+@media(max-width:660px) and (orientation:landscape){
+  #game:not(.play){padding-bottom:24px}
+}
+
+/* Juego de sobremesa, portátil y tableta. Panel derecho independiente. */
+#game.play{
+  --gc-rail:clamp(238px,24vw,328px);
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) var(--gc-rail);
+  grid-template-rows: minmax(66px,auto) 122px auto minmax(0,1fr) 50px;
+  column-gap:12px;row-gap:8px;padding:0 12px 12px;
+  box-sizing:border-box;overflow:hidden;
+  align-content:stretch;
+}
+#game.play::after{content:none!important;display:none!important}
+#game.play #home,#game.play .home,#game.play .profile{display:none!important}
+#game.play .topbar{
+  position:relative!important;inset:auto!important;
+  grid-area:1 / 1 / 2 / 3;min-width:0;min-height:65px;
+  width:100%;height:auto;box-sizing:border-box;
+  padding:10px 10px;align-self:start;
+  background:linear-gradient(180deg,rgba(3,12,29,.83),rgba(3,12,29,.18));
+}
+#game.play #viewport{
+  position:relative!important;inset:auto!important;
+  grid-area:4 / 1 / 5 / 2;min-width:0;min-height:0;
+  width:100%!important;height:100%!important;
+  overflow:hidden;border-radius:13px;
+  isolation:isolate;z-index:0;
+}
+#game.play #viewport canvas{display:block;max-width:100%;max-height:100%}
+#game.play .playhud{
+  display:block;position:relative!important;inset:auto!important;
+  transform:none!important;grid-area:2 / 1 / 3 / 2;
+  width:max-content;max-width:100%;min-width:0;
+  align-self:start;justify-self:start;box-sizing:border-box;
+}
+#game.play #minimap{
+  display:block;position:relative!important;inset:auto!important;
+  transform:none!important;grid-area:2 / 2 / 3 / 3;
+  width:min(118px,100%)!important;height:min(118px,100%)!important;
+  justify-self:end;align-self:start;min-width:0;box-sizing:border-box;
+}
+#game.play #hint{
+  display:block;position:relative!important;inset:auto!important;
+  grid-area:3 / 1 / 4 / 2;transform:none!important;
+  align-self:center;justify-self:start;
+  width:max-content;max-width:100%;height:max-content;
+  margin:0;padding:8px 12px;font-size:10px;line-height:1.25;
+  white-space:normal;box-sizing:border-box;
+}
+#game.play #worlds{
+  display:grid;position:relative!important;inset:auto!important;
+  grid-area:3 / 2 / 6 / 3;transform:none!important;
+  width:100%!important;height:max-content;max-width:none;
+  align-self:end;justify-self:stretch;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  grid-template-rows:repeat(3,minmax(0,auto));
+  gap:7px;padding:8px;box-sizing:border-box;
+}
+#game.play .world{min-height:56px;min-width:0;padding:6px 4px;font-size:9px;line-height:1.2;overflow-wrap:anywhere;box-sizing:border-box}
+#game.play .world .emoji{margin:0 auto 3px;display:block}
+#game.play #graphicSettings{
+  position:relative!important;inset:auto!important;
+  transform:none!important;display:flex;
+  grid-area:5 / 1 / 6 / 2;
+  align-self:center;justify-self:start;
+  gap:8px;min-width:0;width:max-content;max-width:55%;height:max-content;
+}
+#game.play #graphicSettings button{min-height:35px;white-space:normal}
+#game.play #interact.ready{
+  display:block;position:relative!important;inset:auto!important;
+  transform:none!important;grid-area:5 / 1 / 6 / 2;
+  align-self:center;justify-self:end;
+  width:max-content;max-width:42%;min-height:39px;
+  padding:10px 12px;line-height:1.15;box-sizing:border-box;
+}
+#game.play #dpad{display:none!important}
+#game.play .veil{pointer-events:none;z-index:1}
+#game.play .heroSpot{pointer-events:none}
+#game.play #notice{pointer-events:none}
+@media(min-width:661px) and (max-width:980px){
+  #game.play{--gc-rail:clamp(205px,32vw,278px);grid-template-rows:minmax(65px,auto) 102px auto minmax(0,1fr) 45px;column-gap:10px;row-gap:7px;padding:0 10px 10px}
+  #game.play #minimap{width:99px!important;height:99px!important}
+  #game.play .world{min-height:51px;font-size:9px}
+  #game.play #graphicSettings{max-width:58%}
+  #game.play #interact.ready{max-width:40%;font-size:10px;padding:9px}
+}
+
+/* Móvil vertical: escena completa ARRIBA y controles/portales DEBAJO.
+   De este modo ningún control queda dibujado encima del personaje 3D. */
+@media(max-width:660px) and (orientation:portrait){
+ #game.play{
+   display:grid!important;
+   grid-template-columns:repeat(2,minmax(0,1fr));
+   grid-template-rows:70px 90px 51px minmax(100px,1fr) 42px 168px;
+   column-gap:7px;row-gap:6px;
+   padding:0 8px max(8px,env(safe-area-inset-bottom));
+   --gc-rail:0px;
+ }
+ #game.play .topbar{grid-area:1 / 1 / 2 / 3;padding:8px 2px;min-height:0;gap:7px;align-self:center}
+ #game.play .branding{min-width:0}
+ #game.play .branding strong{font-size:clamp(12px,3.6vw,16px);line-height:1.1}
+ #game.play .branding small{font-size:clamp(7px,1.9vw,8px);line-height:1.18}
+ #game.play .actions{gap:4px}
+ #game.play .actions button{width:34px;min-width:34px;height:36px;padding:6px}
+ #game.play .playhud{grid-area:2 / 1 / 3 / 2;width:100%;max-width:100%;padding:8px 7px;align-self:start}
+ #game.play .playhud strong{font-size:9px;line-height:1.25;gap:3px}
+ #game.play .playhud small{font-size:8px;line-height:1.2;overflow-wrap:anywhere}
+ #game.play .playhud .pips{gap:4px;margin-top:5px}
+ #game.play .playhud .pips i{width:11px;height:7px}
+ #game.play #minimap{grid-area:2 / 2 / 3 / 3;width:88px!important;height:88px!important;align-self:start;justify-self:end;margin-right:4px}
+ #game.play #hint{grid-area:3 / 1 / 4 / 2;justify-self:stretch;align-self:stretch;width:100%;max-width:100%;padding:6px 5px;font-size:9px;line-height:1.15;letter-spacing:0;text-align:center;display:flex;align-items:center;justify-content:center}
+ #game.play #interact.ready{grid-area:3 / 2 / 4 / 3;justify-self:stretch;align-self:stretch;width:100%;max-width:none;padding:6px 5px;min-height:0;font-size:10px;line-height:1.18;white-space:normal}
+ #game.play #viewport{grid-area:4 / 1 / 5 / 3;width:100%!important;height:100%!important;min-height:100px}
+ #game.play #graphicSettings{grid-area:5 / 1 / 6 / 3;display:flex;align-self:stretch;justify-self:center;gap:7px;width:100%;max-width:100%;justify-content:center}
+ #game.play #graphicSettings button{width:min(49%,160px);min-width:0;min-height:34px;padding:6px 5px;font-size:10px}
+ #game.play #dpad{grid-area:6 / 1 / 7 / 2;display:block!important;position:relative!important;inset:auto!important;transform:none!important;align-self:center;justify-self:center;width:142px;height:142px;max-width:100%;margin:0}
+ #game.play #dpad .dkey{width:45px;height:45px;font-size:19px}
+ #game.play #dpad .dup{margin-left:43px}
+ #game.play #dpad .drow{gap:42px}
+ #game.play #worlds{grid-area:6 / 2 / 7 / 3;display:grid;align-self:stretch;justify-self:stretch;width:100%!important;height:100%;min-height:0;padding:5px;gap:4px;grid-template-columns:repeat(2,minmax(0,1fr))!important;grid-template-rows:repeat(3,minmax(0,1fr))}
+ #game.play .world{min-height:0;padding:4px 1px;font-size:clamp(8px,2.15vw,9px);line-height:1.14;overflow-wrap:anywhere}
+ #game.play .world .emoji{width:20px;height:20px;margin:0 auto 2px}
+ #game.play .world .emoji .world-icon{width:19px;height:19px}
+}
+@media(max-width:660px) and (orientation:portrait) and (max-height:650px){
+ #game.play{grid-template-rows:65px 73px 43px minmax(85px,1fr) 37px 138px;row-gap:5px;padding-bottom:5px}
+ #game.play .playhud{padding:5px 6px}
+ #game.play .playhud small{font-size:7px}
+ #game.play #minimap{width:70px!important;height:70px!important}
+ #game.play #hint{font-size:8px;padding:4px 3px}
+ #game.play #graphicSettings button{min-height:30px;padding:4px;font-size:9px}
+ #game.play #dpad{height:130px;width:130px;align-self:center}
+ #game.play #dpad .dkey{width:42px;height:42px}
+ #game.play #dpad .dup{margin-left:40px}
+ #game.play #dpad .drow{gap:40px}
+ #game.play .world .emoji{width:17px;height:17px}
+ #game.play .world .emoji .world-icon{width:16px;height:16px}
+}
+
+/* Móvil en horizontal: tres columnas reales: mandos | juego | portales.
+   El mapa y botón de activar ocupan una fila propia del panel derecho. */
+@media(max-width:660px) and (orientation:landscape){
+ #game.play{
+   display:grid!important;
+   grid-template-columns:minmax(117px,26vw) minmax(0,1fr) minmax(156px,34vw);
+   grid-template-rows:61px 70px 34px 41px minmax(75px,1fr);
+   gap:4px 5px;padding:0 6px 6px;
+   --gc-rail:0px;
+ }
+ #game.play .topbar{grid-area:1 / 1 / 2 / 4;padding:6px 2px;min-height:0;align-self:center}
+ #game.play .branding{min-width:0}
+ #game.play .branding strong{font-size:13px;line-height:1.1}
+ #game.play .branding small{font-size:7px;line-height:1.15}
+ #game.play .actions{gap:4px}
+ #game.play .actions button{width:35px;height:35px;min-width:35px;padding:6px}
+ #game.play .playhud{grid-area:2 / 1 / 3 / 2;width:100%;max-width:100%;min-width:0;padding:5px 4px;border-radius:10px;align-self:stretch}
+ #game.play .playhud strong{font-size:8px;line-height:1.15;gap:3px}
+ #game.play .playhud small{font-size:7px;line-height:1.13;overflow-wrap:anywhere;margin-top:3px}
+ #game.play .playhud .pips{gap:3px;margin-top:3px}
+ #game.play .playhud .pips i{width:9px;height:6px}
+ #game.play #viewport{grid-area:2 / 2 / 6 / 3;min-height:0;height:100%!important}
+ #game.play #hint{grid-area:3 / 1 / 4 / 2;justify-self:stretch;align-self:stretch;width:100%;max-width:none;padding:3px 4px;font-size:8px;line-height:1.1;letter-spacing:0;text-align:center;border-radius:10px}
+ #game.play #graphicSettings{grid-area:4 / 1 / 5 / 2;display:flex;flex-wrap:nowrap;align-self:stretch;justify-self:stretch;gap:3px;width:100%;max-width:100%}
+ #game.play #graphicSettings button{flex:1;min-width:0;min-height:0;padding:4px 2px;font-size:7px;line-height:1.12;white-space:normal}
+ #game.play #dpad{grid-area:5 / 1 / 6 / 2;display:block!important;position:relative!important;inset:auto!important;transform:none!important;width:110px;height:100px;max-width:100%;justify-self:center;align-self:center}
+ #game.play #dpad .dkey{width:31px;height:31px;font-size:15px;border-radius:9px}
+ #game.play #dpad .dup{margin-left:31px}
+ #game.play #dpad .drow{gap:31px}
+ #game.play #minimap{grid-area:2 / 3 / 3 / 4;width:68px!important;height:68px!important;justify-self:end;align-self:start;margin-right:2px}
+ #game.play #interact.ready{grid-area:2 / 3 / 3 / 4;justify-self:start;align-self:center;width:min(100px,55%);max-width:55%;height:auto;min-height:40px;padding:5px 4px;font-size:8px;line-height:1.13}
+ #game.play #worlds{grid-area:3 / 3 / 6 / 4;display:grid;align-self:stretch;justify-self:stretch;width:100%!important;height:100%;max-width:none;padding:4px;gap:3px;grid-template-columns:repeat(2,minmax(0,1fr))!important;grid-template-rows:repeat(3,minmax(0,1fr))}
+ #game.play .world{min-width:0;min-height:0;padding:2px;font-size:7px;line-height:1.08;overflow-wrap:anywhere}
+ #game.play .world .emoji{width:15px;height:15px;margin:0 auto 1px}
+ #game.play .world .emoji .world-icon{width:14px;height:14px}
+}
+@media(max-height:340px) and (orientation:landscape) and (max-width:660px){
+ #game.play{grid-template-rows:57px 62px 30px 36px minmax(70px,1fr)}
+ #game.play #minimap{width:60px!important;height:60px!important}
+ #game.play #dpad .dkey{width:28px;height:28px}
+ #game.play #dpad .dup{margin-left:28px}
+ #game.play #dpad .drow{gap:28px}
+}
+
+/* Ventanas de información: el contenido largo nunca oculta Cerrar ni se sale
+   de la pantalla. Se desplaza dentro de su propio panel. */
+#game #modal{overflow-y:auto;overflow-x:hidden;box-sizing:border-box;
+  align-items:safe center;justify-content:center;overscroll-behavior:contain;
+  padding:max(12px,env(safe-area-inset-top)) max(12px,env(safe-area-inset-right))
+          max(12px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left));}
+#game #modal .dialog{box-sizing:border-box;max-width:min(495px,100%);
+  max-height:calc(100dvh - 24px);overflow-y:auto;overflow-x:hidden;
+  overscroll-behavior:contain;scrollbar-gutter:stable;
+  padding:clamp(15px,3vh,26px);}
+#game #modal .dialog h2{overflow-wrap:anywhere;hyphens:auto;line-height:1.08}
+#game #dialogcontent,#game #dialogcontent p{overflow-wrap:anywhere}
+#game #modal .dialog .close{position:sticky;float:right;top:0;right:0;
+  margin:-1px 0 4px 8px;z-index:2;flex-shrink:0;}
+#game #modal .dialog .go{min-height:42px;max-width:100%;white-space:normal}
+@media(max-height:440px){
+ #game #modal .dialog h2{font-size:clamp(23px,5vh,33px)}
+ #game #modal .dialog p{font-size:12px;line-height:1.4}
+}
+/* El contenedor principal puede desplazarse en móviles bajos. El modal debe
+   permanecer fijo al viewport y no moverse con ese scroll. */
+#game #modal{position:fixed!important;inset:0!important;}
+/* Portátiles con poca altura: ajustar la altura de tarjetas en vez de recortarlas. */
+@media (min-width:981px) and (max-height:800px){
+ #game:not(.play) .worlds{gap:5px;padding:6px}
+ #game:not(.play) .world{min-height:49px;padding:5px 3px;font-size:9px}
+ #game:not(.play) .world .emoji{width:20px;height:20px;margin:0 auto 2px}
+ #game:not(.play) .world .emoji .world-icon{width:19px;height:19px}
+}
+/* Cabecera y selector en portátiles bajos: el título ocupa dos filas de la
+   columna izquierda; perfil y portales se apilan en la columna derecha.
+   Esto evita la fila demasiado alta que empujaba los últimos botones fuera. */
+@media(min-width:981px) and (max-height:800px){
+ #game:not(.play){
+   grid-template-columns:minmax(0,1fr) clamp(236px,23vw,320px);
+   grid-template-rows:auto auto auto;
+   align-content:start;row-gap:9px;padding-top:86px;
+ }
+ #game:not(.play) .home{grid-area:1/1/3/2;align-self:center}
+ #game:not(.play) .profile{grid-area:1/2;align-self:start}
+ #game:not(.play) .worlds{grid-area:2/2;align-self:start}
+ #game:not(.play) #hint{grid-area:3/1;align-self:start}
+}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
 </head>
