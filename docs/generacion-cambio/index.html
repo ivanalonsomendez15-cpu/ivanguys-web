@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>GENERACIÓN CAMBIO · Fase 1 · V7 · Explorador mejorado</title>
+<title>GENERACIÓN CAMBIO · Fase 1 · V9 · Héroes del Cambio</title>
 <meta name="theme-color" content="#071933"><meta name="description" content="Aventura tridimensional interactiva mejorada: descubre seis territorios en un planeta con atmósfera más cinematográfica, agua dinámica y vegetación reforzada.">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Nunito:wght@500;600;700;800;900&display=swap');
@@ -46,15 +46,28 @@
 @media(max-width:980px){.play .worlds{width:min(62vw,555px)}}
 @media(max-width:660px){.play .worlds{width:57vw;gap:4px}.play #hint{bottom:163px}.play .veil{opacity:.25}}
 
+
+/* V9: selector de héroes de aventura - tarjetas al estilo de vestuario de videojuego */
+.skin-dock{display:flex;gap:9px;margin-top:15px;max-width:406px;padding:10px;background:linear-gradient(125deg,#071a36db,#102f50dd);border:1px solid #89e8ff69;border-radius:17px;box-shadow:0 20px 42px #0005;backdrop-filter:blur(13px)}
+.skin-choice{position:relative;flex:1;min-width:0;min-height:68px;border-radius:12px;color:white;border:1px solid #ffffff2e;background:linear-gradient(145deg,#ffffff1b,#ffffff08);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;transition:transform .16s,box-shadow .16s,border-color .16s}.skin-choice:before{content:'';position:absolute;top:0;left:9px;right:9px;height:3px;border-radius:5px;background:var(--skin-color)}.skin-choice b{font-size:11px;letter-spacing:1px;font-weight:1000}.skin-choice .skin-symbol{display:block;position:relative;width:31px;height:30px;margin-bottom:3px;filter:drop-shadow(0 3px 4px #0006)}.skin-symbol:before{content:'';position:absolute;width:15px;height:15px;border-radius:48% 48% 42% 42%;background:#f0b88a;left:8px;top:1px;border-top:5px solid var(--skin-color);box-shadow:0 0 0 2px #0b3048}.skin-symbol:after{content:'';position:absolute;bottom:0;left:2px;width:27px;height:14px;border-radius:10px 10px 5px 5px;background:var(--skin-color);border:2px solid #ddf8ff}.skin-choice.is-selected{border-color:var(--skin-color);box-shadow:inset 0 0 0 1px var(--skin-color),0 0 22px #69dfff3a;transform:translateY(-3px);background:#1d557094}.skin-choice:hover{transform:translateY(-4px)}.skin-choice:focus-visible{outline:3px solid #aefff4;outline-offset:2px}
+#skinCycle{font-size:19px}.heroSpot{position:absolute;right:11%;top:19%;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,#92fff34a,transparent 68%);filter:blur(25px);pointer-events:none;z-index:1;opacity:.48}
+@media(max-width:980px){.skin-dock{max-width:315px}.skin-choice{min-height:59px}}
+@media(max-width:660px){.skin-dock{margin:10px auto 0;padding:6px;gap:6px;max-width:306px}.skin-choice{min-height:52px}.skin-choice .skin-symbol{width:23px;height:23px;transform:scale(.75);margin:0}.skin-choice b{font-size:9px}.heroSpot{right:13%;top:42%;width:120px;height:120px}.home{top:76px}.home h1{font-size:58px}.tagline{margin-bottom:9px}.start{min-height:44px;padding:11px 15px}}
+
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
 </head>
 <body>
 <div id="game">
-<div id="viewport" aria-label="Mundo tridimensional interactivo"></div><div class="veil"></div>
-<header class="topbar"><div class="branding"><div class="logo">🌎</div><div><strong>GENERACIÓN CAMBIO</strong><small>6º PRIMARIA CP CARMEN RUIZ-TILVE</small></div></div><div class="actions"><button id="sound" aria-label="Sonido" title="Sonido">♪̸</button><button id="motion" aria-label="Pausar animación" title="Animación">⏸</button><button id="info" aria-label="Información" title="Información">ⓘ</button></div></header>
-<section class="home" id="home"><div class="eyebrow">✦ UN MUNDO POR DESCUBRIR</div><h1>GENERACIÓN <em>CAMBIO</em></h1><div class="school">6º PRIMARIA CP CARMEN RUIZ-TILVE</div><p class="tagline">Explora, aprende y cambia el mundo.</p><button class="start" id="start">COMENZAR AVENTURA&nbsp;&nbsp; ➜</button></section>
-<aside class="profile"><h2>✦ PERFIL EXPLORADOR</h2><div class="avatar-row"><div class="avatar">🧑‍🚀</div><div><div id="nickname" class="user">Explorador/a</div><div class="rank">Nivel 01 · Recluta</div></div></div><button id="rename" class="rename">Elegir apodo</button><div class="statgrid"><div class="stat"><b id="levelValue">01</b><small>Nivel</small></div><div class="stat"><b id="missionValue">0</b><small>Misiones</small></div><div class="stat"><b id="xpValue">0</b><small>XP</small></div><div class="stat"><b id="badgeValue">0</b><small>Insignias</small></div></div><div class="xp"><span id="xpFill"></span></div></aside>
+<div id="viewport" aria-label="Mundo tridimensional interactivo"></div><div class="veil"></div><div class="heroSpot" aria-hidden="true"></div>
+<header class="topbar"><div class="branding"><div class="logo">🌎</div><div><strong>GENERACIÓN CAMBIO</strong><small>6º PRIMARIA CP CARMEN RUIZ-TILVE</small></div></div><div class="actions"><button id="skinCycle" aria-label="Cambiar personaje" title="Cambiar personaje">👕</button><button id="sound" aria-label="Sonido" title="Sonido">♪̸</button><button id="motion" aria-label="Pausar animación" title="Animación">⏸</button><button id="info" aria-label="Información" title="Información">ⓘ</button></div></header>
+<section class="home" id="home"><div class="eyebrow">✦ UN MUNDO POR DESCUBRIR</div><h1>GENERACIÓN <em>CAMBIO</em></h1><div class="school">6º PRIMARIA CP CARMEN RUIZ-TILVE</div><p class="tagline">Explora, aprende y cambia el mundo.</p><button class="start" id="start">COMENZAR AVENTURA&nbsp;&nbsp; ➜</button>
+<div class="skin-dock" role="group" aria-label="Elegir personaje">
+<button class="skin-choice is-selected" data-skin="0" style="--skin-color:#4ce9ea" aria-pressed="true"><span class="skin-symbol"></span><b>NEXO</b></button>
+<button class="skin-choice" data-skin="1" style="--skin-color:#c390ff" aria-pressed="false"><span class="skin-symbol"></span><b>NOVA</b></button>
+<button class="skin-choice" data-skin="2" style="--skin-color:#ffb854" aria-pressed="false"><span class="skin-symbol"></span><b>KAI</b></button>
+</div></section>
+<aside class="profile"><h2>✦ PERFIL EXPLORADOR</h2><div class="avatar-row"><div class="avatar" id="skinAvatar">🧑‍🚀</div><div><div id="nickname" class="user">Explorador/a</div><div class="rank">Nivel 01 · Recluta</div></div></div><button id="rename" class="rename">Elegir apodo</button><div class="statgrid"><div class="stat"><b id="levelValue">01</b><small>Nivel</small></div><div class="stat"><b id="missionValue">0</b><small>Misiones</small></div><div class="stat"><b id="xpValue">0</b><small>XP</small></div><div class="stat"><b id="badgeValue">0</b><small>Insignias</small></div></div><div class="xp"><span id="xpFill"></span></div></aside>
 <div class="playhud"><strong>✦ SEÑALES DEL PLANETA <span id="signalCount">0/6</span></strong><small>WASD · Flechas · Shift correr · Espacio saltar · E portal</small><div class="pips" id="signalPips"><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
 <div id="hint">DESCUBRE LOS SEIS PORTALES · ACTIVA SUS BALIZAS</div><canvas id="minimap" width="180" height="180" aria-label="Minimapa de los portales"></canvas><nav id="worlds" class="worlds" aria-label="Seis territorios"></nav>
 <button id="interact">ACTIVAR BALIZA · E</button>
@@ -324,8 +337,8 @@ function explorerCloth(){
  const tex=new THREE.CanvasTexture(canvas);tex.wrapS=tex.wrapT=THREE.RepeatWrapping;tex.colorSpace=THREE.SRGBColorSpace;tex.anisotropy=renderer.capabilities.getMaxAnisotropy();return tex;
 }
 const clothTex=explorerCloth();
-const fabric=new THREE.MeshStandardMaterial({map:clothTex,color:0xe9f5ff,metalness:.04,roughness:.84});
-const deepFabric=new THREE.MeshStandardMaterial({color:0x163653,metalness:.12,roughness:.72});
+const fabric=new THREE.MeshStandardMaterial({map:clothTex,color:0xf4f9ff,metalness:.04,roughness:.80});
+const deepFabric=new THREE.MeshStandardMaterial({color:0x11314e,metalness:.10,roughness:.70});
 const armor=new THREE.MeshStandardMaterial({color:0xceeaf0,metalness:.55,roughness:.29});
 const ceramic=new THREE.MeshStandardMaterial({color:0x274e68,metalness:.44,roughness:.33});
 const rubber=new THREE.MeshStandardMaterial({color:0x18283b,roughness:.91,metalness:0});
@@ -416,30 +429,140 @@ for(const side of [-1,1]){
 const explorerBeacon=geoSphere(characterGear,cyanTrim,0,2.97,0,.078,.09,.078,16);
 geoTube(characterGear,[[-.18,2.68,.40],[-.09,2.695,.43],[.06,2.695,.43],[.19,2.68,.38]],.013,cyanTrim);
 const characterGlow=new THREE.PointLight(0x6affed,.35,3.5,2);characterGlow.position.set(0,2.25,.34);characterGear.add(characterGlow);
+// Rediseño del protagonista: más juvenil, aventurero y legible visualmente.
+const visorBand=geoRoundedBox(characterGear,.34,.10,.06,.02,cyanTrim,0,2.50,.36);
+const scarfMat=new THREE.MeshStandardMaterial({color:0xffc86f,roughness:.78,metalness:.03});
+const scarf=new THREE.Group();characterContainer.add(scarf);
+const scarfFront=geoRoundedBox(scarf,.42,.12,.08,.03,scarfMat,0,2.13,.22);scarfFront.rotation.x=.06;
+const scarfTail=geoRoundedBox(scarf,.14,.42,.06,.02,scarfMat,-.12,1.83,-.18);scarfTail.rotation.z=.16;scarfTail.rotation.x=.08;
+const belt=geoRoundedBox(characterGear,.62,.10,.10,.03,bronzeTrim,0,1.47,.16);
+for(const side of [-1,1]){geoRoundedBox(characterGear,.16,.16,.14,.03,ceramic,side*.24,1.43,.22);}
+const badgeStar=add(new THREE.ConeGeometry(.055,.14,5),bronzeTrim,characterGear,.22,1.93,.40);badgeStar.rotation.z=.45;badgeStar.rotation.x=Math.PI/2;
+const hairTufts=[];
+for(const side of [-1,1]){const tuft=geoSphere(charFallback,hairMaterial,side*.16,2.90,.23,.11,.18,.12,16);hairTufts.push(tuft);}
+const fringe=geoSphere(charFallback,hairMaterial,0,2.69,.31,.19,.10,.08,16);
+const bootsGlow=[];
+for(const side of [-1,1]){const lamp=geoSphere(characterGear,cyanTrim,side*.18,.58,.24,.04,.04,.07,12);bootsGlow.push(lamp);}
 
 let characterMixer=null,idleAction=null,walkAction=null,runAction=null,characterIsLoaded=false;
-const loader=new GLTFLoader();const characterUrl='https://threejs.org/examples/models/gltf/Soldier.glb';
-loader.load(characterUrl,gltf=>{
- const obj=gltf.scene;
- obj.traverse(node=>{
-  if(node.isMesh){node.castShadow=true;node.receiveShadow=true;if(node.material){node.material=node.material.clone();node.material.roughness=.76;node.material.metalness=.035;node.material.envMapIntensity=.8;}}
- });
- const box=new THREE.Box3().setFromObject(obj),size=new THREE.Vector3();box.getSize(size);
- obj.scale.setScalar(2.8/Math.max(size.y,.001));obj.updateMatrixWorld(true);
- const box2=new THREE.Box3().setFromObject(obj);obj.position.y-=box2.min.y;
- characterContainer.add(obj);charFallback.visible=false;characterIsLoaded=true;
- characterMixer=new THREE.AnimationMixer(obj);
- const clip=name=>gltf.animations.find(a=>a.name.toLowerCase().includes(name));
- const idle=clip('idle')||gltf.animations[0],walk=clip('walking')||clip('walk')||gltf.animations[1],run=clip('running')||clip('run')||gltf.animations[2];
- if(idle){idleAction=characterMixer.clipAction(idle);idleAction.play();}
- if(walk){walkAction=characterMixer.clipAction(walk);walkAction.play();walkAction.weight=0;}
- if(run){runAction=characterMixer.clipAction(run);runAction.play();runAction.weight=0;}
-},undefined,()=>{toast('Explorador 3D compatible activado');});
-// Companion uses mechanical articulations and glow rather than four spheres.
-const drone=new THREE.Group();scene.add(drone);const droneMat=new THREE.MeshStandardMaterial({color:0xc9f6ff,roughness:.2,metalness:.5});add(new THREE.SphereGeometry(.52,22,18),droneMat,drone).scale.set(1.3,.82,.85);add(new THREE.BoxGeometry(.82,.25,.13),material(0x0b3358,.3,.5),drone,0,0,.48);
-for(const x of [-.18,.18])add(new THREE.SphereGeometry(.075,12,10),new THREE.MeshBasicMaterial({color:0x68fff1}),drone,x,.05,.58);
-for(const x of [-.67,.67]){add(new THREE.CylinderGeometry(.14,.18,.35,9),droneMat,drone,x,-.12,0);const fan=add(new THREE.TorusGeometry(.26,.06,10,18),new THREE.MeshBasicMaterial({color:0x7deeff}),drone,x,.04,0);fan.rotation.x=Math.PI/2;}
-const flame=add(new THREE.ConeGeometry(.18,.53,12),new THREE.MeshBasicMaterial({color:0x72f6ff,transparent:true,opacity:.45}),drone,0,-.67,0);flame.rotation.x=Math.PI;
+const loader=new GLTFLoader();
+setTimeout(()=>toast('Explorador rediseñado listo'),800);
+// Robot acompañante rediseñado: cuerpo más expresivo, anillo, antena y alas.
+const drone=new THREE.Group();scene.add(drone);
+const droneCoreMat=new THREE.MeshStandardMaterial({color:0xe5fbff,roughness:.18,metalness:.46});
+const droneDarkMat=material(0x103552,.28,.58),droneGlowMat=new THREE.MeshStandardMaterial({color:0x73fff3,emissive:0x29d8cc,emissiveIntensity:.9,roughness:.24,metalness:.35});
+const droneBody=add(new THREE.SphereGeometry(.62,26,20),droneCoreMat,drone);droneBody.scale.set(1.12,.82,.92);
+const droneFace=geoRoundedBox(drone,.92,.34,.12,.06,droneDarkMat,0,.03,.46);
+const droneEyes=[];for(const side of [-1,1]){const eye=geoRoundedBox(drone,.18,.08,.02,.02,droneGlowMat,side*.18,.04,.54);droneEyes.push(eye);}
+const droneMouth=geoRoundedBox(drone,.22,.04,.02,.02,new THREE.MeshStandardMaterial({color:0x97fff4,emissive:0x2dbfb8,emissiveIntensity:.4,roughness:.3}),0,-.08,.54);
+const droneHalo=add(new THREE.TorusGeometry(.92,.045,12,64),new THREE.MeshBasicMaterial({color:0x7fefff,transparent:true,opacity:.65}),drone,0,-.02,0);droneHalo.rotation.x=Math.PI/2;
+const droneTop=geoRoundedBox(drone,.36,.12,.36,.04,droneCoreMat,0,.54,0);
+const antenna=add(new THREE.CylinderGeometry(.02,.02,.34,10),droneDarkMat,drone,0,.80,0);const antennaOrb=geoSphere(drone,droneGlowMat,0,1.00,0,.08,.08,.08,14);
+const droneWingPivots=[];
+for(const side of [-1,1]){
+ const pivot=new THREE.Group();pivot.position.set(side*.70,0,0);drone.add(pivot);droneWingPivots.push(pivot);
+ geoRoundedBox(pivot,.22,.18,.24,.04,droneCoreMat,0,.01,0);
+ const wing=geoRoundedBox(pivot,.60,.09,.28,.03,droneCoreMat,side*.26,.01,0);wing.rotation.z=side*.10;
+ const fin=add(new THREE.ConeGeometry(.10,.26,4),droneGlowMat,pivot,side*.52,.01,0);fin.rotation.z=side>0?-Math.PI/2:Math.PI/2;
+ add(new THREE.CylinderGeometry(.08,.11,.20,12),droneDarkMat,pivot,0,-.22,0);const thrusterGlow=add(new THREE.ConeGeometry(.08,.22,12),new THREE.MeshBasicMaterial({color:0x7df6ff,transparent:true,opacity:.58}),pivot,0,-.41,0);thrusterGlow.rotation.x=Math.PI;
+}
+const droneLower=geoRoundedBox(drone,.34,.12,.28,.04,droneDarkMat,0,-.42,0);
+const flame=add(new THREE.ConeGeometry(.15,.46,14),new THREE.MeshBasicMaterial({color:0x72f6ff,transparent:true,opacity:.45}),drone,0,-.70,0);flame.rotation.x=Math.PI;
+
+// V9 HÉROES DEL CAMBIO: atuendo deportivo de exploración, silueta heroica, tres aspectos elegibles.
+// Las piezas se generan con malla 3D real (no imágenes 2D ni personajes de otras franquicias).
+for(const oldHelmet of [helmetGlass,helmetBack,helmetBrow,helmetBase,explorerBeacon,visorBand,...sideLamps])oldHelmet.visible=false;
+// Original chest/pack still contributes depth. Remove the bubble helmet: face and expression stay readable.
+const heroicRoot=new THREE.Group();charFallback.add(heroicRoot);
+const jacketMat=new THREE.MeshPhysicalMaterial({color:0x159bae,metalness:.08,roughness:.62,clearcoat:.2});
+const jacketDark=new THREE.MeshStandardMaterial({color:0x15304f,metalness:.12,roughness:.69});
+const jacketLight=new THREE.MeshPhysicalMaterial({color:0x96fff1,metalness:.28,roughness:.3,clearcoat:.32});
+const sneakerMat=new THREE.MeshPhysicalMaterial({color:0xf6f8fb,roughness:.38,metalness:.08});
+const skinBase=new THREE.Color(0xf0b58c);
+const headwear=new THREE.Group();charFallback.add(headwear);
+// Chest form uses a continuous profile rather than several disconnected spheres.
+const jacketProfile=[[.23,1.24],[.37,1.33],[.42,1.48],[.48,1.62],[.54,1.79],[.52,1.92],[.38,2.08],[.23,2.17]];
+const jacketBody=add(new THREE.LatheGeometry(jacketProfile.map(p=>new THREE.Vector2(...p)),48),jacketMat,heroicRoot);jacketBody.scale.z=.79;
+const undershirt=geoRoundedBox(heroicRoot,.27,.46,.12,.04,jacketDark,0,1.83,.385);
+const zipper=geoRoundedBox(heroicRoot,.035,.43,.018,.008,jacketLight,0,1.78,.46);
+const zipperPull=geoRoundedBox(heroicRoot,.08,.08,.02,.015,sneakerMat,0,1.86,.48);
+const techEmblem=add(new THREE.OctahedronGeometry(.12,0),jacketLight,heroicRoot,.22,1.88,.39);techEmblem.scale.set(.8,1.2,.45);
+for(const side of [-1,1]){
+ const seam=geoTube(heroicRoot,[[side*.40,1.94,.21],[side*.44,1.66,.17],[side*.33,1.44,.2]],.014,jacketLight);
+ const pocket=geoRoundedBox(heroicRoot,.24,.22,.10,.028,jacketDark,side*.30,1.44,.25);
+ const buckle=geoRoundedBox(heroicRoot,.17,.07,.02,.01,jacketLight,side*.31,1.47,.32);
+ const armband=geoRoundedBox(charFallback,.29,.13,.11,.025,jacketMat,side*.57,1.61,.08);
+ armband.rotation.z=side*.12;
+ const gloveCuff=geoRoundedBox(charFallback,.28,.12,.21,.03,jacketDark,side*.66,1.00,.065);
+ const toePlate=geoRoundedBox(charFallback,.35,.07,.31,.025,jacketLight,side*.22,.12,.29);
+ const kneecap=geoRoundedBox(charFallback,.24,.20,.12,.04,jacketMat,side*.22,.44,.22);
+}
+const jacketCollar=add(new THREE.TorusGeometry(.32,.11,14,48),jacketDark,heroicRoot,0,2.18,.025);jacketCollar.rotation.x=Math.PI/2;
+const jacketHem=add(new THREE.TorusGeometry(.37,.065,10,48),jacketDark,heroicRoot,0,1.27,0);jacketHem.rotation.x=Math.PI/2;
+// Clothing ornaments and helmet visor are separate per look; no generic space helmet.
+const cap=new THREE.Group();headwear.add(cap);
+const capDome=add(new THREE.SphereGeometry(.365,28,20,0,Math.PI*2,0,Math.PI*.54),jacketMat,cap,0,2.80,.012);
+const capBrim=geoRoundedBox(cap,.65,.055,.29,.025,jacketDark,0,2.737,.34);capBrim.rotation.x=.045;
+const capPin=geoSphere(cap,jacketLight,0,2.90,.31,.045,.045,.024,14);
+const headset=new THREE.Group();headwear.add(headset);
+const headsetBand=add(new THREE.TorusGeometry(.39,.065,12,48,Math.PI*1.02),jacketDark,headset,0,2.56,.04);headsetBand.rotation.z=Math.PI;
+for(const side of [-1,1]){
+ const earpad=geoRoundedBox(headset,.16,.28,.16,.04,jacketMat,side*.39,2.53,.04);
+ const led=geoSphere(headset,jacketLight,side*.48,2.52,.10,.03,.07,.04,12);
+}
+const hood=new THREE.Group();headwear.add(hood);
+const hoodRim=add(new THREE.TorusGeometry(.405,.14,16,52,Math.PI*1.86),jacketMat,hood,0,2.54,.03);hoodRim.rotation.z=.08;
+const hoodNeck=add(new THREE.TorusGeometry(.33,.11,10,42),jacketDark,hood,0,2.20,.005);hoodNeck.rotation.x=Math.PI/2;
+// Volume in the hair using stylized, individually angled 3D locks.
+const hairLockMat=new THREE.MeshStandardMaterial({color:0x26374d,roughness:.84});
+const hairSpikes=[];
+for(let i=0;i<7;i++){
+ const a=(i/6-.5)*1.85;
+ const point=add(new THREE.ConeGeometry(.13+(i%2)*.016,.31+(i%3)*.05,9),hairLockMat,headwear,Math.sin(a)*.27,2.86+(i%2)*.035,.17+Math.cos(a)*.095);
+ point.rotation.z=-Math.sin(a)*.62;point.rotation.x=-.33;hairSpikes.push(point);
+}
+const ponytail=new THREE.Group();headwear.add(ponytail);
+const ponyBase=geoSphere(ponytail,hairLockMat,0,2.73,-.29,.24,.22,.24,18);
+const ponyTop=geoSphere(ponytail,hairLockMat,0,2.52,-.44,.13,.27,.15,18);
+const ponyTip=add(new THREE.ConeGeometry(.14,.35,12),hairLockMat,ponytail,0,2.24,-.47);ponyTip.rotation.x=Math.PI;
+const ponyBand=add(new THREE.TorusGeometry(.12,.025,8,18),jacketLight,ponytail,0,2.62,-.36);ponyBand.rotation.x=Math.PI/2;
+const goggles=geoRoundedBox(headwear,.62,.15,.08,.05,jacketDark,0,2.65,.35);
+const goggleLens=geoRoundedBox(headwear,.52,.08,.024,.02,jacketLight,0,2.65,.406);
+// Floating game-pet gets additional clear face, expressions and three matching costumes.
+const roboBrow=[];
+for(const side of [-1,1]){
+ const brow=geoRoundedBox(drone,.21,.045,.03,.02,droneDarkMat,side*.20,.20,.55);roboBrow.push(brow);
+ const arm=geoSphere(drone,droneCoreMat,side*.84,-.05,.13,.18,.15,.19,18);
+ const claw=geoRoundedBox(drone,.22,.07,.14,.025,droneDarkMat,side*.93,-.19,.23);claw.rotation.z=side*.2;
+}
+const botRingLight=new THREE.PointLight(0x72e8ff,2.2,5);botRingLight.position.set(0,-.2,.23);drone.add(botRingLight);
+const petCrest=geoRoundedBox(drone,.25,.08,.19,.024,droneGlowMat,0,.53,.2);
+const LOOKS=[
+ {name:'NEXO',accent:0x38dce7,trim:0x9bf4f2,shirt:0x167eaf,dark:0x123c64,hair:0x263a50,skin:0xf3bc91,pet:0x72f4ff,emoji:'🧢',head:'cap'},
+ {name:'NOVA',accent:0xbb80ff,trim:0xf8acff,shirt:0x7756cf,dark:0x332a67,hair:0x302343,skin:0xbb815e,pet:0xee9dff,emoji:'✨',head:'pony'},
+ {name:'KAI',accent:0xffa846,trim:0xffe695,shirt:0xdb6b28,dark:0x61402b,hair:0x252a2c,skin:0xdca174,pet:0xffd679,emoji:'⚡',head:'hood'}
+];
+let selectedLook=0;
+function applyLook(index,persist=true){
+ selectedLook=((index%LOOKS.length)+LOOKS.length)%LOOKS.length;const look=LOOKS[selectedLook];
+ jacketMat.color.setHex(look.shirt);jacketDark.color.setHex(look.dark);jacketLight.color.setHex(look.trim);hairLockMat.color.setHex(look.hair);
+ fabric.color.setHex(look.shirt);ceramic.color.setHex(look.dark);bronzeTrim.color.setHex(look.trim);scarfMat.color.setHex(look.accent);
+ skin.color.setHex(look.skin);const skinColor=new THREE.Color(look.skin);
+ for(const mesh of charFallback.children){if(mesh.isMesh&&mesh.material===skin)mesh.material.color.copy(skinColor)}
+ cap.visible=look.head==='cap';ponytail.visible=look.head==='pony';goggles.visible=look.head==='hood';goggleLens.visible=look.head==='hood';
+ hood.visible=look.head==='hood';headset.visible=look.head!=='hood';
+ for(const spike of hairSpikes)spike.visible=look.head!=='hood';
+ droneCoreMat.color.setHex(look.head==='hood'?0xf3ede0:0xe6f9ff);droneGlowMat.color.setHex(look.pet);droneGlowMat.emissive.setHex(look.pet);
+ droneHalo.material.color.setHex(look.pet);botRingLight.color.setHex(look.pet);petCrest.material.emissive.setHex(look.pet);
+ const badge=$('#skinAvatar');if(badge)badge.textContent=look.emoji;
+ for(const btn of document.querySelectorAll('[data-skin]')){const isSelected=Number(btn.dataset.skin)===selectedLook;btn.classList.toggle('is-selected',isSelected);btn.setAttribute('aria-pressed',String(isSelected));}
+ if(persist){try{localStorage.setItem('gc-phase1-look-v9',String(selectedLook))}catch{}}
+ if(playing)toast('ASPECTO: '+look.name);beep(880);
+}
+document.querySelectorAll('[data-skin]').forEach(btn=>btn.addEventListener('click',()=>applyLook(Number(btn.dataset.skin))));
+$('#skinCycle').onclick=()=>applyLook(selectedLook+1);
+try{applyLook(Number(localStorage.getItem('gc-phase1-look-v9')||0),false)}catch{applyLook(0,false)}
+
 // V3 detailed structures: light poles, plaza benches, rocks, wildflowers and illuminated signs.
 const fixtures=new THREE.Group();scene.add(fixtures);
 function lamppost(x,z){const y=h(x,z);const pole=add(new THREE.CylinderGeometry(.085,.11,4.8,12),material(0x244c63,.35,.6),fixtures,x,y+2.45,z);const glass=add(new THREE.SphereGeometry(.26,12,12),new THREE.MeshStandardMaterial({color:0xfff3cf,emissive:0xffbd71,emissiveIntensity:1.9,roughness:.18}),fixtures,x,y+4.92,z);const glow=new THREE.PointLight(0xffdfa5,2.4,10,2);glow.position.set(x,y+4.86,z);fixtures.add(glow);}
@@ -641,11 +764,17 @@ function animate(){requestAnimationFrame(animate);const dt=Math.min(clock.getDel
  });
  fallbackTorso.rotation.z=characterIsLoaded?0:(moving?Math.sin(t*4)*.015:Math.sin(t*1.5)*.009);
  fallbackTorso.scale.y=1+Math.sin(t*1.6)*.006;
- characterGear.position.y=Math.sin(t*1.4)*.007+(moving?Math.abs(stride)*.012:0);
+ characterGear.position.y=Math.sin(t*1.4)*.007+(moving?Math.abs(stride)*.012:0);scarf.position.y=Math.sin(t*1.4)*.01+(moving?Math.abs(stride)*.02:0);scarf.rotation.y=Math.sin(t*.9)*.03;scarfTail.rotation.x=.08+(moving?Math.abs(stride)*.28:Math.sin(t*1.8)*.08);fringe.position.y=2.69+Math.sin(t*2.2)*.01;for(const tuft of hairTufts)tuft.rotation.z=Math.sin(t*1.9+tuft.position.x)*.12;for(const lamp of bootsGlow)lamp.material.emissiveIntensity=.45+Math.sin(t*3.2+lamp.position.x)*.2;
  cyanTrim.emissiveIntensity=.52+Math.sin(t*2.8)*.16;
- characterGlow.intensity=.32+Math.sin(t*2.8)*.08;
- drone.position.set(player.position.x+Math.sin(t*1.2)*.28+1.6,player.position.y+2.3+Math.sin(t*2.8)*.2,player.position.z+1.3);
- if(playing){focus.set(player.position.x,player.position.y+2.0,player.position.z);const offset=new THREE.Vector3(Math.sin(yaw)*distance,3.2+Math.sin(pitch)*distance,Math.cos(yaw)*distance);camera.position.lerp(focus.clone().add(offset),.11);camera.lookAt(focus);}else{camera.position.lerp(new THREE.Vector3(16+Math.sin(t*.16)*1.5,16,39),.023);camera.lookAt(0,1,-18);}
+ characterGlow.intensity=.32+Math.sin(t*2.8)*.08;for(const eye of droneEyes)eye.material.emissiveIntensity=.7+Math.sin(t*3.5+eye.position.x*4)*.18;droneHalo.rotation.z+=dt*1.8;for(const pivot of droneWingPivots)pivot.rotation.z=Math.sin(t*3.4+pivot.position.x)*.16;
+ drone.position.set(player.position.x+Math.sin(t*1.2)*.19+1.25,player.position.y+2.17+Math.sin(t*2.8)*.17,player.position.z+.7);
+ // Mascota expresiva: ojos que parpadean, cejas y aletas acompasadas al paso.
+ const blink=Math.sin(t*1.4)>0.988?.18:1;
+ for(const eye of droneEyes)eye.scale.y=blink;
+ for(let i=0;i<roboBrow.length;i++)roboBrow[i].rotation.z=Math.sin(t*1.7+i*.75)*.1;
+ ponytail.rotation.x=Math.sin(t*1.7)*.05;cap.rotation.z=Math.sin(t*1.1)*.018;
+ heroicRoot.rotation.z=moving?Math.sin(t*(running?13:9))*.014:Math.sin(t*1.3)*.009;
+ if(playing){focus.set(player.position.x,player.position.y+2.0,player.position.z);const offset=new THREE.Vector3(Math.sin(yaw)*distance,3.2+Math.sin(pitch)*distance,Math.cos(yaw)*distance);camera.position.lerp(focus.clone().add(offset),.11);camera.lookAt(focus);}else{camera.position.lerp(new THREE.Vector3(-9.7+Math.sin(t*.23)*.30,7.35,18.2),.048);camera.lookAt(0,1.50,5.15);}
  if(playing&&performance.now()-miniLast>120){drawMinimap();miniLast=performance.now();}
  renderer.render(scene,camera);
 }
