@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>GENERACIÓN CAMBIO · Fase 2 · V16.3 · Jugabilidad y rendimiento · 1.º trimestre</title>
+<title>GENERACIÓN CAMBIO · Fase 2 · V16.4 · Jugabilidad y rendimiento · 1.º trimestre</title>
 <meta name="theme-color" content="#071933"><meta name="description" content="Aventura tridimensional interactiva mejorada: descubre seis territorios en un planeta con atmósfera más cinematográfica, agua dinámica y vegetación reforzada.">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&amp;family=Nunito:wght@500;600;700;800;900&amp;display=swap" media="print" onload="this.media='all'">
 <style>
@@ -1563,8 +1563,9 @@ window.GC_Startup={ready,failed};setTimeout(failed,12000);
 })();
 </script>
 <script type="module" async id="gc3d-module">
-import * as THREE from 'three';
-import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+if(!new URLSearchParams(location.search).has('layout-audit')){
+const THREE=await import('three');
+const {GLTFLoader}=await import('three/addons/loaders/GLTFLoader.js');
 
 const LEVELS=[
   {name:'Naturaleza Viva',short:'NATURALEZA',emoji:'🌳',color:0x77ff9e,area:'Ciencias Naturales',ods:'6, 13, 14, 15',x:-25,z:-14,biome:'forest'},
@@ -1600,7 +1601,7 @@ const keys=new Set();
 function toast(text){notice.textContent=text;notice.classList.add('show');clearTimeout(toastTimeout);toastTimeout=setTimeout(()=>notice.classList.remove('show'),2600);}
 function beep(f=670){if(!window.GC_Audio?.effectsOn())return;try{audio=audio||new(window.AudioContext||window.webkitAudioContext)();const o=audio.createOscillator(),g=audio.createGain();o.type='sine';o.frequency.setValueAtTime(f,audio.currentTime);o.frequency.exponentialRampToValueAtTime(f*1.25,audio.currentTime+.12);g.gain.setValueAtTime(Math.max(.003,.05*window.GC_Audio.fxVolume()),audio.currentTime);g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+.19);o.connect(g);g.connect(audio.destination);o.start();o.stop(audio.currentTime+.2)}catch{}}
 function dialog(title,html){keys.clear();$('#dialogtitle').textContent=title;$('#dialogcontent').innerHTML=html;modal.classList.add('show');$('#close').focus();beep();}
-function closeDialog(){modal.classList.remove('show');}
+function closeDialog(){modal.classList.remove('show');keys.clear();if(playing&&game.classList.contains('webgl-ready'))renderer.domElement.focus({preventScroll:true});}
 function showWorld(index){const w=LEVELS[index];if(!w)return;
  const activated=playing&&near===index;
  if(activated)discoverSignal(index);
@@ -1608,7 +1609,7 @@ function showWorld(index){const w=LEVELS[index];if(!w)return;
  const educational=area?'<p>✦ Misiones del primer trimestre activadas. Los trimestres segundo y tercero se abrirán cuando lleguen sus materiales.</p><button class="go" data-gc-phase2="'+area+'">✦ ENTRAR A LAS MISIONES</button>':'<p>Las misiones de este territorio se incorporarán en una fase posterior.</p>';
  dialog(w.emoji+' '+w.name,'<p>'+w.area+'</p><div class="meta">🌍 ODS '+w.ods+'</div><p>'+(collected.has(index)?'✦ Baliza de exploración registrada.':'Explora para activar la baliza de este territorio.')+'</p>'+educational+'<button class="go" id="goBack">VOLVER AL MUNDO</button>');
 }
-$('#start').onclick=()=>{playing=true;window.GC_Audio?.enterGame();game.classList.add('play');$('#home').classList.add('hidden');resize();toast('✦ MISIÓN: ACTIVA LAS 6 BALIZAS. CAMINA CON WASD / FLECHAS');};
+$('#start').onclick=()=>{playing=true;window.GC_Audio?.enterGame();game.classList.add('play');$('#home').classList.add('hidden');resize();renderer.domElement.focus({preventScroll:true});toast('✦ MISIÓN: ACTIVA LAS 6 BALIZAS. CAMINA CON WASD / FLECHAS');};
 $('#close').onclick=closeDialog;
 modal.addEventListener('click',event=>{const study=event.target.closest('[data-gc-phase2]');if(study){closeDialog();window.GC_Phase2?.openArea(study.dataset.gcPhase2);return;}if(event.target===modal||event.target.id==='goBack')closeDialog();if(event.target.id==='saveAlias'){const input=$('#nameinput'),name=input?.value.trim();if(name){$('#nickname').textContent=name.slice(0,24);try{localStorage.setItem('generacion-cambio-nickname',name.slice(0,24))}catch{}closeDialog();}else toast('Escribe un apodo.')}});
 $('#rename').onclick=()=>dialog('Apodo del explorador','<p>Elige un apodo sin datos personales.</p><input id="nameinput" maxlength="24" autocomplete="off" placeholder="Apodo"><button id="saveAlias" class="go">GUARDAR</button>');
@@ -1617,7 +1618,7 @@ $('#motion').onclick=()=>{paused=!paused;$('#motion').innerHTML=paused?'<svg cla
 worlds.addEventListener('click',e=>{const btn=e.target.closest('[data-world]');if(btn)showWorld(Number(btn.dataset.world));});
 $('#interact').onclick=()=>{if(near>=0)showWorld(near)};
 try{const nick=localStorage.getItem('generacion-cambio-nickname');if(nick)$('#nickname').textContent=nick.slice(0,24)}catch{}
-window.addEventListener('keydown',e=>{if(window.GC_Phase2?.isOpen?.()){keys.clear();return}if(e.code==='Escape'){closeDialog();keys.clear();return}if(!playing||modal.classList.contains('show')||e.target?.closest?.('input,textarea,select,button,[contenteditable]'))return;if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space'].includes(e.code))e.preventDefault();keys.add(e.code);if(e.code==='KeyE'&&!e.repeat&&near>=0)showWorld(near)});
+window.addEventListener('keydown',e=>{if(window.GC_Phase2?.isOpen?.()){keys.clear();return}if(e.code==='Escape'){closeDialog();keys.clear();return}if(!playing||modal.classList.contains('show')||e.target?.closest?.('input,textarea,select,[contenteditable]')||(e.code==='Space'&&e.target?.closest?.('button')))return;if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space'].includes(e.code))e.preventDefault();keys.add(e.code);if(e.code==='KeyE'&&!e.repeat&&near>=0)showWorld(near)});
 window.addEventListener('keyup',e=>keys.delete(e.code));window.addEventListener('blur',()=>keys.clear());
 document.querySelectorAll('[data-key]').forEach(btn=>{const code=btn.dataset.key;btn.addEventListener('pointerdown',e=>{e.preventDefault();if(!playing||window.GC_Phase2?.isOpen?.()||modal.classList.contains('show'))return;keys.add(code);try{btn.setPointerCapture(e.pointerId)}catch{}});for(const name of ['pointerup','pointercancel','lostpointercapture'])btn.addEventListener(name,()=>keys.delete(code))});
 
@@ -1625,7 +1626,7 @@ document.querySelectorAll('[data-key]').forEach(btn=>{const code=btn.dataset.key
 let renderer;
 try{renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,powerPreference:'high-performance'});}catch(e){window.GC_Startup?.failed();throw e;}
 renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1));renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.10;renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
-const viewport=$('#viewport');viewport.appendChild(renderer.domElement);renderer.domElement.style.touchAction='none';renderer.domElement.addEventListener('webglcontextlost',e=>{e.preventDefault();keys.clear();game.classList.remove('webgl-ready');window.GC_Startup?.failed();});renderer.domElement.addEventListener('webglcontextrestored',()=>{renderer.shadowMap.needsUpdate=true;});
+const viewport=$('#viewport');viewport.appendChild(renderer.domElement);renderer.domElement.tabIndex=0;renderer.domElement.setAttribute('aria-label','Escenario 3D. Usa WASD o flechas para caminar.');renderer.domElement.style.touchAction='none';let contextLost=false;renderer.domElement.addEventListener('webglcontextlost',e=>{e.preventDefault();contextLost=true;keys.clear();game.classList.remove('webgl-ready');window.GC_Startup?.failed();});renderer.domElement.addEventListener('webglcontextrestored',()=>{contextLost=false;renderer.shadowMap.needsUpdate=true;});
 const scene=new THREE.Scene();scene.fog=new THREE.FogExp2(0x9bb8c8,.0058);
 const camera=new THREE.PerspectiveCamera(52,1,.1,380);camera.position.set(15,13,40);
 scene.add(new THREE.HemisphereLight(0xe8f7ff,0x3f5266,1.65));
@@ -1762,6 +1763,10 @@ const grassTex=(()=>{const cv=document.createElement('canvas');cv.width=64;cv.he
 const grassMat=new THREE.MeshBasicMaterial({map:grassTex,transparent:true,depthWrite:false,side:THREE.DoubleSide,color:0xffffff});const grassTufts=[];function addGrassTuft(x,z,s=1){const g=new THREE.Group();g.position.set(x,h(x,z)+.05,z);g.userData={baseRot:Math.random()*Math.PI*2,phase:Math.random()*6.28};for(let i=0;i<3;i++){const blade=new THREE.Mesh(new THREE.PlaneGeometry(.7*s,1.6*s),grassMat);blade.position.y=.72*s;blade.rotation.y=i*Math.PI/3+Math.random()*.26;g.add(blade);}scene.add(g);grassTufts.push(g);return g}
 for(let i=0;i<240;i++){const a=Math.random()*Math.PI*2,r=10+Math.random()*58,x=Math.cos(a)*r,z=Math.sin(a)*r;if(Math.hypot(x,z)<8||z>22)continue;addGrassTuft(x,z,.62+Math.random()*.75);}
 for(const lvl of LEVELS){for(let i=0;i<20;i++){const a=Math.random()*Math.PI*2,r=4.8+Math.random()*7.5;addGrassTuft(lvl.x+Math.cos(a)*r,lvl.z+Math.sin(a)*r,.65+Math.random()*.7);}}
+const grassCardBatch=new THREE.InstancedMesh(new THREE.PlaneGeometry(1,1),grassMat,grassTufts.length*3);grassCardBatch.castShadow=false;grassCardBatch.receiveShadow=false;grassCardBatch.frustumCulled=false;grassCardBatch.instanceMatrix.setUsage(THREE.DynamicDrawUsage);scene.add(grassCardBatch);
+const grassCardMatrix=new THREE.Matrix4(),grassCardScale=new THREE.Matrix4();
+function updateGrassCards(time){let i=0;for(const tuft of grassTufts){tuft.rotation.y=tuft.userData.baseRot+Math.sin(time*1.2+tuft.userData.phase)*.08;tuft.updateMatrix();for(const blade of tuft.children){blade.updateMatrix();grassCardScale.makeScale(blade.geometry.parameters.width,blade.geometry.parameters.height,1);grassCardMatrix.multiplyMatrices(tuft.matrix,blade.matrix).multiply(grassCardScale);grassCardBatch.setMatrixAt(i++,grassCardMatrix)}}grassCardBatch.instanceMatrix.needsUpdate=true;}
+updateGrassCards(0);for(const tuft of grassTufts)scene.remove(tuft);
 // Six interactive, sculpted portal structures and distinct biome scenery.
 const portalObjects=[];
 const portalPositions=[];
@@ -2284,9 +2289,9 @@ function finishPointer(e){pressed.delete(e.pointerId);prevPinch=0;}renderer.domE
 renderer.domElement.addEventListener('wheel',e=>{e.preventDefault();distance=THREE.MathUtils.clamp(distance+e.deltaY*.012,5,19)},{passive:false});
 let qualityMode=0,autoScale=1,frameSerial=0,perfFrames=0,perfElapsed=0,lastDraw=0,lastQualityChange=0,lastFrameTime=0,measuredFps=0;
 try{const q=Number(localStorage.getItem('gc-quality-v163'));if(Number.isInteger(q)&&q>=0&&q<=2)qualityMode=q}catch{}
-function pixelRatioFor(width,height){const dpr=window.devicePixelRatio||1,limit=[1700000,850000,4200000][qualityMode];return Math.max(.35,Math.min(dpr,qualityMode===2?2:qualityMode===1?.85:autoScale,Math.sqrt(limit/Math.max(1,width*height))))}
+function pixelRatioFor(width,height){const dpr=window.devicePixelRatio||1,limit=[1700000,850000,4200000][qualityMode];return Math.max(.20,Math.min(dpr,qualityMode===2?2:qualityMode===1?.85:autoScale,Math.sqrt(limit/Math.max(1,width*height))))}
 function applyQuality(){const shadowSize=qualityMode===1?1024:qualityMode===2?3072:1536;if(sunshine.shadow.mapSize.x!==shadowSize){sunshine.shadow.mapSize.set(shadowSize,shadowSize);sunshine.shadow.map?.dispose();sunshine.shadow.map=null;}
-renderer.shadowMap.autoUpdate=qualityMode===2;leafBillboards.forEach(mesh=>mesh.visible=qualityMode!==1);heroBoulders.visible=qualityMode!==1;fireflies.visible=qualityMode!==1;blades.count=qualityMode===1?Math.min(1800,grassCount):grassCount;renderer.shadowMap.needsUpdate=true;resize();schedulePBR();$('#qualityBtn').textContent='GRÁFICOS: '+['AUTO','LIGERO','ALTO'][qualityMode];}
+renderer.shadowMap.autoUpdate=qualityMode===2;leafBillboards.forEach(mesh=>mesh.visible=qualityMode!==1);heroBoulders.visible=qualityMode!==1;fireflies.visible=qualityMode!==1;grassCardBatch.count=qualityMode===1?Math.min(300,grassTufts.length*3):grassTufts.length*3;blades.count=qualityMode===1?Math.min(1800,grassCount):grassCount;renderer.shadowMap.needsUpdate=true;resize();schedulePBR();$('#qualityBtn').textContent='GRÁFICOS: '+['AUTO','LIGERO','ALTO'][qualityMode];}
 function sampleQuality(now,elapsed){if(qualityMode!==0||!playing||elapsed<=0||elapsed>1000)return;perfFrames++;perfElapsed+=elapsed;if(perfElapsed<2200)return;measuredFps=1000*perfFrames/perfElapsed;perfFrames=perfElapsed=0;if(now-lastQualityChange<3500)return;let next=autoScale;if(measuredFps<28)next=Math.max(.55,autoScale-.15);else if(measuredFps>52)next=Math.min(1.25,autoScale+.10);if(Math.abs(next-autoScale)>.01){autoScale=next;lastQualityChange=now;resize();}}
 
 
@@ -2302,7 +2307,7 @@ function drawMinimap(){if(!playing)return;
 }
 let previousSize='';function resize(){const width=Math.max(1,viewport.clientWidth),height=Math.max(1,viewport.clientHeight),ratio=pixelRatioFor(width,height),signature=width+'x'+height+'@'+ratio.toFixed(3);if(signature===previousSize)return;previousSize=signature;renderer.setPixelRatio(ratio);renderer.setSize(width,height,false);camera.aspect=width/height;camera.fov=width<700?65:52;camera.updateProjectionMatrix();renderer.shadowMap.needsUpdate=true;}window.addEventListener('resize',resize);if('ResizeObserver' in window)new ResizeObserver(resize).observe(viewport);applyQuality();
 const direction=new THREE.Vector3(),target=new THREE.Vector3(),focus=new THREE.Vector3(),upAxis=new THREE.Vector3(0,1,0),cameraOffset=new THREE.Vector3(),cameraTarget=new THREE.Vector3(),safeFocus=new THREE.Vector3(),clock=new THREE.Clock();let t=0,jumpHeight=0,jumpSpeed=0,spaceWasDown=false;let miniLast=0;
-function animate(now=performance.now()){requestAnimationFrame(animate);const modalOpen=modal.classList.contains('show')||Boolean(window.GC_Phase2?.isOpen?.());if(document.hidden||modalOpen){keys.clear();clock.getDelta();lastFrameTime=0;return}const interval=playing?0:1000/20;if(now-lastDraw<interval)return;lastDraw=now;const elapsed=lastFrameTime?now-lastFrameTime:0;lastFrameTime=now;sampleQuality(now,elapsed);const dt=Math.min(clock.getDelta(),.065);frameSerial++;if(!paused){t+=dt;characterMixer?.update(dt);water.material.uniforms.time.value=t;spire.rotation.y+=dt*.35;for(const rot of turbines)rot.rotation.z+=dt*1.5;for(const c of clouds)c.position.x+=dt*.15;sunGlow.material.opacity=.72+Math.sin(t*.22)*.08;sunGlow.scale.setScalar(34+Math.sin(t*.35)*1.1);for(const a of auroraBands){a.material.opacity=.12+Math.sin(t*.7+a.userData.phase)*.05;a.rotation.z=Math.sin(t*.25+a.userData.phase)*.06;a.rotation.y=a.userData.baseRot+Math.sin(t*.18+a.userData.phase)*.04;}for(const m of mistPlanes){m.position.y=m.userData.baseY+Math.sin(t*.45+m.userData.phase)*.22;m.position.x+=m.userData.drift*dt;m.material.opacity=.08+Math.sin(t*.55+m.userData.phase)*.04;}for(const tuft of grassTufts){tuft.rotation.y=tuft.userData.baseRot+Math.sin(t*1.2+tuft.userData.phase)*.08;}for(const f of floating)f.position.y=f.userData.baseY+Math.sin(t*.6+f.position.x)*.35;for(const obj of portalObjects){obj.ring.rotation.y+=dt*.28;obj.rim.rotation.x+=dt*.23;for(const p of obj.pts)p.position.y=p.userData.baseY+Math.sin(t*2+p.userData.phase)*.18;}for(const s of sparks)s.position.y=s.userData.baseY+Math.sin(t*1.7+s.userData.phase)*.22;for(const p of fireflies.children)p.position.y=p.userData.y+Math.sin(t*1.12+p.userData.phase)*.17;drone.rotation.y=Math.sin(t*1.3)*.2;}
+function animate(now=performance.now()){requestAnimationFrame(animate);const modalOpen=modal.classList.contains('show')||Boolean(window.GC_Phase2?.isOpen?.());if(document.hidden||modalOpen||contextLost){keys.clear();clock.getDelta();lastFrameTime=0;return}const interval=playing?0:1000/20;if(now-lastDraw<interval)return;lastDraw=now;const elapsed=lastFrameTime?now-lastFrameTime:0;lastFrameTime=now;sampleQuality(now,elapsed);const dt=Math.min(clock.getDelta(),.065);frameSerial++;if(!paused){t+=dt;characterMixer?.update(dt);water.material.uniforms.time.value=t;spire.rotation.y+=dt*.35;for(const rot of turbines)rot.rotation.z+=dt*1.5;for(const c of clouds)c.position.x+=dt*.15;sunGlow.material.opacity=.72+Math.sin(t*.22)*.08;sunGlow.scale.setScalar(34+Math.sin(t*.35)*1.1);for(const a of auroraBands){a.material.opacity=.12+Math.sin(t*.7+a.userData.phase)*.05;a.rotation.z=Math.sin(t*.25+a.userData.phase)*.06;a.rotation.y=a.userData.baseRot+Math.sin(t*.18+a.userData.phase)*.04;}for(const m of mistPlanes){m.position.y=m.userData.baseY+Math.sin(t*.45+m.userData.phase)*.22;m.position.x+=m.userData.drift*dt;m.material.opacity=.08+Math.sin(t*.55+m.userData.phase)*.04;}if(frameSerial%3===0)updateGrassCards(t);for(const f of floating)f.position.y=f.userData.baseY+Math.sin(t*.6+f.position.x)*.35;for(const obj of portalObjects){obj.ring.rotation.y+=dt*.28;obj.rim.rotation.x+=dt*.23;for(const p of obj.pts)p.position.y=p.userData.baseY+Math.sin(t*2+p.userData.phase)*.18;}for(const s of sparks)s.position.y=s.userData.baseY+Math.sin(t*1.7+s.userData.phase)*.22;for(const p of fireflies.children)p.position.y=p.userData.y+Math.sin(t*1.12+p.userData.phase)*.17;drone.rotation.y=Math.sin(t*1.3)*.2;}
  let moving=false,running=false;
  if(playing&&!modalOpen){const dx=(Number(keys.has('KeyD')||keys.has('ArrowRight'))-Number(keys.has('KeyA')||keys.has('ArrowLeft'))),dz=(Number(keys.has('KeyS')||keys.has('ArrowDown'))-Number(keys.has('KeyW')||keys.has('ArrowUp')));direction.set(dx,0,dz);moving=direction.lengthSq()>0;running=keys.has('ShiftLeft')||keys.has('ShiftRight');if(moving){direction.normalize().applyAxisAngle(upAxis,yaw);const speed=running?12:7.6;target.copy(player.position).addScaledVector(direction,dt*speed);const walkRadius=69;const rr=Math.hypot(target.x,target.z);if(rr>walkRadius){target.x*=walkRadius/rr;target.z*=walkRadius/rr;}player.position.x=target.x;player.position.z=target.z;player.rotation.y=Math.atan2(direction.x,direction.z);}
  // Jump is a small introductory movement mechanic; the player lands on the height-mapped ground.
@@ -2353,7 +2358,8 @@ function animate(now=performance.now()){requestAnimationFrame(animate);const mod
  if(!renderer.shadowMap.autoUpdate&&frameSerial%(qualityMode===1?5:3)===0)renderer.shadowMap.needsUpdate=true;
  renderer.render(scene,camera);if(!game.classList.contains("webgl-ready")){game.classList.add("webgl-ready");window.GC_Startup?.ready();}
 }
-window.GC_3D_Diagnostics=Object.freeze({snapshot:()=>({ready:game.classList.contains('webgl-ready'),playing,position:[player.position.x,player.position.y,player.position.z],yaw,pitch,distance,near,signals:collected.size,quality:qualityMode,pixelRatio:renderer.getPixelRatio(),frames:frameSerial,autoFps:measuredFps,drawCalls:renderer.info.render.calls,triangles:renderer.info.render.triangles,canvas:[renderer.domElement.width,renderer.domElement.height]})});
+window.GC_3D_Diagnostics=Object.freeze({snapshot:()=>({ready:game.classList.contains('webgl-ready'),playing,position:[player.position.x,player.position.y,player.position.z],yaw,pitch,distance,near,signals:collected.size,quality:qualityMode,pixelRatio:renderer.getPixelRatio(),frames:frameSerial,autoFps:measuredFps,drawCalls:renderer.info.render.calls,triangles:renderer.info.render.triangles,grassCards:grassCardBatch.count,grassDrawBatches:1,canvas:[renderer.domElement.width,renderer.domElement.height]})});
 requestAnimationFrame(animate);
+}
 </script>
 <script>document.getElementById('gc3d-module').addEventListener('error',()=>window.GC_Startup?.failed());</script></body></html>
