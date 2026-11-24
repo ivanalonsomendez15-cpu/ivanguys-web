@@ -1534,19 +1534,19 @@ $('#start').onclick=()=>{playing=true;window.GC_Audio?.enterGame();game.classLis
 $('#close').onclick=closeDialog;
 modal.addEventListener('click',event=>{const study=event.target.closest('[data-gc-phase2]');if(study){closeDialog();window.GC_Phase2?.openArea(study.dataset.gcPhase2);return;}if(event.target===modal||event.target.id==='goBack')closeDialog();if(event.target.id==='saveAlias'){const input=$('#nameinput'),name=input?.value.trim();if(name){$('#nickname').textContent=name.slice(0,24);try{localStorage.setItem('generacion-cambio-nickname',name.slice(0,24))}catch{}closeDialog();}else toast('Escribe un apodo.')}});
 $('#rename').onclick=()=>dialog('Apodo del explorador','<p>Elige un apodo sin datos personales.</p><input id="nameinput" maxlength="24" autocomplete="off" placeholder="Apodo"><button id="saveAlias" class="go">GUARDAR</button>');
-$('#info').onclick=()=>dialog('GENERACIÓN CAMBIO','<p>6º Primaria · CP Carmen Ruiz-Tilve</p><p>Gráficos AUTO: materiales originales de carga rápida. ALTO: activa también las texturas fotográficas opcionales si hay conexión. LIGERO: reduce la carga gráfica.</p><p>Fase 2: sigue explorando los seis portales y resuelve las misiones del primer trimestre de Ciencias Naturales, Ciencias Sociales, Matemáticas y Lengua Castellana.</p>');
+$('#info').onclick=()=>dialog('GENERACIÓN CAMBIO','<p>6º Primaria · CP Carmen Ruiz-Tilve</p><p>Fase 2: sigue explorando los seis portales y resuelve las misiones del primer trimestre de Ciencias Naturales, Ciencias Sociales, Matemáticas y Lengua Castellana.</p>');
 $('#motion').onclick=()=>{paused=!paused;$('#motion').innerHTML=paused?'<svg class="ui-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 5 11 7-11 7V5Z"/></svg>':'<svg class="ui-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="5" height="16" rx="1"/><rect x="14" y="4" width="5" height="16" rx="1"/></svg>';toast(paused?'Animaciones pausadas':'Animaciones reanudadas');};
 worlds.addEventListener('click',e=>{const btn=e.target.closest('[data-world]');if(btn)showWorld(Number(btn.dataset.world));});
 $('#interact').onclick=()=>{if(near>=0)showWorld(near)};
 try{const nick=localStorage.getItem('generacion-cambio-nickname');if(nick)$('#nickname').textContent=nick.slice(0,24)}catch{}
-window.addEventListener('keydown',e=>{if(window.GC_Phase2?.isOpen?.()){keys.clear();return;}if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space'].includes(e.code))e.preventDefault();keys.add(e.code);if(e.code==='Escape')closeDialog();if(e.code==='KeyE'&&playing&&near>=0&&!modal.classList.contains('show'))showWorld(near)});
-window.addEventListener('keyup',e=>keys.delete(e.code));window.addEventListener('blur',()=>keys.clear());document.addEventListener('visibilitychange',()=>keys.clear());
+window.addEventListener('keydown',e=>{if(window.GC_Phase2?.isOpen?.())return;if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space'].includes(e.code))e.preventDefault();keys.add(e.code);if(e.code==='Escape')closeDialog();if(e.code==='KeyE'&&playing&&near>=0&&!modal.classList.contains('show'))showWorld(near)});
+window.addEventListener('keyup',e=>keys.delete(e.code));window.addEventListener('blur',()=>keys.clear());
 document.querySelectorAll('[data-key]').forEach(btn=>{const code=btn.dataset.key;btn.addEventListener('pointerdown',e=>{e.preventDefault();keys.add(code);btn.setPointerCapture(e.pointerId)});for(const name of ['pointerup','pointercancel','lostpointercapture'])btn.addEventListener(name,()=>keys.delete(code))});
 
 // --- THREE-DIMENSIONAL ENGINE ---
 let renderer;
 try{renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,powerPreference:'high-performance'});}catch(e){window.GC_Startup?.failed();throw e;}
-renderer.setPixelRatio(Math.min(window.devicePixelRatio,1.6));renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.10;renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+renderer.setPixelRatio(Math.min(window.devicePixelRatio,1.5,Math.sqrt(3500000/Math.max(1,innerWidth*innerHeight))));renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.10;renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
 const viewport=$('#viewport');viewport.appendChild(renderer.domElement);
 const scene=new THREE.Scene();scene.fog=new THREE.FogExp2(0x9bb8c8,.0058);
 const camera=new THREE.PerspectiveCamera(52,1,.1,380);camera.position.set(15,13,40);
@@ -2157,11 +2157,11 @@ const pbrLoader=new THREE.TextureLoader();pbrLoader.setCrossOrigin('anonymous');
 const pbrBase='https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/';
 const pbrLoad=(slug,suffix,repeatX,repeatY,srgb=false)=>{
  const path=pbrBase+slug+'/'+slug+'_'+suffix+'_1k.jpg';
- return new Promise(resolve=>{let expired=false;const timer=setTimeout(()=>{expired=true;resolve(null)},12000);pbrLoader.load(path,texture=>{clearTimeout(timer);if(expired){texture.dispose();return;}
+ return new Promise(resolve=>pbrLoader.load(path,texture=>{
   texture.wrapS=texture.wrapT=THREE.RepeatWrapping;texture.repeat.set(repeatX,repeatY);
   texture.anisotropy=Math.min(12,renderer.capabilities.getMaxAnisotropy());
   if(srgb)texture.colorSpace=THREE.SRGBColorSpace;resolve(texture);
- },undefined,()=>{clearTimeout(timer);resolve(null)});});
+ },undefined,()=>resolve(null)));
 };
 function pbrApply(mat,field,tex){if(!tex)return;mat[field]=tex;mat.needsUpdate=true;}
 // The scans affect multiple geometry types, so these few requests upgrade the entire scene.
@@ -2187,16 +2187,11 @@ const pbrSets=[
   }
  }]
 ];
-let pbrStarted=false;
-async function loadPremiumTextures(){if(pbrStarted)return;pbrStarted=true;
- for(const [slug,rx,ry,apply] of pbrSets){
- try{const [diff,norm,rough]=await Promise.all([
-  pbrLoad(slug,'diff',rx,ry,true),pbrLoad(slug,'nor_gl',rx,ry),pbrLoad(slug,'rough',rx,ry)
- ]);await apply(diff,norm,rough);
- }catch(error){console.warn('PBR optional scan unavailable',slug,error);}
- }
+// Optional high-resolution textures are deferred until the player explicitly selects high quality.
+let pbrRequested=false;
+async function loadOptionalPbr(){if(pbrRequested)return;pbrRequested=true;
+ for(const [slug,rx,ry,apply] of pbrSets){try{const [diff,norm,rough]=await Promise.all([pbrLoad(slug,'diff',rx,ry,true),pbrLoad(slug,'nor_gl',rx,ry),pbrLoad(slug,'rough',rx,ry)]);await apply(diff,norm,rough);}catch(error){console.warn('PBR optional scan unavailable',slug,error);}}
 }
-
 
 // Smooth the camera and avoid clipping into the ground; scripted zoom moves into third-person gameplay.
 // Camera controls with third person movement, run, touch and portal proximity.
@@ -2209,7 +2204,7 @@ let qualityMode=0;
 function applyQuality(){const pixelRatios=[1.5,1,Math.min(window.devicePixelRatio,2)][qualityMode];renderer.setPixelRatio(Math.min(window.devicePixelRatio,pixelRatios));sunshine.shadow.mapSize.set(qualityMode===1?1024:qualityMode===2?3072:2048,qualityMode===1?1024:qualityMode===2?3072:2048);sunshine.shadow.map?.dispose();sunshine.shadow.map=null;leafBillboards.forEach(mesh=>mesh.visible=qualityMode!==1);heroBoulders.visible=qualityMode!==1;fireflies.visible=qualityMode!==1;blades.count=qualityMode===1?Math.min(1800,grassCount):grassCount;renderer.shadowMap.needsUpdate=true;resize();}
 
 $('#resetCam').addEventListener('click',()=>{yaw=0;pitch=.14;distance=10;toast('CÁMARA CENTRADA')});
-$('#qualityBtn').addEventListener('click',()=>{qualityMode=(qualityMode+1)%3;applyQuality();$('#qualityBtn').textContent='GRÁFICOS: '+['AUTO','LIGERO','ALTO'][qualityMode];if(qualityMode===2)loadPremiumTextures();});
+$('#qualityBtn').addEventListener('click',()=>{qualityMode=(qualityMode+1)%3;applyQuality();if(qualityMode===2)loadOptionalPbr();$('#qualityBtn').textContent='GRÁFICOS: '+['AUTO','LIGERO','ALTO'][qualityMode];});
 const minimap=$('#minimap'),mini=minimap.getContext('2d');
 function drawMinimap(){if(!playing)return;
  const w=180,h=180;mini.clearRect(0,0,w,h);mini.save();mini.beginPath();mini.arc(90,90,88,0,Math.PI*2);mini.clip();mini.fillStyle='rgba(4,29,45,.95)';mini.fillRect(0,0,w,h);
@@ -2218,10 +2213,9 @@ function drawMinimap(){if(!playing)return;
  LEVELS.forEach((level,i)=>{const x=px(level.x),y=pz(level.z);if(x<3||x>177||y<3||y>177)return;mini.fillStyle='#'+level.color.toString(16);mini.beginPath();mini.arc(x,y,collected.has(i)?5:4,0,Math.PI*2);mini.fill();if(collected.has(i)){mini.lineWidth=1.8;mini.strokeStyle='white';mini.stroke();}});
  mini.save();mini.translate(90,90);mini.rotate(-player.rotation.y);mini.fillStyle='#ffffff';mini.strokeStyle='#174c62';mini.lineWidth=2;mini.beginPath();mini.moveTo(0,-10);mini.lineTo(7,8);mini.lineTo(0,5);mini.lineTo(-7,8);mini.closePath();mini.fill();mini.stroke();mini.restore();mini.restore();
 }
-function resize(){const width=Math.max(1,viewport.clientWidth),height=Math.max(1,viewport.clientHeight);renderer.setSize(width,height,false);camera.aspect=width/height;camera.fov=width<700?65:52;camera.updateProjectionMatrix();}window.addEventListener('resize',resize);resize();
+function resize(){const width=viewport.clientWidth,height=viewport.clientHeight;if(width<1||height<1)return;renderer.setSize(width,height,false);camera.aspect=width/height;camera.fov=width<700?65:52;camera.updateProjectionMatrix();}window.addEventListener('resize',resize);resize();
 const direction=new THREE.Vector3(),target=new THREE.Vector3(),focus=new THREE.Vector3(),clock=new THREE.Clock();let t=0,jumpHeight=0,jumpSpeed=0,spaceWasDown=false;let miniLast=0;
-let lastRendered=0;
-function animate(now=performance.now()){requestAnimationFrame(animate);if(document.hidden||window.GC_Phase2?.isOpen?.()){clock.getDelta();return;}const interval=qualityMode===2?0:qualityMode===1?33:playing?0:33;if(now-lastRendered<interval-1)return;lastRendered=now;const dt=Math.min(clock.getDelta(),.05);if(!paused){t+=dt;characterMixer?.update(dt);water.material.uniforms.time.value=t;spire.rotation.y+=dt*.35;for(const rot of turbines)rot.rotation.z+=dt*1.5;for(const c of clouds)c.position.x+=dt*.15;sunGlow.material.opacity=.72+Math.sin(t*.22)*.08;sunGlow.scale.setScalar(34+Math.sin(t*.35)*1.1);for(const a of auroraBands){a.material.opacity=.12+Math.sin(t*.7+a.userData.phase)*.05;a.rotation.z=Math.sin(t*.25+a.userData.phase)*.06;a.rotation.y=a.userData.baseRot+Math.sin(t*.18+a.userData.phase)*.04;}for(const m of mistPlanes){m.position.y=m.userData.baseY+Math.sin(t*.45+m.userData.phase)*.22;m.position.x+=m.userData.drift*dt;m.material.opacity=.08+Math.sin(t*.55+m.userData.phase)*.04;}for(const tuft of grassTufts){tuft.rotation.y=tuft.userData.baseRot+Math.sin(t*1.2+tuft.userData.phase)*.08;}for(const f of floating)f.position.y=f.userData.baseY+Math.sin(t*.6+f.position.x)*.35;for(const obj of portalObjects){obj.ring.rotation.y+=dt*.28;obj.rim.rotation.x+=dt*.23;for(const p of obj.pts)p.position.y=p.userData.baseY+Math.sin(t*2+p.userData.phase)*.18;}for(const s of sparks)s.position.y=s.userData.baseY+Math.sin(t*1.7+s.userData.phase)*.22;for(const p of fireflies.children)p.position.y=p.userData.y+Math.sin(t*1.12+p.userData.phase)*.17;drone.rotation.y=Math.sin(t*1.3)*.2;}
+function animate(){requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.05);if(document.hidden||window.GC_Phase2?.isOpen?.()){keys.clear();return;}if(!paused){t+=dt;characterMixer?.update(dt);water.material.uniforms.time.value=t;spire.rotation.y+=dt*.35;for(const rot of turbines)rot.rotation.z+=dt*1.5;for(const c of clouds)c.position.x+=dt*.15;sunGlow.material.opacity=.72+Math.sin(t*.22)*.08;sunGlow.scale.setScalar(34+Math.sin(t*.35)*1.1);for(const a of auroraBands){a.material.opacity=.12+Math.sin(t*.7+a.userData.phase)*.05;a.rotation.z=Math.sin(t*.25+a.userData.phase)*.06;a.rotation.y=a.userData.baseRot+Math.sin(t*.18+a.userData.phase)*.04;}for(const m of mistPlanes){m.position.y=m.userData.baseY+Math.sin(t*.45+m.userData.phase)*.22;m.position.x+=m.userData.drift*dt;m.material.opacity=.08+Math.sin(t*.55+m.userData.phase)*.04;}for(const tuft of grassTufts){tuft.rotation.y=tuft.userData.baseRot+Math.sin(t*1.2+tuft.userData.phase)*.08;}for(const f of floating)f.position.y=f.userData.baseY+Math.sin(t*.6+f.position.x)*.35;for(const obj of portalObjects){obj.ring.rotation.y+=dt*.28;obj.rim.rotation.x+=dt*.23;for(const p of obj.pts)p.position.y=p.userData.baseY+Math.sin(t*2+p.userData.phase)*.18;}for(const s of sparks)s.position.y=s.userData.baseY+Math.sin(t*1.7+s.userData.phase)*.22;for(const p of fireflies.children)p.position.y=p.userData.y+Math.sin(t*1.12+p.userData.phase)*.17;drone.rotation.y=Math.sin(t*1.3)*.2;}
  const modalOpen=modal.classList.contains('show')||Boolean(window.GC_Phase2?.isOpen?.());let moving=false,running=false;
  if(playing&&!modalOpen){const dx=(Number(keys.has('KeyD')||keys.has('ArrowRight'))-Number(keys.has('KeyA')||keys.has('ArrowLeft'))),dz=(Number(keys.has('KeyS')||keys.has('ArrowDown'))-Number(keys.has('KeyW')||keys.has('ArrowUp')));direction.set(dx,0,dz);moving=direction.lengthSq()>0;running=keys.has('ShiftLeft')||keys.has('ShiftRight');if(moving){direction.normalize().applyAxisAngle(new THREE.Vector3(0,1,0),yaw);const speed=running?12:7.6;target.copy(player.position).addScaledVector(direction,dt*speed);const walkRadius=69;const rr=Math.hypot(target.x,target.z);if(rr>walkRadius){target.x*=walkRadius/rr;target.z*=walkRadius/rr;}player.position.x=target.x;player.position.z=target.z;player.rotation.y=Math.atan2(direction.x,direction.z);}
  // Jump is a small introductory movement mechanic; the player lands on the height-mapped ground.
