@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>GENERACIÓN CAMBIO · Fase 2 · V16.4 · Jugabilidad y rendimiento · 1.º trimestre</title>
+<title>GENERACIÓN CAMBIO · Fase 2 · V16.5 · Optimización 3D y auditoría · 1.º trimestre</title>
 <meta name="theme-color" content="#071933"><meta name="description" content="Aventura tridimensional interactiva mejorada: descubre seis territorios en un planeta con atmósfera más cinematográfica, agua dinámica y vegetación reforzada.">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&amp;family=Nunito:wght@500;600;700;800;900&amp;display=swap" media="print" onload="this.media='all'">
 <style>
@@ -1624,9 +1624,9 @@ document.querySelectorAll('[data-key]').forEach(btn=>{const code=btn.dataset.key
 
 // --- THREE-DIMENSIONAL ENGINE ---
 let renderer;
-try{renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,powerPreference:'high-performance'});}catch(e){window.GC_Startup?.failed();throw e;}
+try{renderer=new THREE.WebGLRenderer({alpha:true,antialias:false,powerPreference:'high-performance'});}catch(e){window.GC_Startup?.failed();throw e;}
 renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1));renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.10;renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
-const viewport=$('#viewport');viewport.appendChild(renderer.domElement);renderer.domElement.tabIndex=0;renderer.domElement.setAttribute('aria-label','Escenario 3D. Usa WASD o flechas para caminar.');renderer.domElement.style.touchAction='none';let contextLost=false;renderer.domElement.addEventListener('webglcontextlost',e=>{e.preventDefault();contextLost=true;keys.clear();game.classList.remove('webgl-ready');window.GC_Startup?.failed();});renderer.domElement.addEventListener('webglcontextrestored',()=>{contextLost=false;renderer.shadowMap.needsUpdate=true;});
+const viewport=$('#viewport');viewport.appendChild(renderer.domElement);renderer.domElement.tabIndex=0;renderer.domElement.setAttribute('aria-label','Escenario 3D. Usa WASD o flechas para caminar.');renderer.domElement.style.touchAction='none';let contextLost=false;renderer.domElement.addEventListener('webglcontextlost',e=>{e.preventDefault();contextLost=true;keys.clear();game.classList.remove('webgl-ready');window.GC_Startup?.failed();});renderer.domElement.addEventListener('webglcontextrestored',()=>{contextLost=false;qualityMode=1;applyQuality();renderer.shadowMap.needsUpdate=true;toast('Motor 3D recuperado · modo ligero');});
 const scene=new THREE.Scene();scene.fog=new THREE.FogExp2(0x9bb8c8,.0058);
 const camera=new THREE.PerspectiveCamera(52,1,.1,380);camera.position.set(15,13,40);
 scene.add(new THREE.HemisphereLight(0xe8f7ff,0x3f5266,1.65));
@@ -2157,14 +2157,13 @@ const atlasMaterials=Array.from({length:3},(_,i)=>new THREE.MeshStandardMaterial
 const atlasCount=Array.from({length:3},()=>0);
 for(let i=0;i<3;i++){const foliage=new THREE.InstancedMesh(botanicalGeo,atlasMaterials[i],3500);foliage.count=0;foliage.castShadow=false;foliage.receiveShadow=false;foliage.frustumCulled=false;scene.add(foliage);leafBillboards.push(foliage);}
 const twigMat=material(0x5e4a32,1);
-const twigGeo=new THREE.CylinderGeometry(.035,.072,1,6);
+const twigGeo=new THREE.CylinderGeometry(.035,.072,1,6),heroTrunkGeo=new THREE.CylinderGeometry(.20,.37,3.5,10),heroTrunkMatrices=[],heroTwigMatrices=[];
 function forestHeroTree(x,z,size,variant){
- const y=h(x,z);const group=new THREE.Group();group.position.set(x,y,z);scene.add(group);
- const trunk=new THREE.Mesh(new THREE.CylinderGeometry(.20*size,.37*size,3.5*size,10),treeBark);trunk.position.y=1.75*size;trunk.castShadow=true;group.add(trunk);
+ const y=h(x,z);dummy.position.set(x,y+1.75*size,z);dummy.rotation.set(0,0,0);dummy.scale.setScalar(size);dummy.updateMatrix();heroTrunkMatrices.push(dummy.matrix.clone());
  // Short branches carry the leaf clusters rather than a single low-poly crown.
  for(let j=0;j<11;j++){
   const angle=j*2.399+variant*.4;const ry=2.45*size+(j%4)*.44*size;const length=(1.35+(j%4)*.15)*size;
-  const twig=new THREE.Mesh(twigGeo,twigMat);twig.scale.set(size, length, size);twig.position.set(Math.sin(angle)*length*.31,ry,Math.cos(angle)*length*.31);twig.rotation.set(Math.cos(angle)*.64,0,-Math.sin(angle)*.64);twig.castShadow=false;group.add(twig);
+  dummy.scale.set(size,length,size);dummy.position.set(x+Math.sin(angle)*length*.31,y+ry,z+Math.cos(angle)*length*.31);dummy.rotation.set(Math.cos(angle)*.64,0,-Math.sin(angle)*.64);dummy.updateMatrix();heroTwigMatrices.push(dummy.matrix.clone());
  }
  for(let j=0;j<45;j++){
   const typ=(j+variant)%3;const mesh=leafBillboards[typ],idx=atlasCount[typ]++;if(idx>=3500)continue;
@@ -2173,7 +2172,6 @@ function forestHeroTree(x,z,size,variant){
   dummy.rotation.set((j%5)*.18,az+j*.16,(j%7)*.12);
   const sz=(.63+(j%5)*.105)*size;dummy.scale.set(sz,sz,sz);dummy.updateMatrix();mesh.setMatrixAt(idx,dummy.matrix);
  }
- return group;
 }
 const treeLocs=[];
 // Along the six routes, preserve passages and visibility by placing detailed trees beside them.
@@ -2184,6 +2182,8 @@ for(let i=0;i<90;i++){
  const size=.65+(i%7)*.12;
  forestHeroTree(x,z,size,i%3);treeLocs.push([x,z]);
 }
+function staticBatch(geo,mat,matrices,parent=scene,shadows=false){const batch=new THREE.InstancedMesh(geo,mat,Math.max(1,matrices.length));matrices.forEach((m,i)=>batch.setMatrixAt(i,m));batch.count=matrices.length;batch.instanceMatrix.needsUpdate=true;batch.castShadow=shadows;batch.receiveShadow=shadows;batch.computeBoundingSphere();parent.add(batch);return batch;}
+const heroTrunkBatch=staticBatch(heroTrunkGeo,treeBark,heroTrunkMatrices,scene,true),heroTwigBatch=staticBatch(twigGeo,twigMat,heroTwigMatrices);
 // Background woodland receives its own fine-grained transparent leaf sprays at different depths.
 for(let n=0;n<treePlacements.length;n++){
  const [tx,tz,s,groundY]=treePlacements[n];
@@ -2212,6 +2212,7 @@ for(let i=0;i<115;i++){const a=i*2.3999,r=7+(i*11.23)%61,x=Math.cos(a)*r,z=Math.
  rock.position.set(x,h(x,z)+s*.21,z);rock.scale.set(s*1.4,s*.78,s);rock.rotation.y=a;rock.castShadow=rock.receiveShadow=true;heroBoulders.add(rock);
 }
 
+const rockBatches=[];for(const geo of boulderGeos){const rocks=heroBoulders.children.filter(o=>o.geometry===geo);const mats=rocks.map(o=>{o.updateMatrix();return o.matrix.clone()});for(const rock of rocks)heroBoulders.remove(rock);rockBatches.push(staticBatch(geo,boulderMat,mats,heroBoulders,true));}
 // Floating dust/motes catch sunlight and create subtle atmospheric depth near the character.
 const fireflies=new THREE.Group();scene.add(fireflies);
 const moteGeo=new THREE.SphereGeometry(.055,7,6),moteColors=[0xffedb8,0xb0ffee,0xcacaff];
@@ -2287,11 +2288,26 @@ renderer.domElement.addEventListener('pointerdown',e=>{pressed.set(e.pointerId,[
 renderer.domElement.addEventListener('pointermove',e=>{const old=pressed.get(e.pointerId);if(!old)return;pressed.set(e.pointerId,[e.clientX,e.clientY]);if(pressed.size===1){yaw-=(e.clientX-old[0])*.0045;pitch=THREE.MathUtils.clamp(pitch+(e.clientY-old[1])*.0035,-.08,.62)}else{const arr=[...pressed.values()];const pinch=Math.hypot(arr[0][0]-arr[1][0],arr[0][1]-arr[1][1]);if(prevPinch)distance=THREE.MathUtils.clamp(distance+(prevPinch-pinch)*.023,5,19);prevPinch=pinch;}});
 function finishPointer(e){pressed.delete(e.pointerId);prevPinch=0;}renderer.domElement.addEventListener('pointerup',finishPointer);renderer.domElement.addEventListener('pointercancel',finishPointer);renderer.domElement.addEventListener('lostpointercapture',finishPointer);window.addEventListener('blur',()=>{pressed.clear();prevPinch=0;});
 renderer.domElement.addEventListener('wheel',e=>{e.preventDefault();distance=THREE.MathUtils.clamp(distance+e.deltaY*.012,5,19)},{passive:false});
-let qualityMode=0,autoScale=1,frameSerial=0,perfFrames=0,perfElapsed=0,lastDraw=0,lastQualityChange=0,lastFrameTime=0,measuredFps=0;
+let qualityMode=0,autoScale=.85,frameSerial=0,perfFrames=0,perfElapsed=0,lastDraw=0,lastQualityChange=0,lastFrameTime=0,measuredFps=0;
 try{const q=Number(localStorage.getItem('gc-quality-v163'));if(Number.isInteger(q)&&q>=0&&q<=2)qualityMode=q}catch{}
-function pixelRatioFor(width,height){const dpr=window.devicePixelRatio||1,limit=[1700000,850000,4200000][qualityMode];return Math.max(.20,Math.min(dpr,qualityMode===2?2:qualityMode===1?.85:autoScale,Math.sqrt(limit/Math.max(1,width*height))))}
-function applyQuality(){const shadowSize=qualityMode===1?1024:qualityMode===2?3072:1536;if(sunshine.shadow.mapSize.x!==shadowSize){sunshine.shadow.mapSize.set(shadowSize,shadowSize);sunshine.shadow.map?.dispose();sunshine.shadow.map=null;}
-renderer.shadowMap.autoUpdate=qualityMode===2;leafBillboards.forEach(mesh=>mesh.visible=qualityMode!==1);heroBoulders.visible=qualityMode!==1;fireflies.visible=qualityMode!==1;grassCardBatch.count=qualityMode===1?Math.min(300,grassTufts.length*3):grassTufts.length*3;blades.count=qualityMode===1?Math.min(1800,grassCount):grassCount;renderer.shadowMap.needsUpdate=true;resize();schedulePBR();$('#qualityBtn').textContent='GRÁFICOS: '+['AUTO','LIGERO','ALTO'][qualityMode];}
+function pixelRatioFor(width,height){const dpr=window.devicePixelRatio||1,limit=[1200000,500000,4200000][qualityMode];return Math.max(.20,Math.min(dpr,qualityMode===2?2:qualityMode===1?.65:autoScale,Math.sqrt(limit/Math.max(1,width*height))))}
+const pointLights=[];scene.traverse(o=>{if(o.isPointLight)pointLights.push(o)});
+const lowCrownGeo=new THREE.IcosahedronGeometry(1.1,1),lowLeafGeo=new THREE.IcosahedronGeometry(.56,0),lowRockGeo=new THREE.DodecahedronGeometry(.45,0);
+const detailBatches=[...leafBillboards,...leavesMeshes,grassCardBatch,blades];const originalCounts=new Map(detailBatches.map(x=>[x,x.count]));
+// Spread each partial instance count uniformly across the original scene, preserving vegetation coverage.
+function spreadInstances(mesh){const n=mesh.count;if(n<3)return;const source=mesh.instanceMatrix.array.slice(0,n*16),color=mesh.instanceColor?.array?.slice(0,n*3);let k=0;for(let phase=0;phase<3;phase++)for(let i=phase;i<n;i+=3){mesh.instanceMatrix.array.set(source.subarray(i*16,i*16+16),k*16);if(color)mesh.instanceColor.array.set(color.subarray(i*3,i*3+3),k*3);k++}mesh.instanceMatrix.needsUpdate=true;if(color)mesh.instanceColor.needsUpdate=true}
+for(const mesh of [...leafBillboards,...leavesMeshes,blades])spreadInstances(mesh);
+function applyQuality(){const high=qualityMode===2,light=qualityMode===1,shadowSize=high?3072:1024;
+if(sunshine.shadow.mapSize.x!==shadowSize){sunshine.shadow.mapSize.set(shadowSize,shadowSize);sunshine.shadow.map?.dispose();sunshine.shadow.map=null;}
+renderer.shadowMap.enabled=high;renderer.shadowMap.autoUpdate=high;sunshine.castShadow=high;dome.material.transmission=high?.27:0;dome.material.needsUpdate=true;
+for(const o of pointLights)o.visible=high;
+for(const t of treeTypes)t.crown.geometry=high?foliageGeo:lowCrownGeo;
+for(const mesh of leavesMeshes){mesh.geometry=high?leavesGeo:lowLeafGeo;mesh.count=Math.floor(originalCounts.get(mesh)*(high?1:light?.18:.38));}
+for(const mesh of leafBillboards){mesh.visible=!light;mesh.count=Math.floor(originalCounts.get(mesh)*(high?1:.45));}
+rockMesh.geometry=high?rockGeo:lowRockGeo;
+heroBoulders.visible=high;fireflies.visible=high;heroTwigBatch.visible=!light;grassCardBatch.count=Math.floor(originalCounts.get(grassCardBatch)*(high?1:light?.25:.55));blades.count=Math.floor(originalCounts.get(blades)*(high?1:light?.20:.48));
+renderer.shadowMap.needsUpdate=high;resize();schedulePBR();$('#qualityBtn').textContent='GRÁFICOS: '+['AUTO','LIGERO','ALTO'][qualityMode];}
+
 function sampleQuality(now,elapsed){if(qualityMode!==0||!playing||elapsed<=0||elapsed>1000)return;perfFrames++;perfElapsed+=elapsed;if(perfElapsed<2200)return;measuredFps=1000*perfFrames/perfElapsed;perfFrames=perfElapsed=0;if(now-lastQualityChange<3500)return;let next=autoScale;if(measuredFps<28)next=Math.max(.55,autoScale-.15);else if(measuredFps>52)next=Math.min(1.25,autoScale+.10);if(Math.abs(next-autoScale)>.01){autoScale=next;lastQualityChange=now;resize();}}
 
 
@@ -2355,10 +2371,10 @@ function animate(now=performance.now()){requestAnimationFrame(animate);const mod
   camera.lookAt(safeFocus);
 }else{camera.position.lerp(new THREE.Vector3(-9.7+Math.sin(t*.23)*.30,7.35,18.2),.048);camera.lookAt(0,window.innerWidth<=660?(window.innerHeight<=700?-.35:.15):1.50,5.15);}
  if(playing&&performance.now()-miniLast>120){drawMinimap();miniLast=performance.now();}
- if(!renderer.shadowMap.autoUpdate&&frameSerial%(qualityMode===1?5:3)===0)renderer.shadowMap.needsUpdate=true;
+ if(renderer.shadowMap.enabled&&!renderer.shadowMap.autoUpdate&&frameSerial%3===0)renderer.shadowMap.needsUpdate=true;
  renderer.render(scene,camera);if(!game.classList.contains("webgl-ready")){game.classList.add("webgl-ready");window.GC_Startup?.ready();}
 }
-window.GC_3D_Diagnostics=Object.freeze({snapshot:()=>({ready:game.classList.contains('webgl-ready'),playing,position:[player.position.x,player.position.y,player.position.z],yaw,pitch,distance,near,signals:collected.size,quality:qualityMode,pixelRatio:renderer.getPixelRatio(),frames:frameSerial,autoFps:measuredFps,drawCalls:renderer.info.render.calls,triangles:renderer.info.render.triangles,grassCards:grassCardBatch.count,grassDrawBatches:1,canvas:[renderer.domElement.width,renderer.domElement.height]})});
+window.GC_3D_Diagnostics=Object.freeze({snapshot:()=>({ready:game.classList.contains('webgl-ready'),playing,position:[player.position.x,player.position.y,player.position.z],yaw,pitch,distance,near,signals:collected.size,quality:qualityMode,pixelRatio:renderer.getPixelRatio(),frames:frameSerial,autoFps:measuredFps,drawCalls:renderer.info.render.calls,triangles:renderer.info.render.triangles,grassCards:grassCardBatch.count,grassDrawBatches:1,treeDrawBatches:2,rockDrawBatches:rockBatches.length,activePointLights:pointLights.filter(x=>x.visible).length,shadowMapEnabled:renderer.shadowMap.enabled,canvas:[renderer.domElement.width,renderer.domElement.height]})});
 requestAnimationFrame(animate);
 }
 </script>
