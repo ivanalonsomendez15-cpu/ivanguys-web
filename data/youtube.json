@@ -1,10 +1,18 @@
 {
   "status": "ok",
-  "lastUpdated": "2026-11-25T09:46:28.350000+00:00",
+  "lastUpdated": "2026-11-25T19:53:16.795682+00:00",
   "channelTitle": "ivanguys",
   "subscribers": 673,
-  "videoCount": 193,
+  "videoCount": 194,
   "videos": [
+    {
+      "id": "3Op2W4qU7EA",
+      "title": "GTA 6 parece una PELÍCULA 🎬🤯",
+      "url": "https://www.youtube.com/watch?v=3Op2W4qU7EA",
+      "thumbnail": "https://i4.ytimg.com/vi/3Op2W4qU7EA/hqdefault.jpg",
+      "published": "2026-11-25T18:00:19+00:00",
+      "type": "video"
+    },
     {
       "id": "q-oBNcN4jBc",
       "title": "La ACCIÓN de GTA 6 no para 💥",
@@ -115,14 +123,6 @@
       "url": "https://www.youtube.com/watch?v=zY4A1BamLMU",
       "thumbnail": "https://i3.ytimg.com/vi/zY4A1BamLMU/hqdefault.jpg",
       "published": "2026-10-31T23:00:14+00:00",
-      "type": "video"
-    },
-    {
-      "id": "-iUHGmL7Tyo",
-      "title": "5 DÍAS. ESTO YA ESTÁ AQUÍ. 💀💚 | ZELDA OCARINA OF TIME",
-      "url": "https://www.youtube.com/watch?v=-iUHGmL7Tyo",
-      "thumbnail": "https://i2.ytimg.com/vi/-iUHGmL7Tyo/hqdefault.jpg",
-      "published": "2026-10-30T23:00:09+00:00",
       "type": "video"
     }
   ]
