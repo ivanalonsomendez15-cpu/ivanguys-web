@@ -1,10 +1,18 @@
 {
   "status": "ok",
-  "lastUpdated": "2026-11-24T16:20:47.824792+00:00",
+  "lastUpdated": "2026-11-25T01:02:46.329846+00:00",
   "channelTitle": "ivanguys",
   "subscribers": 674,
-  "videoCount": 192,
+  "videoCount": 193,
   "videos": [
+    {
+      "id": "q-oBNcN4jBc",
+      "title": "La ACCIÓN de GTA 6 no para 💥",
+      "url": "https://www.youtube.com/watch?v=q-oBNcN4jBc",
+      "thumbnail": "https://i2.ytimg.com/vi/q-oBNcN4jBc/hqdefault.jpg",
+      "published": "2026-11-24T18:00:32+00:00",
+      "type": "video"
+    },
     {
       "id": "gjqCo4aFpoE",
       "title": "GTA 6: LA TENSIÓN NO DEJA DE SUBIR 😱",
@@ -116,14 +124,6 @@
       "thumbnail": "https://i2.ytimg.com/vi/-iUHGmL7Tyo/hqdefault.jpg",
       "published": "2026-10-30T23:00:09+00:00",
       "type": "video"
-    },
-    {
-      "id": "tjpny3afltc",
-      "title": "🗡️ ¡SOLO 6 DÍAS! 🔥 ZELDA: OCARINA OF TIME REGRESA 💚 #Shorts",
-      "url": "https://www.youtube.com/watch?v=tjpny3afltc",
-      "thumbnail": "https://i1.ytimg.com/vi/tjpny3afltc/hqdefault.jpg",
-      "published": "2026-10-30T09:00:19+00:00",
-      "type": "short"
     }
   ]
 }
