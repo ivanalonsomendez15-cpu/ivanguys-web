@@ -1,10 +1,18 @@
 {
   "status": "ok",
-  "lastUpdated": "2026-11-26T12:16:27.996998+00:00",
+  "lastUpdated": "2026-11-26T21:53:26.452269+00:00",
   "channelTitle": "ivanguys",
-  "subscribers": 673,
-  "videoCount": 194,
+  "subscribers": 672,
+  "videoCount": 195,
   "videos": [
+    {
+      "id": "TrPUSm7C_Hc",
+      "title": "GTA 6: 30 segundos de PURO CINE 🤯",
+      "url": "https://www.youtube.com/watch?v=TrPUSm7C_Hc",
+      "thumbnail": "https://i1.ytimg.com/vi/TrPUSm7C_Hc/hqdefault.jpg",
+      "published": "2026-11-26T18:00:02+00:00",
+      "type": "video"
+    },
     {
       "id": "3Op2W4qU7EA",
       "title": "GTA 6 parece una PELÍCULA 🎬🤯",
@@ -115,14 +123,6 @@
       "url": "https://www.youtube.com/watch?v=oECZRs_cd7c",
       "thumbnail": "https://i4.ytimg.com/vi/oECZRs_cd7c/hqdefault.jpg",
       "published": "2026-11-01T23:00:36+00:00",
-      "type": "video"
-    },
-    {
-      "id": "zY4A1BamLMU",
-      "title": "QUEDAN 4 DÍAS. 💀🗡️ | OCARINA OF TIME REMAKE",
-      "url": "https://www.youtube.com/watch?v=zY4A1BamLMU",
-      "thumbnail": "https://i3.ytimg.com/vi/zY4A1BamLMU/hqdefault.jpg",
-      "published": "2026-10-31T23:00:14+00:00",
       "type": "video"
     }
   ]
