@@ -115,7 +115,7 @@ button{transition:background .12s,filter .12s}
     if(isAR){if(past.endsWith('c'))past=past.slice(0,-1)+'qu';else if(past.endsWith('g'))past+='u';else if(past.endsWith('z'))past=past.slice(0,-1)+'c'}
     extra.add(norm(past+(isAR?'é':'í')));
     // Presentes regulares, excluyendo verbos con hiato o alternancia conocida.
-    if(!['ampliar','criar','enfriar','enviar','guiar','desviar','variar','fotografiar','confiar','situar','puntuar','efectuar','soltar','negar','calentar','acertar','acostar','recordar','temblar','volar','volcar','probar','rodar','festejar'].includes(verb)){
+    if(!['ampliar','criar','enfriar','enviar','guiar','desviar','variar','fotografiar','confiar','situar','puntuar','efectuar','soltar','negar','calentar','acertar','acostar','recordar','temblar','volar','volcar','probar','rodar','festejar','alentar','gobernar','renovar','sosegar'].includes(verb)){
       for(const ending of (isAR?['o','as','a','amos','áis','an']:isER?['o','es','e','emos','éis','en']:['o','es','e','imos','ís','en']))extra.add(norm(stem+ending));
     }
   }
