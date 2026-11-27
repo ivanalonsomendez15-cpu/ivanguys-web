@@ -1,10 +1,18 @@
 {
   "status": "ok",
-  "lastUpdated": "2026-11-27T13:47:07.736834+00:00",
+  "lastUpdated": "2026-11-27T22:39:10.112687+00:00",
   "channelTitle": "ivanguys",
   "subscribers": 672,
-  "videoCount": 195,
+  "videoCount": 196,
   "videos": [
+    {
+      "id": "JWOqcMSFv7Y",
+      "title": "TAN CIERTO XD #yosoydelos7mil #stumbleguys #elpersonajedelasemana #pesopluma #roblox",
+      "url": "https://www.youtube.com/watch?v=JWOqcMSFv7Y",
+      "thumbnail": "https://i3.ytimg.com/vi/JWOqcMSFv7Y/hqdefault.jpg",
+      "published": "2026-11-27T17:30:34+00:00",
+      "type": "video"
+    },
     {
       "id": "TrPUSm7C_Hc",
       "title": "GTA 6: 30 segundos de PURO CINE 🤯",
@@ -115,14 +123,6 @@
       "url": "https://www.youtube.com/watch?v=VwjgQiOsvY8",
       "thumbnail": "https://i3.ytimg.com/vi/VwjgQiOsvY8/hqdefault.jpg",
       "published": "2026-11-02T23:00:22+00:00",
-      "type": "video"
-    },
-    {
-      "id": "oECZRs_cd7c",
-      "title": "3 DÍAS. 💀💀💀 | ZELDA OCARINA OF TIME REMAKE",
-      "url": "https://www.youtube.com/watch?v=oECZRs_cd7c",
-      "thumbnail": "https://i4.ytimg.com/vi/oECZRs_cd7c/hqdefault.jpg",
-      "published": "2026-11-01T23:00:36+00:00",
       "type": "video"
     }
   ]
